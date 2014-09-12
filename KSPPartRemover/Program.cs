@@ -12,7 +12,8 @@ namespace KSPPartRemover
 		private enum Command
 		{
 			Unspecified,
-			Remove
+			Remove,
+			List
 		}
 
 		private static Command command;
@@ -26,6 +27,8 @@ namespace KSPPartRemover
 			{
 				{"-r", ParseRemoveCommand},
 				{"--remove", ParseRemoveCommand},
+				{"-l", ParseListCommand},
+				{"--list", ParseListCommand},
 				{"-i", ParseInputFilePathArgument},
 				{"-o", ParseOutputFilePathArgument},
 				{"-s", ParseSilentExecutionArgument},
@@ -35,7 +38,8 @@ namespace KSPPartRemover
 		private static readonly Dictionary<Command, Func<int>> CommandDelegates =
 			new Dictionary<Command, Func<int>>
 			{
-				{Command.Remove, PerformRemoveCommand}
+				{Command.Remove, PerformRemoveCommand},
+				{Command.List, PerformListCommand}
 			};
 
 		private static void PrintInfoHeader()
@@ -65,6 +69,9 @@ namespace KSPPartRemover
 			Console.WriteLine();
 			Console.WriteLine("\t -r, --remove <nameOrIdOfPartToRemove>");
 			Console.WriteLine("\t\t remove all parts with the given name - or id if the parameter is an integer");
+			Console.WriteLine();
+			Console.WriteLine("\t -l, --list");
+			Console.WriteLine("\t\t list all parts in craft file");
 			Console.WriteLine();
 			Console.WriteLine("Arguments:");
 			Console.WriteLine();
@@ -145,6 +152,17 @@ namespace KSPPartRemover
 				if (outputTextWriter != Console.Out)
 					outputTextWriter.Dispose();
 			}
+		}
+
+		private static int PerformListCommand()
+		{
+			var craftFile = CraftFile.FromText(inputTextReader.ReadToEnd());
+
+			ConsoleWriteLineIfNotSilent("Parts in craft file:");
+			ConsoleWriteLineIfNotSilent("====================");
+			PrintPartList(craftFile, craftFile);
+
+			return 0;
 		}
 
 		private static IReadOnlyList<Part> Parts(CraftFile craftFile, long partId)
@@ -307,6 +325,16 @@ namespace KSPPartRemover
 			command = Command.Remove;
 
 			partToRemove = args[argIdx].Trim('\"');
+			return argIdx;
+		}
+
+		private static int ParseListCommand(int argIdx, params string[] args)
+		{
+			if (command != Command.Unspecified)
+				throw new ArgumentException("");
+
+			command = Command.List;
+
 			return argIdx;
 		}
 

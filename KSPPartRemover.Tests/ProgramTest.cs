@@ -61,6 +61,25 @@ namespace KSPPartRemover.Tests
 		}
 
 		[Test]
+		public void CanPrintPartListToStdOut()
+		{
+			// given
+			var inputCraftText =
+				new Part("somePart").Content +
+				new Part("anotherPart").Content;
+
+			const string inputFileName = "input.txt";
+			File.WriteAllText(inputFileName, inputCraftText);
+
+			// when
+			var returnCode = Program.Main("-l", "-i", inputFileName);
+
+			// then
+			Assert.That(StdOutput.ToString(), Is.StringEnding("somePart (id=0)" + Environment.NewLine + "anotherPart (id=1)" + Environment.NewLine));
+			Assert.That(returnCode, Is.EqualTo(0));
+		}
+
+		[Test]
 		public void PrintsAndReturnsErrorIfPartIdToReplaceIsNotFound()
 		{
 			// given

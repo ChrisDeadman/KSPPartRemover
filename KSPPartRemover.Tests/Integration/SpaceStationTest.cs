@@ -20,7 +20,7 @@ namespace KSPPartRemover.Tests.Integration
 			File.WriteAllText(inputFileName, inputCraftText);
 
 			// when
-			var returnCode = Program.Main("--part-name", "ladder1", "-i", inputFileName, "-o", outputFileName, "--silent");
+			var returnCode = Program.Main("--remove", "ladder1", "-i", inputFileName, "-o", outputFileName, "--silent");
 
 			// then
 			Assert.That(returnCode, Is.EqualTo(0));

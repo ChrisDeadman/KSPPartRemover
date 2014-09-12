@@ -62,6 +62,18 @@ namespace KSPPartRemover.Tests.Backend
 		}
 
 		[Test]
+		public void IdReturnsNegativeNumberIfPartNameIsNotFound()
+		{
+			// given
+			var craftFileText = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue")).Content;
+
+			var target = CraftFile.FromText(craftFileText);
+
+			// when / then
+			Assert.That(target.IdOfPart("aDifferentPart"), Is.LessThan(0));
+		}
+
+		[Test]
 		public void IdReturnsNegativeNumberIfPartIsNotFound()
 		{
 			// given
@@ -72,9 +84,31 @@ namespace KSPPartRemover.Tests.Backend
 			// when / then
 			Assert.That(target.IdOfPart(new Part("aDifferentPart")), Is.LessThan(0));
 		}
+		[Test]
+		public void CanReturnIdForPartName()
+		{
+			// given
+			var somePart = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
+			var partToFind = new Part("partToFind", new KeyValuePair<string, string>("anyAttribute", "someValue"));
+			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
+
+			var craftFileText =
+				somePart.Content + Environment.NewLine +
+				partToFind.Content + Environment.NewLine +
+				partToFind.Content + Environment.NewLine +
+				anotherPart.Content;
+
+			var target = CraftFile.FromText(craftFileText);
+
+			// when
+			var result = target.IdOfPart("partToFind");
+
+			// then
+			Assert.That(result, Is.EqualTo(1));
+		}
 
 		[Test]
-		public void CanReturnIdOfPart()
+		public void CanReturnIdForPart()
 		{
 			// given
 			var somePart = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue"));

@@ -20,6 +20,20 @@ namespace KSPPartRemover.Backend
 			return new CraftFile(content);
 		}
 
+		public long IdOfPart(string partName)
+		{
+			var id = 0;
+			foreach (var presentPart in this)
+			{
+				if (presentPart.Name.Equals(partName))
+					return id;
+
+				id++;
+			}
+
+			return -1;
+		}
+
 		public long IdOfPart(Part part)
 		{
 			var id = 0;

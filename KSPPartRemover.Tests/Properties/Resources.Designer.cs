@@ -125,5 +125,87 @@ namespace KSPPartRemover.Tests.Properties {
                 return ResourceManager.GetString("_5bc46e52_b7ff_47b2_b04d_c6227e47264f_in", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ship = Mün Mk I
+        ///version = 0.23.5
+        ///description = 
+        ///type = VAB
+        ///PART
+        ///{
+        ///	part = fuelTank_4294291662
+        ///	partName = Part
+        ///	pos = -0.2561799,3.782969,0.2440315
+        ///	rot = 0,0,0,1
+        ///	attRot = 0,0,0,1
+        ///	mir = 1,1,1
+        ///	istg = 0
+        ///	dstg = 0
+        ///	sidx = -1
+        ///	sqor = -1
+        ///	attm = 0
+        ///	link = fuelTank_4294291630
+        ///	link = liquidEngine_4294290234
+        ///	attN = top,fuelTank_4294291630
+        ///	attN = bottom,liquidEngine_4294290234
+        ///	EVENTS
+        ///	{
+        ///	}
+        ///	ACTIONS
+        ///	{
+        ///	}
+        ///	RESOURCE
+        ///	{
+        ///		name = LiquidFuel
+        ///		amount = 180
+        ///		maxAmount = 180
+        ///		flowSt [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Mün_Mk_I_expected_craft {
+            get {
+                return ResourceManager.GetString("Mün_Mk_I_expected_craft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ship = Mün Mk I
+        ///version = 0.23.5
+        ///description = 
+        ///type = VAB
+        ///PART
+        ///{
+        ///	part = fuelTank_4294291662
+        ///	partName = Part
+        ///	pos = -0.2561799,3.782969,0.2440315
+        ///	rot = 0,0,0,1
+        ///	attRot = 0,0,0,1
+        ///	mir = 1,1,1
+        ///	istg = 0
+        ///	dstg = 0
+        ///	sidx = -1
+        ///	sqor = -1
+        ///	attm = 0
+        ///	link = fuelTank_4294291630
+        ///	link = liquidEngine_4294290234
+        ///	attN = top,fuelTank_4294291630
+        ///	attN = bottom,liquidEngine_4294290234
+        ///	EVENTS
+        ///	{
+        ///	}
+        ///	ACTIONS
+        ///	{
+        ///	}
+        ///	RESOURCE
+        ///	{
+        ///		name = LiquidFuel
+        ///		amount = 180
+        ///		maxAmount = 180
+        ///		flowSt [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Mün_Mk_I_in_craft {
+            get {
+                return ResourceManager.GetString("Mün_Mk_I_in_craft", resourceCulture);
+            }
+        }
     }
 }

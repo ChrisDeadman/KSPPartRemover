@@ -118,6 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Mün_Mk_I_expected_craft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mün Mk I.expected.craft.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Mün_Mk_I_in_craft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mün Mk I.in.craft.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="_5bc46e52_b7ff_47b2_b04d_c6227e47264f_expected" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\5bc46e52-b7ff-47b2-b04d-c6227e47264f.expected.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

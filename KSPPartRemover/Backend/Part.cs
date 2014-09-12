@@ -40,13 +40,19 @@ namespace KSPPartRemover.Backend
 		{
 			get
 			{
-				var contentIndex = 0;
 				int endIdx;
-				var value = FindProperty("name", ref contentIndex, out endIdx);
-				if (value == null)
-					throw new FormatException();
 
-				return value;
+				var contentIndex = 0;
+				var value = FindProperty("part", ref contentIndex, out endIdx);
+				if (value != null)
+					return value;
+
+				contentIndex = 0;
+				value = FindProperty("name", ref contentIndex, out endIdx);
+				if (value != null)
+					return value;
+
+				throw new FormatException();
 			}
 		}
 
@@ -130,7 +136,11 @@ namespace KSPPartRemover.Backend
 			if (endIdx < 0)
 				endIdx = Content.Length - 1;
 
-			return Content.Substring(startIndex, endIdx - startIndex).Split('=')[1].Trim();
+			var potentialProperty = Content.Substring(startIndex, endIdx - startIndex);
+			if (!potentialProperty.Contains("="))
+				return null;
+
+			return potentialProperty.Split('=')[1].Trim();
 		}
 
 		public override string ToString()

@@ -43,7 +43,26 @@ namespace KSPPartRemover.Tests.Backend
 		}
 
 		[Test]
-		public void ReturnsNameOfPart()
+		public void CanReturnNameOfPartFromPartProperty()
+		{
+			// given
+			var target = Part.FromContent(
+				"PART " + Environment.NewLine +
+				"{" + Environment.NewLine +
+				"	  part 	 =		somePart	 " + Environment.NewLine +
+				" name = thisIsIgnoredIfPartPropertyIsFound" + Environment.NewLine +
+				" anyAttribute = someValue" + Environment.NewLine +
+				"}");
+
+			// when
+			var result = target.Name;
+
+			// then
+			Assert.That(result, Is.EqualTo("somePart"));
+		}
+
+		[Test]
+		public void CanReturnNameOfPartFromNameProperty()
 		{
 			// given
 			var target = Part.FromContent(

@@ -60,7 +60,7 @@ Release Notes:
 ### KSPPartRemover v0.2.1
 * add initial support for .craft files
 * Compatible with KSP version: 0.24.2
-c
+
 ### KSPPartRemover v0.2
 * update command-line switches (not compatible with v0.1)
 * replace -p/--part-name command with -r/--remove

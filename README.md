@@ -1,4 +1,4 @@
-KSPPartRemover v0.2
+KSPPartRemover v0.2.1
 ======================
 Author: ChrisDeadman
 

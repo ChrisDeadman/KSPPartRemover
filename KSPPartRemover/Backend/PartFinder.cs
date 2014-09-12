@@ -14,6 +14,12 @@ namespace KSPPartRemover.Backend
 			CraftFile = craftFile;
 		}
 
+		public Part FindPartById(long id)
+		{
+			var currentPartId = 0;
+			return CraftFile.FirstOrDefault(part => currentPartId++ == id);
+		}
+
 		public IReadOnlyList<Part> AllOccurrences(string name)
 		{
 			return CraftFile.Where(part => part.Name.Equals(name)).ToList();

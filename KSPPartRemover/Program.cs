@@ -165,30 +165,6 @@ namespace KSPPartRemover
 			return 0;
 		}
 
-		private static IReadOnlyList<Part> Parts(CraftFile craftFile, long partId)
-		{
-			var partFinder = new PartFinder(craftFile);
-
-			ConsoleWriteLineIfNotSilent(string.Format("Searching for part with id={0}...", partId));
-			var part = partFinder.FindPartById(partId);
-			if (part == null)
-				throw new ArgumentException(string.Format("No part with id={0} found, aborting.", partId));
-
-			return new List<Part>(new[] {part});
-		}
-
-		private static IReadOnlyList<Part> Parts(CraftFile craftFile, string partName)
-		{
-			var partFinder = new PartFinder(craftFile);
-
-			ConsoleWriteLineIfNotSilent(string.Format("Searching for parts with name '{0}'...", partName));
-			var occurrences = partFinder.AllOccurrences(partToRemove);
-			if (occurrences.Count <= 0)
-				throw new ArgumentException(string.Format("No parts with a name of '{0}' found, aborting.", partName));
-
-			return occurrences;
-		}
-
 		private static int PerformRemoveCommand()
 		{
 			if (String.IsNullOrEmpty(partToRemove))
@@ -203,7 +179,7 @@ namespace KSPPartRemover
 				: Parts(craftFile, partToRemove);
 
 			var partRemover = new SafePartRemover(craftFile);
-			var partRemovalActions = matchingParts.AsParallel().Select(partRemover.PrepareRemovePart).ToArray();
+			var partRemovalActions = matchingParts.AsParallel().Select(partRemover.PrepareRemovePart);
 			var mergedPartRemovalAction = partRemover.CombineRemovalActions(partRemovalActions);
 
 			if (!silentExecution)
@@ -226,6 +202,30 @@ namespace KSPPartRemover
 
 			outputTextWriter.Write(craftFile.Content);
 			return 0;
+		}
+
+		private static IReadOnlyList<Part> Parts(CraftFile craftFile, long partId)
+		{
+			var partFinder = new PartFinder(craftFile);
+
+			ConsoleWriteLineIfNotSilent(string.Format("Searching for part with id={0}...", partId));
+			var part = partFinder.FindPartById(partId);
+			if (part == null)
+				throw new ArgumentException(string.Format("No part with id={0} found, aborting.", partId));
+
+			return new List<Part>(new[] {part});
+		}
+
+		private static IReadOnlyList<Part> Parts(CraftFile craftFile, string partName)
+		{
+			var partFinder = new PartFinder(craftFile);
+
+			ConsoleWriteLineIfNotSilent(string.Format("Searching for parts with name '{0}'...", partName));
+			var occurrences = partFinder.AllOccurrences(partToRemove);
+			if (occurrences.Count <= 0)
+				throw new ArgumentException(string.Format("No parts with a name of '{0}' found, aborting.", partName));
+
+			return occurrences;
 		}
 
 		private static void PrintPartList(CraftFile craftFile, IEnumerable<Part> parts)
@@ -299,7 +299,7 @@ namespace KSPPartRemover
 			if (args.Length <= argIdx)
 				throw new ArgumentException("");
 
-			inputTextReader = new StreamReader(args[argIdx]);
+			inputTextReader = new StreamReader(new FileStream(args[argIdx], FileMode.Open, FileAccess.Read, FileShare.Write));
 			return argIdx;
 		}
 
@@ -309,7 +309,7 @@ namespace KSPPartRemover
 			if (args.Length <= argIdx)
 				throw new ArgumentException("");
 
-			outputTextWriter = new StreamWriter(args[argIdx]);
+			outputTextWriter = new StreamWriter(new FileStream(args[argIdx], FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
 			return argIdx;
 		}
 

@@ -18,7 +18,7 @@ namespace KSPPartRemover
 
 		private static Command command;
 		private static string partToRemove;
-		private static TextReader inputTextReader;
+		private static string inputText;
 		private static TextWriter outputTextWriter;
 		private static bool silentExecution;
 
@@ -126,7 +126,7 @@ namespace KSPPartRemover
 					if (command == Command.Unspecified)
 						throw new ArgumentException("No command specified");
 
-					if (inputTextReader == null)
+					if (inputText == null)
 						throw new ArgumentException("No input file specified");
 
 					return CommandDelegates[command]();
@@ -146,9 +146,6 @@ namespace KSPPartRemover
 			}
 			finally
 			{
-				if (inputTextReader != null)
-					inputTextReader.Dispose();
-
 				if (outputTextWriter != Console.Out)
 					outputTextWriter.Dispose();
 			}
@@ -156,7 +153,7 @@ namespace KSPPartRemover
 
 		private static int PerformListCommand()
 		{
-			var craftFile = CraftFile.FromText(inputTextReader.ReadToEnd());
+			var craftFile = CraftFile.FromText(inputText);
 
 			ConsoleWriteLineIfNotSilent("Parts in craft file:");
 			ConsoleWriteLineIfNotSilent("====================");
@@ -171,7 +168,7 @@ namespace KSPPartRemover
 				throw new ArgumentException("no part name specified");
 
 			ConsoleWriteLineIfNotSilent("Loading craft file...");
-			var craftFile = CraftFile.FromText(inputTextReader.ReadToEnd());
+			var craftFile = CraftFile.FromText(inputText);
 
 			long partId;
 			var matchingParts = long.TryParse(partToRemove, out partId)
@@ -276,7 +273,7 @@ namespace KSPPartRemover
 		{
 			command = Command.Unspecified;
 			partToRemove = null;
-			inputTextReader = null;
+			inputText = null;
 			outputTextWriter = Console.Out;
 			silentExecution = false;
 		}
@@ -299,7 +296,9 @@ namespace KSPPartRemover
 			if (args.Length <= argIdx)
 				throw new ArgumentException("");
 
-			inputTextReader = new StreamReader(new FileStream(args[argIdx], FileMode.Open, FileAccess.Read, FileShare.Write));
+			using (var inputTextReader = new StreamReader(new FileStream(args[argIdx], FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
+				inputText = inputTextReader.ReadToEnd();
+
 			return argIdx;
 		}
 
@@ -309,7 +308,7 @@ namespace KSPPartRemover
 			if (args.Length <= argIdx)
 				throw new ArgumentException("");
 
-			outputTextWriter = new StreamWriter(new FileStream(args[argIdx], FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read));
+			outputTextWriter = new StreamWriter(new FileStream(args[argIdx], FileMode.Truncate, FileAccess.ReadWrite, FileShare.Read), Encoding.UTF8);
 			return argIdx;
 		}
 

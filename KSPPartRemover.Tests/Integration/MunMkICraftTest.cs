@@ -11,20 +11,19 @@ namespace KSPPartRemover.Tests.Integration
 		public void CanRemoveBoostersAttachedToNoseConeFromCraftFile()
 		{
 			// given
-			const string inputFileName = "input.txt";
-			const string outputFileName = "result.txt";
+			const string tempFileName = "temp.txt";
 
 			var inputCraftText = Resources.Mün_Mk_I_in_craft;
 			var expectedOutputCraftText = Resources.Mün_Mk_I_expected_craft;
 
-			File.WriteAllText(inputFileName, inputCraftText);
+			File.WriteAllText(tempFileName, inputCraftText);
 
 			// when
-			var returnCode = Program.Main("--remove", "noseCone_4294253786", "-i", inputFileName, "-o", outputFileName, "--silent");
+			var returnCode = Program.Main("--remove", "noseCone_4294253786", "-i", tempFileName, "-o", tempFileName, "--silent");
 
 			// then
 			Assert.That(returnCode, Is.EqualTo(0));
-			Assert.That(File.ReadAllText(outputFileName), Is.EqualTo(expectedOutputCraftText));
+			Assert.That(File.ReadAllText(tempFileName), Is.EqualTo(expectedOutputCraftText));
 		}
 	}
 }

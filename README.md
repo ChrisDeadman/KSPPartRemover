@@ -1,5 +1,5 @@
-KSPPartRemover v0.2.1
-======================
+KSPPartRemover v0.2.1.1
+=======================
 Author: ChrisDeadman
 
 Removes parts from Kerbal Space Program crafts
@@ -7,7 +7,7 @@ Removes parts from Kerbal Space Program crafts
 #### Brief feature list:
 * Checks all references to the removed part and removes all affected parts
 * Lists the parts to remove before the actual removal (if not used with the --silent switch)
-* Adapts all the "parent", "sym", "SrfN" and "AttN" entries
+* Adapts all the "parent", "link", "sym", "SrfN" and "AttN" entries
 * In other words performs a "safe" remove ;-)
 * At the moment only works with files which only include one single craft
 * (which means you need to copy your craft to a temporary file in case you want to modify .sfs files)
@@ -56,6 +56,13 @@ you want to modify and then insert the modified result back into your .sfs file.
 ==============
 Release Notes:
 ===============
+
+### KSPPartRemover v0.2.1.1
+* preserve formatting of input file when adjusting part properties
+* fix a bug where output files could get corrupted if they were already existing
+* fix bug: throws exception if output file is same as input file
+* lower TargetFramework version from v4.5.1 to v4.5
+* Compatible with KSP version: 0.24.2
 
 ### KSPPartRemover v0.2.1
 * add initial support for .craft files

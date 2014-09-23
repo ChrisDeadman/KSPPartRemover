@@ -84,11 +84,15 @@ namespace KSPPartRemover.Backend
 			if (FindProperty(key, ref contentIndex, out endIdx) == null)
 				throw new NotSupportedException();
 
+			var preamble = PrecedingWhitespaceCharacters(contentIndex);
+			contentIndex -= preamble.Length;
+
 			RemoveMultiPropertyValues(key);
 
 			foreach (var value in values)
 			{
-				var propertyString = string.Format(Environment.NewLine + "{0} = {1}", key, value);
+				var propertyString = preamble + string.Format("{0} = {1}", key, value) + Environment.NewLine;
+
 				Content = Content.Insert(contentIndex, propertyString);
 				contentIndex += propertyString.Length;
 			}
@@ -104,43 +108,54 @@ namespace KSPPartRemover.Backend
 				if (value == null)
 					break;
 
-				Content = Content.Remove(contentIndex, endIdx - contentIndex);
+				var preamble = PrecedingWhitespaceCharacters(contentIndex);
+				contentIndex -= preamble.Length;
+
+				Content = Content.Remove(contentIndex, (endIdx - contentIndex) + 1);
 			}
 		}
 
 		// NOTE: We do not use a regex for this because it's so ultimately slow that the app would not be usable anymore!
 		private string FindProperty(string key, ref int startIndex, out int endIdx)
 		{
-			endIdx = startIndex;
-
-			var foundStartIdx = Content.IndexOf(key, startIndex);
-			if (foundStartIdx < 1)
-				return null;
-
-			var charBeforeStartidx = Content[foundStartIdx - 1];
-			if (charBeforeStartidx != ' ' && charBeforeStartidx != '\t' && charBeforeStartidx != '{')
+			while (true)
 			{
-				if (charBeforeStartidx != '\n')
+				endIdx = startIndex;
+
+				var foundStartIdx = Content.IndexOf(key, startIndex);
+				if (foundStartIdx < 1)
 					return null;
 
-				foundStartIdx--;
+				startIndex = foundStartIdx;
 
-				charBeforeStartidx = Content[foundStartIdx - 1];
-				if (charBeforeStartidx == '\r')
-					foundStartIdx--;
+				var charBeforeStartidx = Content[startIndex - 1];
+				if (charBeforeStartidx != ' ' && charBeforeStartidx != '\t' && charBeforeStartidx != '{' && charBeforeStartidx != '\n')
+				{
+					startIndex++;
+					continue;
+				}
+
+				endIdx = Content.IndexOf('\n', startIndex + 1);
+				if (endIdx < 0)
+					endIdx = Content.Length - 1;
+
+				var potentialProperty = Content.Substring(startIndex, endIdx - startIndex);
+				if (!potentialProperty.Contains("="))
+				{
+					startIndex = endIdx;
+					continue;
+				}
+
+				return potentialProperty.Split('=')[1].Trim();
 			}
+		}
 
-			startIndex = foundStartIdx;
+		private string PrecedingWhitespaceCharacters(int index)
+		{
+			var previousNewLineIdx = Content.LastIndexOfAny(new[] {'\r', '\n'}, index);
+			previousNewLineIdx++; // This also covers the -1 if not found
 
-			endIdx = Content.IndexOf(Environment.NewLine, startIndex + 1);
-			if (endIdx < 0)
-				endIdx = Content.Length - 1;
-
-			var potentialProperty = Content.Substring(startIndex, endIdx - startIndex);
-			if (!potentialProperty.Contains("="))
-				return null;
-
-			return potentialProperty.Split('=')[1].Trim();
+			return Content.Substring(previousNewLineIdx, index - previousNewLineIdx);
 		}
 
 		public override string ToString()

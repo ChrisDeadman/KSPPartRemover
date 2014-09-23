@@ -1,4 +1,4 @@
-ship = Mün Mk I
+﻿ship = Mün Mk I
 version = 0.23.5
 description = 
 type = VAB
@@ -2378,11 +2378,8 @@ PART
 	sidx = 2
 	sqor = 6
 	attm = 1
-	
-	
-sym = radialDecoupler_4294290004
-	
-srfN = srfAttach, fuelTank_4294291598
+	sym = radialDecoupler_4294290004
+	srfN = srfAttach, fuelTank_4294291598
 	EVENTS
 	{
 	}
@@ -2430,11 +2427,8 @@ PART
 	sidx = 2
 	sqor = 6
 	attm = 1
-	
-	
-sym = radialDecoupler_4294290142
-	
-srfN = srfAttach, fuelTank_4294291598
+	sym = radialDecoupler_4294290142
+	srfN = srfAttach, fuelTank_4294291598
 	EVENTS
 	{
 	}

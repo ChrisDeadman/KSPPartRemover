@@ -117,15 +117,15 @@ namespace KSPPartRemover.Tests.Backend
 			var target = new Part(
 				"AnyName",
 				new KeyValuePair<string, string>("aProperty", "aValue"),
-				new KeyValuePair<string, string>("propertyToReplace", "removedPropertyValue"),
+				new KeyValuePair<string, string>("\tpropertyToReplace", "removedPropertyValue"),
 				new KeyValuePair<string, string>("anotherProperty", "anotherValue"),
 				new KeyValuePair<string, string>("propertyToReplace", "thisIsAlsoRemoved"));
 
 			var expectedResult = new Part(
 				"AnyName",
 				new KeyValuePair<string, string>("aProperty", "aValue"),
-				new KeyValuePair<string, string>("propertyToReplace", "value1"),
-				new KeyValuePair<string, string>("propertyToReplace", "value2"),
+				new KeyValuePair<string, string>("\tpropertyToReplace", "value1"),
+				new KeyValuePair<string, string>("\tpropertyToReplace", "value2"),
 				new KeyValuePair<string, string>("anotherProperty", "anotherValue"));
 
 			// when
@@ -144,7 +144,7 @@ namespace KSPPartRemover.Tests.Backend
 				new KeyValuePair<string, string>("aProperty", "aValue"),
 				new KeyValuePair<string, string>("propertyToRemove", "removedPropertyValue"),
 				new KeyValuePair<string, string>("anotherProperty", "anotherValue"),
-				new KeyValuePair<string, string>("propertyToRemove", "thisIsAlsoRemoved"));
+				new KeyValuePair<string, string>("\tpropertyToRemove", "thisIsAlsoRemoved"));
 
 			var expectedResult = new Part(
 				"AnyName",

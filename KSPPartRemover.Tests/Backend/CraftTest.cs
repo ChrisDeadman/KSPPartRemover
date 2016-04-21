@@ -6,20 +6,20 @@ using NUnit.Framework;
 
 namespace KSPPartRemover.Tests.Backend
 {
-	public class CraftFileTest
+	public class CraftTest
 	{
 		[Test]
-		public void EnumerationThrowsExceptionIfCraftFileTextIsInvalid()
+		public void EnumerationThrowsExceptionIfCraftTextIsInvalid()
 		{
 			// given
-			var craftFileText = "PART " + Environment.NewLine +
+			var craftText = "PART " + Environment.NewLine +
 								"{" + Environment.NewLine +
 								"		 name	 =	 partToFind" + Environment.NewLine +
 								"{" + Environment.NewLine +
 								" anyAttribute = anyValue" + Environment.NewLine +
 								"}";
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when / then
 			Assert.That(() => target.ToArray(), Throws.TypeOf<FormatException>());
@@ -33,29 +33,29 @@ namespace KSPPartRemover.Tests.Backend
 			var aDifferentPart = new Part("aDifferentPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				aDifferentPart.Content + Environment.NewLine +
 				anotherPart.Content;
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// then
 			Assert.That(target, Is.EquivalentTo(new[] {somePart, aDifferentPart, anotherPart}));
 		}
 
 		[Test]
-		public void IdThrowsExceptionIfCraftFileTextIsInvalid()
+		public void IdThrowsExceptionIfCraftTextIsInvalid()
 		{
 			// given
-			var craftFileText = "PART " + Environment.NewLine +
+			var craftText = "PART " + Environment.NewLine +
 								"{" + Environment.NewLine +
 								"		 name	 =	 partToFind" + Environment.NewLine +
 								"{" + Environment.NewLine +
 								" anyAttribute = anyValue" + Environment.NewLine +
 								"}";
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when / then
 			Assert.That(() => target.IdOfPart(new Part("dummyName")), Throws.TypeOf<FormatException>());
@@ -65,9 +65,9 @@ namespace KSPPartRemover.Tests.Backend
 		public void IdReturnsNegativeNumberIfPartNameIsNotFound()
 		{
 			// given
-			var craftFileText = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue")).Content;
+			var craftText = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue")).Content;
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when / then
 			Assert.That(target.IdOfPart("aDifferentPart"), Is.LessThan(0));
@@ -77,9 +77,9 @@ namespace KSPPartRemover.Tests.Backend
 		public void IdReturnsNegativeNumberIfPartIsNotFound()
 		{
 			// given
-			var craftFileText = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue")).Content;
+			var craftText = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue")).Content;
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when / then
 			Assert.That(target.IdOfPart(new Part("aDifferentPart")), Is.LessThan(0));
@@ -92,13 +92,13 @@ namespace KSPPartRemover.Tests.Backend
 			var partToFind = new Part("partToFind", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				partToFind.Content + Environment.NewLine +
 				partToFind.Content + Environment.NewLine +
 				anotherPart.Content;
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when
 			var result = target.IdOfPart("partToFind");
@@ -115,13 +115,13 @@ namespace KSPPartRemover.Tests.Backend
 			var partToFind = new Part("partToFind", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				partToFind.Content + Environment.NewLine +
 				partToFind.Content + Environment.NewLine +
 				anotherPart.Content;
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when
 			var result = target.IdOfPart(partToFind);
@@ -138,14 +138,14 @@ namespace KSPPartRemover.Tests.Backend
 			var partToReplace = new Part("partToReplace", new KeyValuePair<string, string>("replacedAttribute", "replacedValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				partToReplace.Content + Environment.NewLine +
 				anotherPart.Content;
 
 			var replacementPart = new Part("replacementPart", new KeyValuePair<string, string>("replacementAttribute", "replacementValue"));
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when
 			target.ReplacePart(partToReplace, replacementPart);
@@ -162,12 +162,12 @@ namespace KSPPartRemover.Tests.Backend
 			var partToRemove = new Part("partToReplace", new KeyValuePair<string, string>("replacedAttribute", "replacedValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				partToRemove.Content + Environment.NewLine +
 				anotherPart.Content;
 
-			var target = CraftFile.FromText(craftFileText);
+			var target = Craft.FromText(craftText);
 
 			// when
 			target.RemovePart(partToRemove);

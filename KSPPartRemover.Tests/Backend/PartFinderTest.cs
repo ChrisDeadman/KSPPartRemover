@@ -14,11 +14,11 @@ namespace KSPPartRemover.Tests.Backend
 			var somePart = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				anotherPart.Content;
 
-			var target = new PartFinder(CraftFile.FromText(craftFileText));
+			var target = new PartFinder(Craft.FromText(craftText));
 
 			// when
 			var result = target.FindPartById(2);
@@ -35,12 +35,12 @@ namespace KSPPartRemover.Tests.Backend
 			var anIntermediatePart = new Part("anIntermediatePart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				anIntermediatePart.Content + Environment.NewLine +
 				anotherPart.Content;
 
-			var target = new PartFinder(CraftFile.FromText(craftFileText));
+			var target = new PartFinder(Craft.FromText(craftText));
 
 			// when / then
 			Assert.That(target.FindPartById(0), Is.EqualTo(somePart));
@@ -55,11 +55,11 @@ namespace KSPPartRemover.Tests.Backend
 			var somePart = new Part("somePart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				anotherPart.Content;
 
-			var target = new PartFinder(CraftFile.FromText(craftFileText));
+			var target = new PartFinder(Craft.FromText(craftText));
 
 			// when
 			var result = target.AllOccurrences("partToFind");
@@ -76,11 +76,11 @@ namespace KSPPartRemover.Tests.Backend
 			var partToFind = new Part("partToFind", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText = somePart.Content + Environment.NewLine +
+			var craftText = somePart.Content + Environment.NewLine +
 								partToFind.Content + Environment.NewLine +
 								anotherPart.Content;
 
-			var target = new PartFinder(CraftFile.FromText(craftFileText));
+			var target = new PartFinder(Craft.FromText(craftText));
 
 			// when
 			var result = target.AllOccurrences("partToFind");
@@ -97,13 +97,13 @@ namespace KSPPartRemover.Tests.Backend
 			var partToFind = new Part("partToFind", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 			var anotherPart = new Part("anotherPart", new KeyValuePair<string, string>("anyAttribute", "someValue"));
 
-			var craftFileText =
+			var craftText =
 				somePart.Content + Environment.NewLine +
 				partToFind.Content + Environment.NewLine +
 				anotherPart.Content +
 				partToFind.Content + Environment.NewLine;
 
-			var target = new PartFinder(CraftFile.FromText(craftFileText));
+			var target = new PartFinder(Craft.FromText(craftText));
 
 			// when
 			var result = target.AllOccurrences("partToFind");

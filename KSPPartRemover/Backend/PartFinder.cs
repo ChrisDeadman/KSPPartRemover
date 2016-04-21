@@ -7,22 +7,22 @@ namespace KSPPartRemover.Backend
 {
 	public class PartFinder
 	{
-		private readonly CraftFile CraftFile;
+		private readonly Craft Craft;
 
-		public PartFinder(CraftFile craftFile)
+		public PartFinder(Craft craft)
 		{
-			CraftFile = craftFile;
+			Craft = craft;
 		}
 
 		public Part FindPartById(long id)
 		{
 			var currentPartId = 0;
-			return CraftFile.FirstOrDefault(part => currentPartId++ == id);
+			return Craft.FirstOrDefault(part => currentPartId++ == id);
 		}
 
 		public IReadOnlyList<Part> AllOccurrences(string name)
 		{
-			return CraftFile.Where(part => part.Name.Equals(name)).ToList();
+			return Craft.Where(part => part.Name.Equals(name)).ToList();
 		}
 	}
 }

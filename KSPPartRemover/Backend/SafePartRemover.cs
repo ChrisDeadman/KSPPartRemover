@@ -8,11 +8,11 @@ namespace KSPPartRemover.Backend
 {
 	public class SafePartRemover
 	{
-		private readonly CraftFile CraftFile;
+		private readonly Craft Craft;
 
-		public SafePartRemover(CraftFile craftFile)
+		public SafePartRemover(Craft craft)
 		{
-			CraftFile = craftFile;
+			Craft = craft;
 		}
 
 		public PartRemovalAction PrepareRemovePart(Part partToRemove)
@@ -37,7 +37,7 @@ namespace KSPPartRemover.Backend
 				SafePartRemover = safePartRemover;
 				PartsToBeRemoved = partsToBeRemoved;
 				PartIdsToBeRemovedDescendingOrder = PartsToBeRemoved.
-					Select(part => SafePartRemover.CraftFile.IdOfPart(part)).
+					Select(part => SafePartRemover.Craft.IdOfPart(part)).
 					Where(partId => partId >= 0).
 					OrderByDescending(value => value).
 					ToList();
@@ -46,7 +46,7 @@ namespace KSPPartRemover.Backend
 			public void RemoveParts()
 			{
 				var partReplacementDictionary = new Dictionary<Part, Part>();
-				foreach (var part in SafePartRemover.CraftFile.Except(PartsToBeRemoved))
+				foreach (var part in SafePartRemover.Craft.Except(PartsToBeRemoved))
 				{
 					if (!NeedsUpdate(part))
 						continue;
@@ -97,10 +97,10 @@ namespace KSPPartRemover.Backend
 				}
 
 				foreach (var partToRemove in PartsToBeRemoved)
-					SafePartRemover.CraftFile.RemovePart(partToRemove);
+					SafePartRemover.Craft.RemovePart(partToRemove);
 
 				foreach (var partReplacement in partReplacementDictionary)
-					SafePartRemover.CraftFile.ReplacePart(partReplacement.Key, partReplacement.Value);
+					SafePartRemover.Craft.ReplacePart(partReplacement.Key, partReplacement.Value);
 			}
 
 			private bool NeedsUpdate(Part part)
@@ -151,7 +151,7 @@ namespace KSPPartRemover.Backend
 
 		private IReadOnlyList<Part> CollectPartsToBeRemoved(Part partToRemove, List<Part> partsToBeRemoved = null)
 		{
-			var idOfpartToRemove = CraftFile.IdOfPart(partToRemove);
+			var idOfpartToRemove = Craft.IdOfPart(partToRemove);
 			if (idOfpartToRemove < 0)
 				return new Part[0];
 
@@ -160,7 +160,7 @@ namespace KSPPartRemover.Backend
 
 			partsToBeRemoved.Add(partToRemove);
 
-			foreach (var part in CraftFile.Except(partsToBeRemoved))
+			foreach (var part in Craft.Except(partsToBeRemoved))
 			{
 				var dependentOnIds =
 					GetParentPartReferences(part).Concat(
@@ -250,7 +250,7 @@ namespace KSPPartRemover.Backend
 		{
 			long id;
 			if (!long.TryParse(partReference, out id))
-				id = CraftFile.IdOfPart(partReference);
+				id = Craft.IdOfPart(partReference);
 
 			return id;
 		}

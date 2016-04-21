@@ -51,7 +51,7 @@ namespace KSPPartRemover.Tests
 		}
 
 		[Test]
-		public void HasReturnValueLessThanZeroIfIfArgumentsAreInvalid()
+		public void HasReturnValueLessThanZeroIfArgumentsAreInvalid()
 		{
 			// when
 			var returnCode = Program.Main();
@@ -99,9 +99,8 @@ namespace KSPPartRemover.Tests
 		}
 
 		// Important: Note here that we uniquely identify parts by their content.
-		// This was a design decision so a partdoes not need to depend on the whole craft file.
-		// It is also no problem since in reality no two part definitions can be the same unless they are EXACT duplicates and overlap each other
-		// - in which case it is good to remove them :-)
+		// This was a design decision so a part does not need to depend on the whole craft file.
+		// It is also no problem since in reality no two part definitions can be the same unless they are EXACT duplicates and overlap each other - in which case they should be removed anyway ;-)
 		[Test]
 		public void CanReplacePartByIdAndOutputResultToStdOut()
 		{

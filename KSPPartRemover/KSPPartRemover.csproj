@@ -40,10 +40,10 @@
   <ItemGroup>
     <Compile Include="Backend\PartFinder.cs" />
     <Compile Include="Backend\Part.cs" />
-    <Compile Include="Backend\CraftFile.cs" />
     <Compile Include="Backend\SafePartRemover.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Backend\Craft.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

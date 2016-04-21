@@ -13,8 +13,8 @@ namespace KSPPartRemover.Tests.Integration
 			// given
 			const string tempFileName = "temp.txt";
 
-			var inputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft.txt")).ReadToEnd();
-			var expectedOutputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.expected.craft.txt")).ReadToEnd();
+			var inputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft")).ReadToEnd();
+			var expectedOutputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.expected.craft")).ReadToEnd();
 
 			File.WriteAllText(tempFileName, inputCraftText);
 

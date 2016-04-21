@@ -6,18 +6,18 @@ using System.Text;
 
 namespace KSPPartRemover.Backend
 {
-	public class CraftFile : IEnumerable<Part>
+	public class Craft : IEnumerable<Part>
 	{
 		public string Content { get; private set; }
 
-		private CraftFile(string content)
+		private Craft(string content)
 		{
 			Content = content;
 		}
 
-		public static CraftFile FromText(string content)
+		public static Craft FromText(string content)
 		{
-			return new CraftFile(content);
+			return new Craft(content);
 		}
 
 		public long IdOfPart(string partName)

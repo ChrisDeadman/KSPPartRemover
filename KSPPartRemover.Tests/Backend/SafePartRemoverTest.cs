@@ -22,7 +22,7 @@ namespace KSPPartRemover.Tests.Backend
 			var part8 = new Part("part8", Property("srfN", "srfAttach, 6"), Property("srfN", "srfAttach, part1")); // first srfN id is adapted
 			var part9 = new Part("part9", Property("attN", "top, 0"), Property("attN", "bottom, 7"), Property("link", "part2"), Property("link", "part7")); // second attN id is adapted, first link reference is removed
 
-			var craftFileText =
+			var craftText =
 				part1.Content + Environment.NewLine +
 				part2.Content + Environment.NewLine +
 				partToRemove.Content + Environment.NewLine +
@@ -42,8 +42,8 @@ namespace KSPPartRemover.Tests.Backend
 				part6
 			};
 
-			var craftFile = CraftFile.FromText(craftFileText);
-			var target = new SafePartRemover(craftFile);
+			var craft = Craft.FromText(craftText);
+			var target = new SafePartRemover(craft);
 
 			// when
 			var removalAction = target.PrepareRemovePart(partToRemove);
@@ -66,7 +66,7 @@ namespace KSPPartRemover.Tests.Backend
 			var part8 = new Part("part8", Property("srfN", "srfAttach, 6"), Property("srfN", "srfAttach, 0")); // first srfN id is adapted
 			var part9 = new Part("part9", Property("attN", "top, 0"), Property("attN", "bottom, 7"), Property("link", "part2"), Property("link", "part7")); // second attN id is adapted, first link reference is removed
 
-			var craftFileText =
+			var craftText =
 				part1.Content + Environment.NewLine +
 				part2.Content + Environment.NewLine +
 				partToRemove.Content + Environment.NewLine +
@@ -87,14 +87,14 @@ namespace KSPPartRemover.Tests.Backend
 			var expectedPart8 = new Part("part8", Property("srfN", "srfAttach, 1"), Property("srfN", "srfAttach, 0"));
 			var expectedPart9 = new Part("part9", Property("attN", "top, 0"), Property("attN", "bottom, 2"), Property("link", "part7"));
 
-			var craftFile = CraftFile.FromText(craftFileText);
-			var target = new SafePartRemover(craftFile);
+			var craft = Craft.FromText(craftText);
+			var target = new SafePartRemover(craft);
 
 			// when
 			target.PrepareRemovePart(partToRemove).RemoveParts();
 
 			// then
-			Assert.That(craftFile, Is.EquivalentTo(new[] {expectedPart1, expectedPart7, expectedPart8, expectedPart9}));
+			Assert.That(craft, Is.EquivalentTo(new[] {expectedPart1, expectedPart7, expectedPart8, expectedPart9}));
 		}
 
 		private static KeyValuePair<string, string> Property(string key, string value)

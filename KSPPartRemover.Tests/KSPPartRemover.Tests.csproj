@@ -38,13 +38,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProgramTest.cs" />
-    <Compile Include="Backend\CraftFileTest.cs" />
     <Compile Include="Backend\PartFinderTest.cs" />
     <Compile Include="Backend\PartTest.cs" />
     <Compile Include="Backend\SafePartRemoverTest.cs" />
     <Compile Include="Integration\MunMkICraftTest.cs" />
     <Compile Include="Integration\SpaceStationTest.cs" />
+    <Compile Include="Backend\CraftTest.cs" />
+    <Compile Include="Integration\ProgramTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">
@@ -53,9 +53,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\5bc46e52-b7ff-47b2-b04d-c6227e47264f.expected.txt" />
-    <EmbeddedResource Include="Resources\5bc46e52-b7ff-47b2-b04d-c6227e47264f.in.txt" />
-    <EmbeddedResource Include="Resources\Mün Mk I.expected.craft.txt" />
-    <EmbeddedResource Include="Resources\Mün Mk I.in.craft.txt" />
+    <EmbeddedResource Include="Resources\5bc46e52-b7ff-47b2-b04d-c6227e47264f.expected.craft" />
+    <EmbeddedResource Include="Resources\5bc46e52-b7ff-47b2-b04d-c6227e47264f.in.craft" />
+    <EmbeddedResource Include="Resources\Mün Mk I.expected.craft" />
+    <EmbeddedResource Include="Resources\Mün Mk I.in.craft" />
   </ItemGroup>
 </Project>

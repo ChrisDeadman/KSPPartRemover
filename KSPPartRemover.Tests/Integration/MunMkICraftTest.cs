@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using KSPPartRemover.Tests.Properties;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace KSPPartRemover.Tests.Integration
@@ -13,8 +13,8 @@ namespace KSPPartRemover.Tests.Integration
 			// given
 			const string tempFileName = "temp.txt";
 
-			var inputCraftText = Resources.Mün_Mk_I_in_craft;
-			var expectedOutputCraftText = Resources.Mün_Mk_I_expected_craft;
+			var inputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft.txt")).ReadToEnd();
+			var expectedOutputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.expected.craft.txt")).ReadToEnd();
 
 			File.WriteAllText(tempFileName, inputCraftText);
 

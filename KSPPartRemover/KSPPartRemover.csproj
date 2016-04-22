@@ -38,12 +38,17 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Format\KspProperty.cs" />
+    <Compile Include="Format\KspObject.cs" />
+    <Compile Include="Format\KspObjectReader.cs" />
+    <Compile Include="Format\KspObjectWriter.cs" />
     <Compile Include="Backend\PartFinder.cs" />
     <Compile Include="Backend\Part.cs" />
     <Compile Include="Backend\SafePartRemover.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Backend\Craft.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Extension\KspGlobalObjectExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -56,4 +61,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Format\" />
+    <Folder Include="Extension\" />
+  </ItemGroup>
 </Project>

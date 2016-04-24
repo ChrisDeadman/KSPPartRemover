@@ -107,8 +107,8 @@ PART
 	link = radialDecoupler_4294291486
 	link = radialDecoupler_4294290142
 	link = radialDecoupler_4294290004
-	attN = top,stackDecoupler_4294291566
-	attN = bottom,fuelTank_4294291630
+	attN = top, stackDecoupler_4294291566
+	attN = bottom, fuelTank_4294291630
 	EVENTS
 	{
 	}
@@ -1540,8 +1540,8 @@ PART
 	link = parachuteSingle_4294290532
 	link = longAntenna_4294290296
 	link = ksp.r.largeBatteryPack_4294260406
-	attN = bottom,stackDecoupler_4294290662
-	attN = top,parachuteSingle_4294290532
+	attN = bottom, stackDecoupler_4294290662
+	attN = top, parachuteSingle_4294290532
 	EVENTS
 	{
 	}

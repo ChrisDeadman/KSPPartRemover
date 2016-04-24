@@ -7,13 +7,33 @@ namespace KSPPartRemover.Format
 {
 	public class KspObjectReader
 	{
-		public static KspObject Read (String text)
+		public static KspObject ReadObject (String text)
 		{
 			var lines = text.Split (new [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select (str => str.TrimStart ()).ToArray ();
 
 			KspObject rootObject;
 			ReadObject (lines, 0, out rootObject);
 			return rootObject;
+		}
+
+		public static KspProperty ReadProperty (String str)
+		{
+			var keyValue = str.Split ('=');
+			if (keyValue.Length != 2) {
+				return null;
+			}
+
+			return new KspProperty (keyValue [0].Trim (), keyValue [1].Trim ());
+		}
+
+		public static KspReference ReadReference (String str)
+		{
+			var keyValue = str.Split (',');
+			if (keyValue.Length == 2) {
+				return new KspReference (keyValue [0].Trim (), keyValue [1].Trim ());
+			}
+
+			return new KspReference (null, str.Trim ());
 		}
 
 		private static int ReadObject (string[] lines, int index, out KspObject obj)
@@ -24,7 +44,7 @@ namespace KSPPartRemover.Format
 
 			var name = KspCraftFileExtensions.GlobalVesselType;
 			if (!lines [index].Contains ("=")) {
-				name = lines [index++].Trim();
+				name = lines [index++].Trim ();
 				if (lines [index++] != "{") {
 					throw new FormatException ();
 				}
@@ -45,24 +65,24 @@ namespace KSPPartRemover.Format
 			return index + 1;
 		}
 
-		static int ReadProperties (string[] lines, int index, out List<KspProperty> properties)
+		private static int ReadProperties (string[] lines, int index, out List<KspProperty> properties)
 		{
 			properties = new List<KspProperty> ();
 
 			while (lines.Length > index) {
-				var keyValue = lines [index].Split ('=');
-				if (keyValue.Length != 2) {
+				var property = ReadProperty (lines [index]);
+				if (property == null) {
 					break;
 				}
 
-				properties.Add (new KspProperty (keyValue [0].Trim(), keyValue [1].Trim()));
+				properties.Add (property);
 				index++;
 			}
 
 			return index;
 		}
 
-		static int ReadObjects (string[] lines, int index, out List<KspObject> objects)
+		private static int ReadObjects (string[] lines, int index, out List<KspObject> objects)
 		{
 			objects = new List<KspObject> ();
 

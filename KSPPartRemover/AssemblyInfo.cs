@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("KSPPartRemover")]
-[assembly: AssemblyDescription("Removes parts from KSP save files")]
+[assembly: AssemblyDescription("Removes parts from KSP craft and save files")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Deadman")]
 [assembly: AssemblyProduct("KSPPartRemover")]
-[assembly: AssemblyCopyright("Copyright © 2014")]
+[assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.2.1.1")]
-[assembly: AssemblyFileVersion("0.2.1.1")]
+[assembly: AssemblyVersion("0.3.0.0")]
+[assembly: AssemblyFileVersion("0.3.0.0")]

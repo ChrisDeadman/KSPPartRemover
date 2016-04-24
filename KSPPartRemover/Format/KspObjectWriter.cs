@@ -8,6 +8,13 @@ namespace KSPPartRemover.Format
 {
 	public class KspObjectWriter
 	{
+		public static String ToString (KspObject obj)
+		{
+			var sb = new StringBuilder ();
+			WriteObject (obj, sb, 0);
+			return sb.ToString ();
+		}
+
 		public static String ToString (KspProperty property)
 		{
 			var sb = new StringBuilder ();
@@ -15,11 +22,13 @@ namespace KSPPartRemover.Format
 			return sb.ToString ();
 		}
 
-		public static String ToString (KspObject obj)
+		public static String ToString (KspReference reference)
 		{
-			var sb = new StringBuilder ();
-			WriteObject (obj, sb, 0);
-			return sb.ToString ();
+			if (String.IsNullOrEmpty (reference.prefix)) {
+				return reference.name;
+			}
+
+			return string.Format ("{0}, {1}", reference.prefix, reference.name);
 		}
 
 		private static void WriteObject (KspObject obj, StringBuilder sb, int level)

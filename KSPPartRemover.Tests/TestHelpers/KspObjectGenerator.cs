@@ -36,7 +36,7 @@ namespace KSPPartRemover.Tests.TestHelpers
 
 		public static KspObject GlobalCraft (params KspObject[] parts)
 		{
-			return Object (KspCraftFileExtensions.GlobalVesselType, Properties(Property("dummy", "at least one property is needed for global object detection to work")), parts);
+			return Object (KspCraftFileExtensions.GlobalVesselType, Properties(Property("name", "global craft")), parts);
 		}
 	}
 }

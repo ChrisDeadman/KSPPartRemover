@@ -42898,7 +42898,7 @@ PART
 				active = True
 				guiActive = False
 				guiIcon = Board
-				guiName = Board 
+				guiName = Board
 				category = Board
 				guiActiveUnfocused = True
 				unfocusedRange = 2
@@ -43027,7 +43027,7 @@ PART
 				active = True
 				guiActive = False
 				guiIcon = Board
-				guiName = Board 
+				guiName = Board
 				category = Board
 				guiActiveUnfocused = True
 				unfocusedRange = 2
@@ -43156,7 +43156,7 @@ PART
 				active = True
 				guiActive = False
 				guiIcon = Board
-				guiName = Board 
+				guiName = Board
 				category = Board
 				guiActiveUnfocused = True
 				unfocusedRange = 2
@@ -43285,7 +43285,7 @@ PART
 				active = True
 				guiActive = False
 				guiIcon = Board
-				guiName = Board 
+				guiName = Board
 				category = Board
 				guiActiveUnfocused = True
 				unfocusedRange = 2

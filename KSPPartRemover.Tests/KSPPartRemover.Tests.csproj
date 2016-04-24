@@ -41,11 +41,11 @@
     <Compile Include="Format\FormatIntegrationTest.cs" />
     <Compile Include="Integration\MunMkICraftTest.cs" />
     <Compile Include="Integration\SpaceStationTest.cs" />
+    <Compile Include="Features\PartRemoverTest.cs" />
+    <Compile Include="Extension\KspCraftObjectExtensionsTest.cs" />
+    <Compile Include="TestHelpers\KspObjectGenerator.cs" />
     <Compile Include="Integration\ProgramTest.cs" />
-    <Compile Include="Backend\PartFinderTest.cs" />
-    <Compile Include="Backend\PartTest.cs" />
-    <Compile Include="Backend\SafePartRemoverTest.cs" />
-    <Compile Include="Backend\CraftTest.cs" />
+    <Compile Include="Extension\KspObjectSearchExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">
@@ -63,5 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Format\" />
+    <Folder Include="TestHelpers\" />
+    <Folder Include="Features\" />
   </ItemGroup>
 </Project>

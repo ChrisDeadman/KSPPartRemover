@@ -43,12 +43,12 @@
     <Compile Include="Format\KspObject.cs" />
     <Compile Include="Format\KspObjectReader.cs" />
     <Compile Include="Format\KspObjectWriter.cs" />
-    <Compile Include="Backend\PartFinder.cs" />
-    <Compile Include="Backend\Part.cs" />
-    <Compile Include="Backend\SafePartRemover.cs" />
-    <Compile Include="Backend\Craft.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Extension\KspGlobalObjectExtensions.cs" />
+    <Compile Include="Extension\KspObjectSearchExtensions.cs" />
+    <Compile Include="Extension\KspCraftObjectExtensions.cs" />
+    <Compile Include="Features\PartRemover.cs" />
+    <Compile Include="Extension\KspCraftFileExtensions.cs" />
+    <Compile Include="Format\KspReference.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -64,5 +64,6 @@
   <ItemGroup>
     <Folder Include="Format\" />
     <Folder Include="Extension\" />
+    <Folder Include="Features\" />
   </ItemGroup>
 </Project>

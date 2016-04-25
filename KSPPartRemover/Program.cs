@@ -23,7 +23,7 @@ namespace KSPPartRemover
 		private static string partNamePattern;
 		private static string inputText;
 		private static TextWriter outputTextWriter;
-		//private static string craftNamePattern;
+		private static string craftNamePattern;
 		private static bool silentExecution;
 
 		private static readonly Dictionary<string, Func<int, string[], int>> ArgumentParsers =
@@ -33,7 +33,8 @@ namespace KSPPartRemover
 				{ "list-parts", ParseListPartsCommand },
 				{ "-i", ParseInputFilePathArgument },
 				{ "-o", ParseOutputFilePathArgument },
-				//{ "-c", ParseCraftNameArgument },
+				{ "-c", ParseCraftNameArgument },
+				{ "--craft", ParseCraftNameArgument },
 				{ "-s", ParseSilentExecutionArgument },
 				{ "--silent", ParseSilentExecutionArgument }
 			};
@@ -66,32 +67,37 @@ namespace KSPPartRemover
 
 			Console.Write ("usage: ");
 			Console.Write (Path.GetFileName (assemblyName.CodeBase));
-			Console.WriteLine (" COMMAND [-s | --silent] -i <inputFilePath> [-o <outputFilePath>]");
+			Console.WriteLine (" <COMMAND> [-s | --silent] -i <inputFilePath> [-o <outputFilePath>]");
 			Console.WriteLine ();
 			Console.WriteLine ("Commands:");
 			Console.WriteLine ();
 			Console.WriteLine ("\t remove-part <partId or partNamePattern>");
-			Console.WriteLine ("\t\t remove the part with the given 'partId' (integer) or all parts matching 'partNamePattern' (regex string)");
+			Console.WriteLine ("\t\t 'partId': remove the part with the given id (integer);");
+			Console.WriteLine ("\t\t 'partNamePattern': remove all parts matching the given regex pattern;");
 			Console.WriteLine ();
 			Console.WriteLine ("\t list-crafts");
-			Console.WriteLine ("\t\t list all crafts in the input file");
+			Console.WriteLine ("\t\t list all crafts in the input file;");
 			Console.WriteLine ();
 			Console.WriteLine ("\t list-parts");
-			Console.WriteLine ("\t\t list all parts in the input file");
+			Console.WriteLine ("\t\t list all parts in the input file;");
 			Console.WriteLine ();
 			Console.WriteLine ("Arguments:");
 			Console.WriteLine ();
 			Console.WriteLine ("\t -i <FilePath>");
-			Console.WriteLine ("\t\t specifies the input file");
+			Console.WriteLine ("\t\t specifies the input file;");
 			Console.WriteLine ();
 			Console.WriteLine ("\t -o <FilePath>");
-			Console.WriteLine ("\t\t [Optional] specifies the output file - prints to stdout if not specified");
+			Console.WriteLine ("\t\t [Optional] specifies the output file");
+			Console.WriteLine ("\t\t            prints to stdout if not specified;");
 			Console.WriteLine ();
-			Console.WriteLine ("\t -c <craftNamePattern>");
-			Console.WriteLine ("\t\t [Optional] regex pattern for target craft(s) - applies to all commands; processes all crafts if not specified");
+			Console.WriteLine ("\t -c, --craft <craftNamePattern>");
+			Console.WriteLine ("\t\t [Optional] regex pattern for target craft(s);");
+			Console.WriteLine ("\t\t            processes all crafts if not specified;");
+			Console.WriteLine ("\t\t            applies to all commands;");
 			Console.WriteLine ();
 			Console.WriteLine ("\t -s, --silent");
-			Console.WriteLine ("\t\t [Optional] do not print additional information and do not ask for removal confirmation");
+			Console.WriteLine ("\t\t [Optional] do not print additional info;");
+			Console.WriteLine ("\t\t            do not ask for confirmation;");
 			Console.WriteLine ();
 		}
 
@@ -101,7 +107,7 @@ namespace KSPPartRemover
 			partNamePattern = null;
 			inputText = null;
 			outputTextWriter = Console.Out;
-			//craftNamePattern = null;
+			craftNamePattern = null;
 			silentExecution = false;
 		}
 
@@ -153,11 +159,10 @@ namespace KSPPartRemover
 
 		private static int PerformListCraftsCommand ()
 		{
-			var kspObjTree = KspObjectReader.Read (inputText);
-			var crafts = Crafts (kspObjTree, null);
+			var kspObjTree = KspObjectReader.ReadObject (inputText);
+			var crafts = Crafts (kspObjTree, craftNamePattern);
 
-			ConsoleWriteLineIfNotSilent ("Crafts in file:");
-			ConsoleWriteLineIfNotSilent ("===============");
+			ConsoleWriteLineIfNotSilent ("");
 			PrintList (crafts.Select (craft => craft.GetCraftName ()));
 
 			return 0;
@@ -165,11 +170,10 @@ namespace KSPPartRemover
 
 		private static int PerformListPartsCommand ()
 		{
-			var kspObjTree = KspObjectReader.Read (inputText);
-			var crafts = Crafts (kspObjTree, null);
+			var kspObjTree = KspObjectReader.ReadObject (inputText);
+			var crafts = Crafts (kspObjTree, craftNamePattern);
 
-			ConsoleWriteLineIfNotSilent ("Parts in file:");
-			ConsoleWriteLineIfNotSilent ("==============");
+			ConsoleWriteLineIfNotSilent ("");
 			foreach (var craft in crafts) {
 				Console.WriteLine ("{0}:", craft.GetCraftName ());
 				PrintList (craft.GetParts ().Select (part => string.Format ("\t{0} (id={1})", part.GetPartName (), craft.GetIdOfPart (part))));
@@ -183,10 +187,14 @@ namespace KSPPartRemover
 			if (String.IsNullOrEmpty (partNamePattern))
 				throw new ArgumentException ("no part specified");
 
-			var kspObjTree = KspObjectReader.Read (inputText);
-			var crafts = Crafts (kspObjTree, null);
+			var kspObjTree = KspObjectReader.ReadObject (inputText);
+			var crafts = Crafts (kspObjTree, craftNamePattern);
 
 			foreach (var craft in crafts) {
+				if (!silentExecution) {
+					Console.WriteLine ("Entering craft '{0}'", craft.GetCraftName ());
+				}
+
 				int partToRemoveId;
 				var matchingParts = int.TryParse (partNamePattern, out partToRemoveId) ? Parts (craft, partToRemoveId) : Parts (craft, partNamePattern);
 
@@ -196,13 +204,14 @@ namespace KSPPartRemover
 
 				if (!silentExecution) {
 					Console.WriteLine ();
-					Console.WriteLine ("Would remove the following parts from {0}:", craft.GetCraftName ());
-					Console.WriteLine ("=============================================");
+					Console.WriteLine ("The following parts will be removed:");
+					Console.WriteLine ("====================================");
 					PrintList (mergedPartRemovalAction.PartsToBeRemoved.Select (part => string.Format ("{0} (id={1})", part.GetPartName (), craft.GetIdOfPart (part))));
-					Console.WriteLine ("=============================================");
+					Console.WriteLine ("====================================");
 					if (!ConfirmPartRemoval ()) {
-						Console.WriteLine ("aborted.");
-						return -1;
+						continue;
+					} else {
+						Console.WriteLine ();
 					}
 				}
 
@@ -354,15 +363,15 @@ namespace KSPPartRemover
 			return argIdx;
 		}
 
-//		private static int ParseCraftNameArgument (int argIdx, params string[] args)
-//		{
-//			argIdx++;
-//			if (args.Length <= argIdx)
-//				throw new ArgumentException ("");
-//			
-//			craftNamePattern = args [argIdx];
-//			return argIdx;
-//		}
+		private static int ParseCraftNameArgument (int argIdx, params string[] args)
+		{
+			argIdx++;
+			if (args.Length <= argIdx)
+				throw new ArgumentException ("");
+
+			craftNamePattern = args [argIdx];
+			return argIdx;
+		}
 
 		private static int ParseSilentExecutionArgument (int argIdx, params string[] args)
 		{

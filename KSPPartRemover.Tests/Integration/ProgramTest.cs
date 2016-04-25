@@ -115,63 +115,61 @@ namespace KSPPartRemover.Tests.Integration
 			Assert.That (returnCode, Is.EqualTo (0));
 		}
 
-//		[Test]
-//		public void CanRemovePartsOfMultipleCraftsAndOutputResult ()
-//		{
-//			// given
-//			var inputCrafts = gen.Object ("GAME", gen.Properties (),
-//				                  gen.Craft (gen.Properties (gen.Property ("name", "craft1")),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "strut"))),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))),
-//				                  gen.Craft (gen.Properties (gen.Property ("name", "craft2")),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "strut"))),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))),
-//				                  gen.Craft (gen.Properties (gen.Property ("name", "craft3")),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "strut"))),
-//					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))));
-//
-//			var expectedCrafts = gen.Object ("GAME", gen.Properties (),
-//				                     gen.Craft (gen.Properties (gen.Property ("name", "craft1")),
-//					                     gen.Part (gen.Properties (gen.Property ("name", "strut")))),
-//				                     gen.Craft (gen.Properties (gen.Property ("name", "craft2")),
-//					                     gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
-//					                     gen.Part (gen.Properties (gen.Property ("name", "strut"))),
-//					                     gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))),
-//				                     gen.Craft (gen.Properties (gen.Property ("name", "craft3")),
-//					                     gen.Part (gen.Properties (gen.Property ("name", "strut")))));
-//			
-//
-//			var inputText = KspObjectWriter.ToString (inputCrafts);
-//			var expectedResult = KspObjectWriter.ToString (expectedCrafts);
-//
-//			// when
-//			File.WriteAllText ("input.txt", inputText);
-//			var returnCode = Program.Main ("remove-part", "fuelTank", "-c", ".*raft[1,3]", "-i", "input.txt", "-s");
-//
-//			// then
-//			Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
-//			Assert.That (returnCode, Is.EqualTo (0));
-//		}
+		[Test]
+		public void CanRemovePartsOfMultipleCraftsAndOutputResult ()
+		{
+			// given
+			var inputCrafts = gen.Object ("GAME", gen.Properties (),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "craft1")),
+					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
+					                  gen.Part (gen.Properties (gen.Property ("name", "strut"))),
+					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "craft2")),
+					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
+					                  gen.Part (gen.Properties (gen.Property ("name", "strut"))),
+					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "craft3")),
+					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
+					                  gen.Part (gen.Properties (gen.Property ("name", "strut"))),
+					                  gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))));
+
+			var expectedCrafts = gen.Object ("GAME", gen.Properties (),
+				                     gen.Craft (gen.Properties (gen.Property ("name", "craft1")),
+					                     gen.Part (gen.Properties (gen.Property ("name", "strut")))),
+				                     gen.Craft (gen.Properties (gen.Property ("name", "craft2")),
+					                     gen.Part (gen.Properties (gen.Property ("name", "fuelTank"))),
+					                     gen.Part (gen.Properties (gen.Property ("name", "strut"))),
+					                     gen.Part (gen.Properties (gen.Property ("name", "fuelTank")))),
+				                     gen.Craft (gen.Properties (gen.Property ("name", "craft3")),
+					                     gen.Part (gen.Properties (gen.Property ("name", "strut")))));
+
+			var inputText = KspObjectWriter.ToString (inputCrafts);
+			var expectedResult = KspObjectWriter.ToString (expectedCrafts);
+
+			// when
+			File.WriteAllText ("input.txt", inputText);
+			var returnCode = Program.Main ("remove-part", "fuelTank", "-c", ".*raft[1,3]", "-i", "input.txt", "-s");
+
+			// then
+			Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
+			Assert.That (returnCode, Is.EqualTo (0));
+		}
 
 		[Test]
 		public void CanPrintCraftList ()
 		{
 			// given
 			var inputCrafts = gen.Object ("GAME", gen.Properties (),
-				                  gen.Craft (gen.Properties (gen.Property ("name", "someCraft")),
-					                  gen.Part (gen.Properties (gen.Property ("name", "somePart")))),
-				                  gen.Craft (gen.Properties (gen.Property ("name", "anotherCraft")),
-					                  gen.Part (gen.Properties (gen.Property ("name", "somePart")))));
+				                  gen.Craft (gen.Properties (gen.Property ("name", "someCraft"))),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "anotherCraft"))),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "ignored"))));
 
 			var inputText = KspObjectWriter.ToString (inputCrafts);
 			var expectedResult = "someCraft" + Environment.NewLine + "anotherCraft" + Environment.NewLine;
 
 			// when
 			File.WriteAllText ("input.txt", inputText);
-			var returnCode = Program.Main ("list-crafts", "-i", "input.txt");
+			var returnCode = Program.Main ("list-crafts", "-c", ".*Craft", "-i", "input.txt");
 
 			// then
 			Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
@@ -187,7 +185,9 @@ namespace KSPPartRemover.Tests.Integration
 					                  gen.Part (gen.Properties (gen.Property ("name", "somePart")))),
 				                  gen.Craft (gen.Properties (gen.Property ("name", "anotherCraft")),
 					                  gen.Part (gen.Properties (gen.Property ("name", "somePart"))),
-					                  gen.Part (gen.Properties (gen.Property ("name", "anotherPart")))));
+					                  gen.Part (gen.Properties (gen.Property ("name", "anotherPart")))),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "ignored")),
+					                  gen.Part (gen.Properties (gen.Property ("name", "somePart")))));
 
 			var inputText = KspObjectWriter.ToString (inputCrafts);
 			var expectedResult =
@@ -196,10 +196,10 @@ namespace KSPPartRemover.Tests.Integration
 				"anotherCraft:" + Environment.NewLine +
 				"\tsomePart (id=0)" + Environment.NewLine +
 				"\tanotherPart (id=1)" + Environment.NewLine;
-			
+
 			// when
 			File.WriteAllText ("input.txt", inputText);
-			var returnCode = Program.Main ("list-parts", "-i", "input.txt");
+			var returnCode = Program.Main ("list-parts", "-c", ".*Craft", "-i", "input.txt");
 
 			// then
 			Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
@@ -246,23 +246,23 @@ namespace KSPPartRemover.Tests.Integration
 			Assert.That (returnCode, Is.LessThan (0));
 		}
 
-//		[Test]
-//		public void PrintsAndReturnsErrorIfNoCraftWithMatchingCraftNameIsFound ()
-//		{
-//			// given
-//			var inputCrafts = gen.Object ("GAME", gen.Properties (),
-//				                  gen.Craft (gen.Properties (gen.Property ("name", "someCraft"))),
-//				                  gen.Craft (gen.Properties (gen.Property ("name", "anotherCraft"))));
-//
-//			var inputText = KspObjectWriter.ToString (inputCrafts);
-//
-//			// when
-//			File.WriteAllText ("input.txt", inputText);
-//			var returnCode = Program.Main ("remove-part", "somePart", "-c", "nonExistingCraft", "-i", "input.txt");
-//
-//			// then
-//			Assert.That (StdOutput.ToString (), Is.StringContaining ("No craft matching 'nonExistingCraft' found, aborting"));
-//			Assert.That (returnCode, Is.LessThan (0));
-//		}
+		[Test]
+		public void PrintsAndReturnsErrorIfNoCraftWithMatchingCraftNameIsFound ()
+		{
+			// given
+			var inputCrafts = gen.Object ("GAME", gen.Properties (),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "someCraft"))),
+				                  gen.Craft (gen.Properties (gen.Property ("name", "anotherCraft"))));
+
+			var inputText = KspObjectWriter.ToString (inputCrafts);
+
+			// when
+			File.WriteAllText ("input.txt", inputText);
+			var returnCode = Program.Main ("remove-part", "somePart", "--craft", "nonExistingCraft", "-i", "input.txt");
+
+			// then
+			Assert.That (StdOutput.ToString (), Is.StringContaining ("No craft matching 'nonExistingCraft' found, aborting"));
+			Assert.That (returnCode, Is.LessThan (0));
+		}
 	}
 }

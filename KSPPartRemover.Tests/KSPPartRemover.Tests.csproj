@@ -46,6 +46,7 @@
     <Compile Include="TestHelpers\KspObjectGenerator.cs" />
     <Compile Include="Integration\ProgramTest.cs" />
     <Compile Include="Extension\KspObjectSearchExtensionsTest.cs" />
+    <Compile Include="Integration\SaveFileTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">

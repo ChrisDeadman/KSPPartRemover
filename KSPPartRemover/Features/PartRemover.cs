@@ -8,47 +8,70 @@ using KSPPartRemover.Extension;
 
 namespace KSPPartRemover.Features
 {
-	public class PartRemover
+	public static class PartRemover
 	{
-		private readonly KspObject craft;
-
-		public PartRemover (KspObject craft)
+		public static PartRemovalAction PrepareRemove (KspCraftObject craft, IReadOnlyList<KspPartObject> partsToRemove)
 		{
-			this.craft = craft;
+			var partsToRemoveInclDependencies = new Dictionary<int, KspPartObject> ();
+
+			foreach (var removedPart in partsToRemove) {
+				CollectPartsToBeRemoved (craft, removedPart, partsToRemoveInclDependencies);
+			}
+
+			return new PartRemovalAction (craft, partsToRemoveInclDependencies);
 		}
 
-		public PartRemovalAction PrepareRemovePart (KspObject partToRemove)
+		private static void CollectPartsToBeRemoved (KspCraftObject craft, KspPartObject partToRemove, Dictionary<int, KspPartObject>  partsToRemoveInclDependencies = null)
 		{
-			return new PartRemovalAction (this, CollectPartsToBeRemoved (partToRemove));
+			var idOfpartToRemove = craft.GetIdOfPart (partToRemove);
+			if (idOfpartToRemove < 0)
+				return;
+			
+			partsToRemoveInclDependencies [idOfpartToRemove] = partToRemove;
+
+			foreach (var part in craft.Parts.Value.Except(partsToRemoveInclDependencies.Values)) {
+				var dependentOnIds = 
+					GetPartReferencesFromProperty (part, "parent").Concat (
+						GetPartReferencesFromProperty (part, "sym")).Concat (
+						GetPartReferencesFromProperty (part, "srfN")).Concat (
+						GetPartReferencesFromProperty (part, "attN")).
+					Distinct ().Select (reference => IdOfPartReference (craft, reference));
+
+				if (dependentOnIds.Any (dependendId => dependendId == idOfpartToRemove))
+					CollectPartsToBeRemoved (craft, part, partsToRemoveInclDependencies);
+			}
 		}
 
-		public PartRemovalAction CombineRemovalActions (IEnumerable<PartRemovalAction> partRemovalActions)
+		private static List<KspReference> GetPartReferencesFromProperty (KspPartObject part, string propertyName)
 		{
-			return new PartRemovalAction (this, partRemovalActions.SelectMany (action => action.PartsToBeRemoved).Distinct ().ToList ());
+			return part.kspObject.FindPropertyByName (propertyName).Select (property => KspObjectReader.ReadReference (property.value)).ToList ();
+		}
+
+		private static int IdOfPartReference (KspCraftObject craft, KspReference reference)
+		{
+			if (reference.id.HasValue) {
+				return reference.id.Value;
+			}
+
+			var part = craft.Parts.Value.Where (p => p.Name.Value.Equals (reference.name)).SingleOrDefault ();
+
+			return (part == null) ? -1 : craft.GetIdOfPart (part);
 		}
 
 		public class PartRemovalAction
 		{
-			public IReadOnlyList<KspObject> PartsToBeRemoved { get; private set; }
+			public readonly KspCraftObject craft;
+			public readonly Dictionary<int, KspPartObject> partsToBeRemoved;
 
-			public IReadOnlyList<int> PartIdsToBeRemovedDescendingOrder { get; private set; }
-
-			private readonly PartRemover partRemover;
-
-			public PartRemovalAction (PartRemover partRemover, IReadOnlyList<KspObject> partsToBeRemoved)
+			public PartRemovalAction (KspCraftObject craft, Dictionary<int, KspPartObject> partsToBeRemoved)
 			{
-				this.partRemover = partRemover;
-				PartsToBeRemoved = partsToBeRemoved;
-				PartIdsToBeRemovedDescendingOrder = PartsToBeRemoved.
-					Select (part => partRemover.craft.GetIdOfPart (part)).
-					Where (partId => partId >= 0).
-					OrderByDescending (value => value).
-					ToList ();
+				this.craft = craft;
+				this.partsToBeRemoved = partsToBeRemoved;
 			}
 
 			public void RemoveParts ()
 			{
-				foreach (var part in partRemover.craft.GetParts().Except(PartsToBeRemoved)) {
+				foreach (var part in craft.Parts.Value.Except(partsToBeRemoved.Values)) {
 					if (!NeedsUpdate (part))
 						continue;
 					
@@ -59,12 +82,12 @@ namespace KSPPartRemover.Features
 					EvaluateAndUpdatePartReferences (part, "attN");
 				}
 
-				foreach (var partToRemove in PartsToBeRemoved) {
-					partRemover.craft.children.Remove (partToRemove);
+				foreach (var entry in partsToBeRemoved) {
+					craft.RemovePart (entry.Value);
 				}
 			}
 
-			private void EvaluateAndUpdatePartReferences (KspObject part, string propertyName)
+			private void EvaluateAndUpdatePartReferences (KspPartObject part, string propertyName)
 			{
 				var updatedReferences = GetPartReferencesFromProperty (part, propertyName);
 				if (updatedReferences.Any ()) {
@@ -74,7 +97,7 @@ namespace KSPPartRemover.Features
 				}
 			}
 
-			private bool NeedsUpdate (KspObject part)
+			private bool NeedsUpdate (KspPartObject part)
 			{
 				return
 					GetPartReferencesFromProperty (part, "link").Concat (
@@ -82,18 +105,17 @@ namespace KSPPartRemover.Features
 					GetPartReferencesFromProperty (part, "sym")).Concat (
 					GetPartReferencesFromProperty (part, "srfN")).Concat (
 					GetPartReferencesFromProperty (part, "attN")).
-					Distinct ().Any (
-					reference => PartIdsToBeRemovedDescendingOrder.Any (
-						idToBeRemoved => idToBeRemoved < partRemover.IdOfPartReference (reference)));
+					Distinct ().
+					Any (reference => partsToBeRemoved.Any (removeEntry => removeEntry.Key < IdOfPartReference (craft, reference)));
 			}
 
 			private void RemoveReferencesToRemovedParts (List<KspReference> references)
 			{
-				for (var idToBeRemovedIdx = 0; idToBeRemovedIdx < PartIdsToBeRemovedDescendingOrder.Count; idToBeRemovedIdx++) {
+				foreach (var part in partsToBeRemoved.OrderByDescending(entry => entry.Key)) {
 					for (var referenceIdx = 0; referenceIdx < references.Count; referenceIdx++) {
 						var reference = references [referenceIdx];
-						var referencedId = partRemover.IdOfPartReference (reference);
-						if (referencedId == PartIdsToBeRemovedDescendingOrder [idToBeRemovedIdx])
+						var referencedId = IdOfPartReference (craft, reference);
+						if (referencedId == part.Key)
 							references.RemoveAt (referenceIdx--);
 					}
 				}
@@ -101,72 +123,29 @@ namespace KSPPartRemover.Features
 
 			private void AdjustReferenceIds (List<KspReference> references)
 			{
-				for (var idToBeRemovedIdx = 0; idToBeRemovedIdx < PartIdsToBeRemovedDescendingOrder.Count; idToBeRemovedIdx++) {
+				foreach (var part in partsToBeRemoved.OrderByDescending(entry => entry.Key)) {
 					for (var referenceIdx = 0; referenceIdx < references.Count; referenceIdx++) {
 						var reference = references [referenceIdx];
-						if (reference.id > PartIdsToBeRemovedDescendingOrder [idToBeRemovedIdx])
-							reference.name = (reference.id - 1).ToString (CultureInfo.InvariantCulture);
+						var referencedId = reference.id;
+						if (referencedId.HasValue && referencedId.Value > part.Key)
+							reference.name = (referencedId.Value - 1).ToString (CultureInfo.InvariantCulture);
 					}
 				}
 			}
-		}
 
-		private IReadOnlyList<KspObject> CollectPartsToBeRemoved (KspObject partToRemove, List<KspObject> partsToBeRemoved = null)
-		{
-			var idOfpartToRemove = craft.GetIdOfPart (partToRemove);
-			if (idOfpartToRemove < 0)
-				return new KspObject[0];
+			private static void UpdatePartReferences (KspPartObject part, string propertyName, List<KspReference> references)
+			{
+				var existingProperties = part.kspObject.FindPropertyByName (propertyName).ToArray ();
+				var insertindex = (existingProperties.Length > 0) ? part.kspObject.properties.IndexOf (existingProperties.First ()) : 0;
 
-			if (partsToBeRemoved == null)
-				partsToBeRemoved = new List<KspObject> ();
+				foreach (var property in existingProperties) {
+					part.kspObject.properties.Remove (property);
+				}
 
-			partsToBeRemoved.Add (partToRemove);
-
-			foreach (var part in craft.GetParts().Except(partsToBeRemoved)) {
-				var dependentOnIds = 
-					GetPartReferencesFromProperty (part, "parent").Concat (
-						GetPartReferencesFromProperty (part, "sym")).Concat (
-						GetPartReferencesFromProperty (part, "srfN")).Concat (
-						GetPartReferencesFromProperty (part, "attN")).
-					Distinct ().Select (IdOfPartReference);
-
-				if (dependentOnIds.Any (dependendId => dependendId == idOfpartToRemove))
-					CollectPartsToBeRemoved (part, partsToBeRemoved);
+				foreach (var reference in references) {
+					part.kspObject.properties.Insert (insertindex++, new KspProperty (propertyName, KspObjectWriter.ToString (reference)));
+				}
 			}
-
-			return partsToBeRemoved;
-		}
-
-		private static void UpdatePartReferences (KspObject part, string propertyName, List<KspReference> references)
-		{
-			var existingProperties = part.FindPropertyByName (propertyName).ToArray ();
-			var insertindex = (existingProperties.Length > 0) ? part.properties.IndexOf (existingProperties.First ()) : 0;
-
-			foreach (var property in existingProperties) {
-				part.properties.Remove (property);
-			}
-
-			foreach (var reference in references) {
-				part.properties.Insert (insertindex++, new KspProperty (propertyName, KspObjectWriter.ToString (reference)));
-			}
-		}
-
-		private static List<KspReference> GetPartReferencesFromProperty (KspObject part, string propertyName)
-		{
-			return part.FindPropertyByName (propertyName).
-				Select (property => KspObjectReader.ReadReference (property.value)).
-				ToList ();
-		}
-
-		private int IdOfPartReference (KspReference reference)
-		{
-			if (reference.id >= 0) {
-				return reference.id;
-			}
-
-			var part = craft.GetParts().Where (p => p.GetPartName().Equals(reference.name)).SingleOrDefault();
-
-			return (part == null) ? -1 : craft.GetIdOfPart(part);
 		}
 	}
 }

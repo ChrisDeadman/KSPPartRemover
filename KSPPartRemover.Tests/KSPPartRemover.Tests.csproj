@@ -42,11 +42,13 @@
     <Compile Include="Integration\MunMkICraftTest.cs" />
     <Compile Include="Integration\SpaceStationTest.cs" />
     <Compile Include="Features\PartRemoverTest.cs" />
-    <Compile Include="Extension\KspCraftObjectExtensionsTest.cs" />
     <Compile Include="TestHelpers\KspObjectGenerator.cs" />
     <Compile Include="Integration\ProgramTest.cs" />
     <Compile Include="Extension\KspObjectSearchExtensionsTest.cs" />
     <Compile Include="Integration\SaveFileTest.cs" />
+    <Compile Include="Extension\KspCraftObjectTest.cs" />
+    <Compile Include="Extension\KspPartObjectTest.cs" />
+    <Compile Include="Extension\KspCraftFileExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">

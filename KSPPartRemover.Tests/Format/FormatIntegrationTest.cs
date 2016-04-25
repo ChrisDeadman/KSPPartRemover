@@ -6,7 +6,7 @@ using KSPPartRemover.Format;
 
 namespace KSPPartRemover.Tests.Format
 {
-	public class KspObjectReaderTest
+	public class FormatIntegrationTest
 	{
 		[Test]
 		public void CanReadAndWriteKspObjectsFromCraftFileString()

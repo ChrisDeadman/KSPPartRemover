@@ -45,10 +45,11 @@
     <Compile Include="Format\KspObjectWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Extension\KspObjectSearchExtensions.cs" />
-    <Compile Include="Extension\KspCraftObjectExtensions.cs" />
     <Compile Include="Features\PartRemover.cs" />
     <Compile Include="Extension\KspCraftFileExtensions.cs" />
     <Compile Include="Format\KspReference.cs" />
+    <Compile Include="Extension\KspCraftObject.cs" />
+    <Compile Include="Extension\KspPartObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

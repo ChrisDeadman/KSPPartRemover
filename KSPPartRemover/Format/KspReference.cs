@@ -8,12 +8,12 @@ namespace KSPPartRemover.Format
 
 		public String name { get; set; }
 
-		public int id {
+		public int? id {
 			get { 
 				int id;
 				if (!int.TryParse (name, out id))
-					id = -1;
-
+					return null;
+				
 				return id;
 			}
 		}

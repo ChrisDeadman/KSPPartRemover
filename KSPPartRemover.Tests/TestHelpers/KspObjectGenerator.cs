@@ -14,29 +14,29 @@ namespace KSPPartRemover.Tests.TestHelpers
 			return new KspProperty (name, value);
 		}
 
-		public static List<KspProperty> Properties(params KspProperty[] properties)
+		public static List<KspProperty> Properties (params KspProperty[] properties)
 		{
 			return properties.ToList ();
 		}
 
 		public static KspObject Object (string type, List<KspProperty> properties, params KspObject[] parts)
 		{
-			return new KspObject (type, properties.ToList(), parts.ToList());
+			return new KspObject (type, properties.ToList (), parts.ToList ());
 		}
 
 		public static KspObject Part (List<KspProperty> properties)
 		{
-			return Object ("PART", properties);
+			return Object (KspPartObject.Type, properties);
 		}
 
 		public static KspObject Craft (List<KspProperty> properties, params KspObject[] parts)
 		{
-			return Object ("VESSEL", properties, parts);
+			return Object (KspCraftObject.Type, properties, parts);
 		}
 
 		public static KspObject GlobalCraft (params KspObject[] parts)
 		{
-			return Object (KspCraftFileExtensions.GlobalVesselType, Properties(Property("name", "global craft")), parts);
+			return Object (KspCraftFileExtensions.GlobalVesselType, Properties (Property ("name", "global craft")), parts);
 		}
 	}
 }

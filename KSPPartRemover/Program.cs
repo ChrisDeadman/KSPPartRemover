@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using KSPPartRemover.Extension;
 using KSPPartRemover.Format;
 using KSPPartRemover.Features;
@@ -163,7 +164,7 @@ namespace KSPPartRemover
 			var crafts = Crafts (kspObjTree, craftNamePattern);
 
 			ConsoleWriteLineIfNotSilent ("");
-			PrintList (crafts.Select (craft => craft.GetCraftName ()));
+			PrintList (crafts.Select (craft => craft.Name.Value));
 
 			return 0;
 		}
@@ -175,8 +176,8 @@ namespace KSPPartRemover
 
 			ConsoleWriteLineIfNotSilent ("");
 			foreach (var craft in crafts) {
-				Console.WriteLine ("{0}:", craft.GetCraftName ());
-				PrintList (craft.GetParts ().Select (part => string.Format ("\t{0} (id={1})", part.GetPartName (), craft.GetIdOfPart (part))));
+				Console.WriteLine ("{0}:", craft.Name.Value);
+				PrintList (craft.Parts.Value.Select (part => string.Format ("\t{0} (id={1})", part.Name.Value, craft.GetIdOfPart (part))));
 			}
 
 			return 0;
@@ -192,21 +193,18 @@ namespace KSPPartRemover
 
 			foreach (var craft in crafts) {
 				if (!silentExecution) {
-					Console.WriteLine ("Entering craft '{0}'", craft.GetCraftName ());
+					Console.WriteLine ("Entering craft '{0}'", craft.Name.Value);
 				}
 
 				int partToRemoveId;
 				var matchingParts = int.TryParse (partNamePattern, out partToRemoveId) ? Parts (craft, partToRemoveId) : Parts (craft, partNamePattern);
-
-				var partRemover = new PartRemover (craft);
-				var partRemovalActions = matchingParts.AsParallel ().Select (partRemover.PrepareRemovePart);
-				var mergedPartRemovalAction = partRemover.CombineRemovalActions (partRemovalActions);
+				var partRemovalAction = PartRemover.PrepareRemove(craft, matchingParts);
 
 				if (!silentExecution) {
 					Console.WriteLine ();
 					Console.WriteLine ("The following parts will be removed:");
 					Console.WriteLine ("====================================");
-					PrintList (mergedPartRemovalAction.PartsToBeRemoved.Select (part => string.Format ("{0} (id={1})", part.GetPartName (), craft.GetIdOfPart (part))));
+					PrintList (partRemovalAction.partsToBeRemoved.Select (part => string.Format ("[id={0}] {1}", part.Key, part.Value.Name.Value)));
 					Console.WriteLine ("====================================");
 					if (!ConfirmPartRemoval ()) {
 						continue;
@@ -215,7 +213,7 @@ namespace KSPPartRemover
 					}
 				}
 
-				mergedPartRemovalAction.RemoveParts ();
+				partRemovalAction.RemoveParts ();
 			}
 
 			outputTextWriter.Write (KspObjectWriter.ToString (kspObjTree));
@@ -223,30 +221,36 @@ namespace KSPPartRemover
 			return 0;
 		}
 
-		private static IReadOnlyList<KspObject> Crafts (KspObject kspObjTree, string craftNamePattern)
+		private static IReadOnlyList<KspCraftObject> Crafts (KspObject kspObjTree, String craftNamePattern)
 		{
 			ConsoleWriteLineIfNotSilent (string.Format ("Searching for crafts matching '{0}'...", craftNamePattern));
-			var occurrences = (craftNamePattern == null) ? kspObjTree.GetCrafts ().ToList () : kspObjTree.FilterCraftsByNamePattern (craftNamePattern).ToList ();
+			var occurrences = (String.IsNullOrEmpty (craftNamePattern))
+				? kspObjTree.GetCrafts ().ToList ()
+				: kspObjTree.GetCrafts ().Where (craft => MatchesRegex (craft.Name.Value, craftNamePattern)).ToList ();
+
 			if (occurrences.Count <= 0)
 				throw new ArgumentException (string.Format ("No craft matching '{0}' found, aborting.", craftNamePattern));
 
 			return occurrences;
 		}
 
-		private static IReadOnlyList<KspObject> Parts (KspObject craft, int partId)
+		private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, int partId)
 		{
 			ConsoleWriteLineIfNotSilent (string.Format ("Searching for part with id={0}...", partId));
 			var part = craft.GetPartById (partId);
 			if (part == null)
 				throw new ArgumentException (string.Format ("No part with id={0} found, aborting.", partId));
 
-			return new List<KspObject> (new[] { part });
+			return new List<KspPartObject> (new[] { part });
 		}
 
-		private static IReadOnlyList<KspObject> Parts (KspObject craft, string partName)
+		private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, string partName)
 		{
 			ConsoleWriteLineIfNotSilent (string.Format ("Searching for parts with name '{0}'...", partName));
-			var occurrences = craft.FilterPartsByNamePattern (partNamePattern).ToList ();
+			var occurrences = (String.IsNullOrEmpty (partNamePattern))
+				? craft.Parts.Value.ToList ()
+				: craft.Parts.Value.Where (part => MatchesRegex (part.Name.Value, partNamePattern)).ToList ();
+			
 			if (occurrences.Count <= 0)
 				throw new ArgumentException (string.Format ("No parts with a name of '{0}' found, aborting.", partName));
 
@@ -397,6 +401,11 @@ namespace KSPPartRemover
 			Console.Write ("EXCEPTION: ");
 			Console.WriteLine (exception.ToString ());
 			Console.WriteLine ();
+		}
+
+		private static bool MatchesRegex (String str, String pattern)
+		{
+			return String.IsNullOrEmpty (pattern) || Regex.Match (str, pattern).Success;
 		}
 	}
 }

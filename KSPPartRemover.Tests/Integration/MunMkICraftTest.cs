@@ -19,7 +19,7 @@ namespace KSPPartRemover.Tests.Integration
             File.WriteAllText (tempFileName, inputCraftText);
 
             // when
-            var returnCode = Program.Main ("remove-part", "noseCone_4294253786", "-i", tempFileName, "-o", tempFileName, "--silent");
+            var returnCode = Program.Main ("remove-part", "--part", "noseCone_4294253786", "-i", tempFileName, "-o", tempFileName, "--silent");
 
             // then
             Assert.That (returnCode, Is.EqualTo (0));

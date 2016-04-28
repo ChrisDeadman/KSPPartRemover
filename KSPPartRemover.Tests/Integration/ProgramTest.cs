@@ -82,7 +82,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "0", "-i", "input.txt", "-s");
+            var returnCode = Program.Main ("remove-part", "-p", "0", "-i", "input.txt", "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
@@ -108,7 +108,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "fuelTank", "-i", "input.txt", "-s");
+            var returnCode = Program.Main ("remove-part", "-p", "fuelTank", "-i", "input.txt", "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
@@ -148,7 +148,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "fuelTank", "-c", ".*raft[1,3]", "-i", "input.txt", "-s");
+            var returnCode = Program.Main ("remove-part", "-p", "fuelTank", "-c", ".*raft[1,3]", "-i", "input.txt", "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
@@ -186,7 +186,8 @@ namespace KSPPartRemover.Tests.Integration
                     .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft"))
                     .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "ignored"))))
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored"))
                     .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart"))));
             
@@ -201,7 +202,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("list-parts", "-c", ".*Craft", "-i", "input.txt");
+            var returnCode = Program.Main ("list-parts", "-p", "[s,f].*", "-c", ".*Craft", "-i", "input.txt");
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
@@ -234,19 +235,16 @@ namespace KSPPartRemover.Tests.Integration
             var inputText = KspObjectWriter.ToString (inputCrafts);
             var expectedResult =
                 "someCraft:" + Environment.NewLine +
-                "\t[0]fuelTank1:" + Environment.NewLine +
-                "\t\t[1]strut[link]" + Environment.NewLine +
                 "\t[1]strut:" + Environment.NewLine +
                 "\t\t[0]fuelTank1[parent]" + Environment.NewLine +
                 "\t\t[0]fuelTank1[sym(top)]" + Environment.NewLine +
                 "anotherCraft:" + Environment.NewLine +
                 "\t[0]strut:" + Environment.NewLine +
-                "\t\t[1]fuelTank2[attN(bottom)]" + Environment.NewLine +
-                "\t[1]fuelTank2:" + Environment.NewLine;
-
+                "\t\t[1]fuelTank2[attN(bottom)]" + Environment.NewLine;
+            
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("list-partdeps", ".*uelTank.*", "-c", ".*Craft", "-i", "input.txt");
+            var returnCode = Program.Main ("list-partdeps", "-p", ".*uelTank.*", "-c", ".*Craft", "-i", "input.txt");
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
@@ -266,10 +264,10 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "2", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-part", "-p", "2", "-i", "input.txt");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringContaining ("No part with id=2 found"));
+            Assert.That (StdOutput.ToString (), Is.StringContaining ("No parts matching '2' found"));
             Assert.That (returnCode, Is.LessThan (0));
         }
 
@@ -286,10 +284,10 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "nonExistingPart", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-part", "-p", "nonExistingPart", "-i", "input.txt");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringContaining ("No parts with a name of 'nonExistingPart' found"));
+            Assert.That (StdOutput.ToString (), Is.StringContaining ("No parts matching 'nonExistingPart' found"));
             Assert.That (returnCode, Is.LessThan (0));
         }
 
@@ -305,7 +303,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "somePart", "--craft", "nonExistingCraft", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-part", "-p", "somePart", "--craft", "nonExistingCraft", "-i", "input.txt");
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringContaining ("No craft matching 'nonExistingCraft' found, aborting"));

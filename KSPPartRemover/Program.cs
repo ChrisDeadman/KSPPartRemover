@@ -17,7 +17,7 @@ namespace KSPPartRemover
         private static String partNamePattern;
         private static String inputText;
         private static TextWriter outputTextWriter;
-        private static String craftNamePattern;
+        private static String craftNameRegex;
         private static bool silentExecution;
 
         private static readonly Dictionary<String, Func<int, String[], int>> ArgumentParsers =
@@ -28,11 +28,18 @@ namespace KSPPartRemover
                 { "list-partdeps", ParseListPartDepsCommand },
                 { "-i", ParseInputFilePathArgument },
                 { "-o", ParseOutputFilePathArgument },
-                { "-c", ParseCraftNameArgument },
-                { "--craft", ParseCraftNameArgument },
+                { "-c", ParseCraftNameRegexArgument },
+                { "--craft", ParseCraftNameRegexArgument },
+                { "-p", ParsePartNamePatternArgument },
+                { "--part", ParsePartNamePatternArgument },
                 { "-s", ParseSilentExecutionArgument },
                 { "--silent", ParseSilentExecutionArgument }
             };
+
+        private static int ParseRemoveCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformRemovePartCommand);
+        private static int ParseListCraftsCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformListCraftsCommand);
+        private static int ParseListPartsCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformListPartsCommand);
+        private static int ParseListPartDepsCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformListPartDepsCommand);
 
         private static void PrintInfoHeader ()
         {
@@ -40,8 +47,7 @@ namespace KSPPartRemover
 
             var infoHeader = new StringBuilder ();
             infoHeader.AppendFormat ("{0} v{1}", assemblyName.Name, assemblyName.Version);
-            infoHeader.AppendLine ();
-            infoHeader.AppendLine ();
+            infoHeader.AppendLine ();   
             infoHeader.Append ("Compatible with KSP version: 1.1");
 
             Console.WriteLine ();
@@ -55,42 +61,43 @@ namespace KSPPartRemover
 
             Console.Write ("usage: ");
             Console.Write (Path.GetFileName (assemblyName.CodeBase));
-            Console.WriteLine (" <COMMAND> [-s | --silent] -i <inputFilePath> [-o <outputFilePath>]");
+            Console.WriteLine (" <command> [<args>] -i <inputFilePath> [-o <outputFilePath>]");
             Console.WriteLine ();
-            Console.WriteLine ("Commands:");
-            Console.WriteLine ();
-            Console.WriteLine ("\t remove-part <partId or partNameRegex>");
-            Console.WriteLine ("\t\t 'partId': remove the part with the given id (integer);");
-            Console.WriteLine ("\t\t 'partNameRegex': remove all parts matching the regex;");
+            Console.WriteLine ("Commands:"); 
+            Console.WriteLine (); 
+            Console.WriteLine ("\t remove-part");
+            Console.WriteLine ("\t\t remove one or more parts from one or more crafts");
             Console.WriteLine ();
             Console.WriteLine ("\t list-crafts");
-            Console.WriteLine ("\t\t list all crafts in the input file;");
+            Console.WriteLine ("\t\t list crafts in the input file");
             Console.WriteLine ();
             Console.WriteLine ("\t list-parts");
-            Console.WriteLine ("\t\t list all parts in the input file;");
+            Console.WriteLine ("\t\t list parts in the input file");
             Console.WriteLine ();
-            Console.WriteLine ("\t list-partdeps [<partId or partNameRegex>]");
-            Console.WriteLine ("\t\t list all parts with dependencies in the input file;");
-            Console.WriteLine ("\t\t [Optional] 'partId': list dependencies on part with the given id (integer);");
-            Console.WriteLine ("\t\t [Optional] 'partNameRegex': list dependencies on parts matching the regex;");
+            Console.WriteLine ("\t list-partdeps");
+            Console.WriteLine ("\t\t same as 'list-parts' but also prints dependencies");
+            Console.WriteLine ("\t\t the part filter is applied on the dependencies for this command");
             Console.WriteLine ();
-            Console.WriteLine ("Arguments:");
-            Console.WriteLine ();
+            Console.WriteLine ("Switches:"); 
+            Console.WriteLine (); 
             Console.WriteLine ("\t -i <FilePath>");
-            Console.WriteLine ("\t\t specifies the input file;");
+            Console.WriteLine ("\t\t specifies the input file");
             Console.WriteLine ();
+            Console.WriteLine ("\t[Optional]");
             Console.WriteLine ("\t -o <FilePath>");
-            Console.WriteLine ("\t\t [Optional] specifies the output file");
-            Console.WriteLine ("\t\t            prints to stdout if not specified;");
+            Console.WriteLine ("\t\t specifies the output file (prints to stdout if not specified)");
             Console.WriteLine ();
-            Console.WriteLine ("\t -c, --craft <craftNamePattern>");
-            Console.WriteLine ("\t\t [Optional] regex pattern for target craft(s);");
-            Console.WriteLine ("\t\t            processes all crafts if not specified;");
-            Console.WriteLine ("\t\t            applies to all commands;");
+            Console.WriteLine ("\t[Optional]");
+            Console.WriteLine ("\t -c, --craft <craftNameRegex>");
+            Console.WriteLine ("\t\t apply craft filter (applies to all crafts if not specified)");
             Console.WriteLine ();
+            Console.WriteLine ("\t[Optional]");
+            Console.WriteLine ("\t -p, --part <partId or partNameRegex>");
+            Console.WriteLine ("\t\t apply part filter (applies to all parts if not specified)");
+            Console.WriteLine ();
+            Console.WriteLine ("\t[Optional]");
             Console.WriteLine ("\t -s, --silent");
-            Console.WriteLine ("\t\t [Optional] do not print additional info;");
-            Console.WriteLine ("\t\t            do not ask for confirmation;");
+            Console.WriteLine ("\t\t do not print additional info, do not ask for confirmation");
             Console.WriteLine ();
         }
 
@@ -100,7 +107,7 @@ namespace KSPPartRemover
             partNamePattern = null;
             inputText = null;
             outputTextWriter = Console.Out;
-            craftNamePattern = null;
+            craftNameRegex = null;
             silentExecution = false;
         }
 
@@ -140,6 +147,9 @@ namespace KSPPartRemover
                     PrintUsage ();
                     OutputExceptionBrief (ex);
                     return -1;
+                } catch (KeyNotFoundException ex) {
+                    OutputExceptionBrief (ex);
+                    return -1;
                 } catch (Exception ex) {
                     OutputExceptionDetailed (ex);
                     return -1;
@@ -153,7 +163,7 @@ namespace KSPPartRemover
         private static int PerformListCraftsCommand ()
         {
             var kspObjTree = KspObjectReader.ReadObject (inputText);
-            var crafts = Crafts (kspObjTree, craftNamePattern);
+            var crafts = Crafts (kspObjTree, craftNameRegex);
 
             ConsoleWriteLineIfNotSilent ("");
             PrintList (crafts.Select (craft => craft.Name));
@@ -164,12 +174,15 @@ namespace KSPPartRemover
         private static int PerformListPartsCommand ()
         {
             var kspObjTree = KspObjectReader.ReadObject (inputText);
-            var crafts = Crafts (kspObjTree, craftNamePattern);
+            var crafts = Crafts (kspObjTree, craftNameRegex);
 
             ConsoleWriteLineIfNotSilent ("");
             foreach (var craft in crafts) {
-                Console.WriteLine ($"{craft.Name}:");
-                PrintList (craft.Children<KspPartObject> ().Select (part => $"\t{PartObjectToString (craft, part)}"));
+                var matchingParts = Parts (craft, partNamePattern);
+                if (matchingParts.Count > 0) {
+                    Console.WriteLine ($"{craft.Name}:");
+                    PrintList (matchingParts.Select (part => $"\t{PartObjectToString (craft, part)}"));   
+                }
             }
 
             return 0;
@@ -178,15 +191,18 @@ namespace KSPPartRemover
         private static int PerformListPartDepsCommand ()
         {
             var kspObjTree = KspObjectReader.ReadObject (inputText);
-            var crafts = Crafts (kspObjTree, craftNamePattern);
+            var crafts = Crafts (kspObjTree, craftNameRegex);
 
             ConsoleWriteLineIfNotSilent ("");
             foreach (var craft in crafts) {
                 Console.WriteLine ($"{craft.Name}:");
 
-                foreach (var part in craft.Children<KspPartObject> ()) {
-                    Console.WriteLine ($"\t{PartObjectToString (craft, part)}:");
-                    PrintList (part.Properties.OfType<KspPartLinkProperty>().Select (link => ($"\t\t{PartLinkPropertyToString (craft, link)}")));
+                foreach (var part in Parts(craft)) {
+                    var matchingPartLinks = PartLinks(craft, part, partNamePattern);
+                    if (matchingPartLinks.Count > 0) {
+                        Console.WriteLine ($"\t{PartObjectToString (craft, part)}:");
+                        PrintList (matchingPartLinks.Select (link => ($"\t\t{PartLinkPropertyToString (craft, link)}")));
+                    }
                 }
             }
 
@@ -214,17 +230,22 @@ namespace KSPPartRemover
             }
 
             var kspObjTree = KspObjectReader.ReadObject (inputText);
-            var crafts = Crafts (kspObjTree, craftNamePattern);
+            var crafts = Crafts (kspObjTree, craftNameRegex);
 
             foreach (var craft in crafts) {
                 if (!silentExecution) {
                     Console.WriteLine ($"Entering craft '{craft.Name}'");
                 }
 
+                ConsoleWriteLineIfNotSilent ($"Searching for parts matching '{partNamePattern}'...");
+
                 var matchingParts = Parts (craft, partNamePattern);
                 var dependentParts = matchingParts.SelectMany (part => PartLookup.EvaluateHardDependencies (craft, part)).Distinct ();
                 var removedParts = matchingParts.Concat (dependentParts).Distinct ().ToArray ();
 
+                if (removedParts.Length <= 0)
+                    throw new KeyNotFoundException ($"No parts matching '{partNamePattern}' found, aborting.");
+                
                 if (!silentExecution) {
                     Console.WriteLine ();
                     Console.WriteLine ("The following parts will be removed:");
@@ -246,51 +267,53 @@ namespace KSPPartRemover
             return 0;
         }
 
-        private static IReadOnlyList<KspCraftObject> Crafts (KspObject kspObjTree, String craftNamePattern)
+        private static IReadOnlyList<KspCraftObject> Crafts (KspObject kspObjTree, String craftNameRegex)
         {
-            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNamePattern}'...");
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
             var crafts = kspObjTree.Children <KspCraftObject> (recursive: true).ToList ();
             if (kspObjTree is KspCraftObject) {
                 crafts.Add (kspObjTree as KspCraftObject);
             }
 
-            if (!String.IsNullOrEmpty (craftNamePattern)) {
-                crafts = crafts.Where (craft => MatchesRegex (craft.Name, craftNamePattern)).ToList ();
+            if (!String.IsNullOrEmpty (craftNameRegex)) {
+                crafts = crafts.Where (craft => MatchesRegex (craft.Name, craftNameRegex)).ToList ();
                 if (crafts.Count <= 0) {
-                    throw new KeyNotFoundException ($"No craft matching '{craftNamePattern}' found, aborting.");
+                    throw new KeyNotFoundException ($"No craft matching '{craftNameRegex}' found, aborting.");
                 }
             }
 
             return crafts;
         }
 
-        private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, String partName)
+        private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, String partNamePattern = null)
         {
             int id;
-            if (int.TryParse (partNamePattern, out id)) {
-                return Parts (craft, id);
+            List<KspPartObject> dependencies;
+
+            if (String.IsNullOrEmpty (partNamePattern)) {
+                dependencies = craft.Children <KspPartObject> ().ToList ();
+            }
+            else if (int.TryParse (partNamePattern, out id)) {
+                dependencies = new List<KspPartObject>();
+                var dependency = craft.Child<KspPartObject>(id);
+                if (dependency != null) {
+                    dependencies.Add(dependency);
+                }
+            }
+            else {
+                dependencies = craft.Children <KspPartObject> ().Where (part => MatchesRegex (part.Name, partNamePattern)).ToList ();
             }
 
-            ConsoleWriteLineIfNotSilent ($"Searching for parts with name '{partName}'...");
-            var occurrences = (String.IsNullOrEmpty (partNamePattern))
-                ? craft.Children <KspPartObject> ().ToList ()
-                : craft.Children <KspPartObject> ().Where (part => MatchesRegex (part.Name, partNamePattern)).ToList ();
-            
-            if (occurrences.Count <= 0)
-                throw new KeyNotFoundException ($"No parts with a name of '{partName}' found, aborting.");
-
-            return occurrences;
+            return dependencies;
         }
 
-        private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, int partId)
+        private static IReadOnlyList<KspPartLinkProperty> PartLinks (KspCraftObject craft, KspPartObject part, String partNamePattern = null)
         {
-            ConsoleWriteLineIfNotSilent ($"Searching for part with id={partId}...");
-            var part = craft.Child<KspPartObject> (partId);
-            if (part == null)
-                throw new KeyNotFoundException ($"No part with id={partId} found, aborting.");
-
-            return new List<KspPartObject> (new[] { part });
+            return PartLinks(part, Parts(craft, partNamePattern));
         }
+
+        private static IReadOnlyList<KspPartLinkProperty> PartLinks (KspPartObject part, IReadOnlyList<KspPartObject> dependencies) =>
+            part.Properties.OfType<KspPartLinkProperty> ().Where (link => dependencies.Any(dep => Object.Equals(link.Part, dep))).ToList();
 
         private static void PrintList (IEnumerable<String> entries)
         {
@@ -334,53 +357,12 @@ namespace KSPPartRemover
             Console.WriteLine (value ?? String.Empty);
         }
 
-        private static int ParseRemoveCommand (int argIdx, params String[] args)
-        {
-            argIdx++;
-            if (args.Length <= argIdx)
-                throw new ArgumentException ("");
-
-            if (commandHandler != null)
-                throw new ArgumentException ("");
-
-            commandHandler = PerformRemovePartCommand;
-
-            partNamePattern = args [argIdx].Trim ('\"');
-            return argIdx;
-        }
-
-        private static int ParseListCraftsCommand (int argIdx, params String[] args)
+        private static int ParseCommand (int argIdx, Func<int> handler)
         {
             if (commandHandler != null)
                 throw new ArgumentException ("");
 
-            commandHandler = PerformListCraftsCommand;
-
-            return argIdx;
-        }
-
-        private static int ParseListPartsCommand (int argIdx, params String[] args)
-        {
-            if (commandHandler != null)
-                throw new ArgumentException ("");
-
-            commandHandler = PerformListPartsCommand;
-
-            return argIdx;
-        }
-
-        private static int ParseListPartDepsCommand (int argIdx, params String[] args)
-        {
-            argIdx++;
-            if (args.Length <= argIdx)
-                throw new ArgumentException ("");
-
-            if (commandHandler != null)
-                throw new ArgumentException ("");
-
-            commandHandler = PerformListPartDepsCommand;
-
-            partNamePattern = args [argIdx].Trim ('\"');
+            commandHandler = handler;
             return argIdx;
         }
 
@@ -417,13 +399,23 @@ namespace KSPPartRemover
             return argIdx;
         }
 
-        private static int ParseCraftNameArgument (int argIdx, params String[] args)
+        private static int ParseCraftNameRegexArgument (int argIdx, params String[] args)
         {
             argIdx++;
             if (args.Length <= argIdx)
                 throw new ArgumentException ("");
 
-            craftNamePattern = args [argIdx];
+            craftNameRegex = args [argIdx];
+            return argIdx;
+        }
+
+        private static int ParsePartNamePatternArgument (int argIdx, params String[] args)
+        {
+            argIdx++;
+            if (args.Length <= argIdx)
+                throw new ArgumentException ("");
+
+            partNamePattern = args [argIdx].Trim ('\"');
             return argIdx;
         }
 
@@ -438,8 +430,7 @@ namespace KSPPartRemover
             var message = exception.Message;
             if (String.IsNullOrEmpty (message))
                 message = "Invalid command line arguments.";
-
-            Console.WriteLine ();
+            
             Console.Write ("ERROR: ");
             Console.WriteLine (message);
             Console.WriteLine ();

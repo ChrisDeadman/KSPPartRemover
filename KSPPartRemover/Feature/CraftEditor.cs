@@ -33,7 +33,7 @@ namespace KSPPartRemover.Feature
         }
 
         private static IReadOnlyList<KspPartLinkProperty> RemovePartLinks (IReadOnlyList<KspPartLinkProperty> links, IReadOnlyList<KspPartObject> parts) =>
-			links.Where (link => !parts.Contains (link.Part)).ToList ();
+            links.Where (link => !parts.Contains (link.Part)).ToList ();
     }
 
     public static class CraftEditorExtensions

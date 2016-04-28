@@ -255,9 +255,9 @@ namespace KSPPartRemover
         {
             ConsoleWriteLineIfNotSilent ($"Searching for parts with name '{partName}'...");
             var occurrences = (String.IsNullOrEmpty (partNamePattern))
-				? craft.Children <KspPartObject> ().ToList ()
-				: craft.Children <KspPartObject> ().Where (part => MatchesRegex (part.Name, partNamePattern)).ToList ();
-			
+                ? craft.Children <KspPartObject> ().ToList ()
+                : craft.Children <KspPartObject> ().Where (part => MatchesRegex (part.Name, partNamePattern)).ToList ();
+            
             if (occurrences.Count <= 0)
                 throw new KeyNotFoundException ($"No parts with a name of '{partName}' found, aborting.");
 

@@ -13,8 +13,8 @@ namespace KSPPartRemover.Tests.KspObjects
         {
             // given
             var part = new KspPartObject ()
-				.AddProperty (new KspStringProperty ("name", "thisIsIgnoredIfPartPropertyIsFound"))
-				.AddProperty (new KspStringProperty ("part", "somePart")) as KspPartObject;
+                .AddProperty (new KspStringProperty ("name", "thisIsIgnoredIfPartPropertyIsFound"))
+                .AddProperty (new KspStringProperty ("part", "somePart")) as KspPartObject;
 
             // when / then
             Assert.That (part.Name, Is.EqualTo ("somePart"));
@@ -25,7 +25,7 @@ namespace KSPPartRemover.Tests.KspObjects
         {
             // given
             var part = new KspPartObject ()
-				.AddProperty (new KspStringProperty ("name", "somePart")) as KspPartObject;
+                .AddProperty (new KspStringProperty ("name", "somePart")) as KspPartObject;
 
             // when / then
             Assert.That (part.Name, Is.EqualTo ("somePart"));
@@ -36,24 +36,24 @@ namespace KSPPartRemover.Tests.KspObjects
         {
             // given
             var obj = new KspObject ("OBJ")
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part1")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part2")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part3")));
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part1")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part2")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part3")));
 
             var parts = obj.Children<KspPartObject> ().ToArray ();
 
             var part = obj.Children [0]
-				.AddProperty (new KspPartLinkProperty ("link", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("link", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("parent", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("parent", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("sym", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("sym", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("srfN", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("srfN", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("attN", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("attN", "top", parts [1], false)) as KspPartObject;
-			
+                .AddProperty (new KspPartLinkProperty ("link", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("link", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("parent", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("parent", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("sym", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("sym", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("srfN", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("srfN", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("attN", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("attN", "top", parts [1], false)) as KspPartObject;
+            
             // when / then
             Assert.That (part.LinkRefs, Is.EqualTo (new[] { part.Properties [1], part.Properties [2] }));
             Assert.That (part.ParentRefs, Is.EqualTo (new[] { part.Properties [3], part.Properties [4] }));
@@ -67,23 +67,23 @@ namespace KSPPartRemover.Tests.KspObjects
         {
             // given
             var obj = new KspObject ("OBJ")
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part1")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part2")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part3")));
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part1")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part2")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "part3")));
 
             var parts = obj.Children<KspPartObject> ().ToArray ();
 
             var part = obj.Children [0]
-				.AddProperty (new KspPartLinkProperty ("link", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("link", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("parent", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("parent", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("sym", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("sym", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("srfN", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("srfN", "top", parts [1], false))
-				.AddProperty (new KspPartLinkProperty ("attN", "top", parts [0], false))
-				.AddProperty (new KspPartLinkProperty ("attN", "top", parts [1], false)) as KspPartObject;
+                .AddProperty (new KspPartLinkProperty ("link", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("link", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("parent", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("parent", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("sym", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("sym", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("srfN", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("srfN", "top", parts [1], false))
+                .AddProperty (new KspPartLinkProperty ("attN", "top", parts [0], false))
+                .AddProperty (new KspPartLinkProperty ("attN", "top", parts [1], false)) as KspPartObject;
 
             var newProperties = new[] {
                 new KspPartLinkProperty ("link", "bottom", parts [0], false),

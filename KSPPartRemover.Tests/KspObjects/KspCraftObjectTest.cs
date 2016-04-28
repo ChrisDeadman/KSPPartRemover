@@ -11,8 +11,8 @@ namespace KSPPartRemover.Tests.KspObjects
         {
             // given
             var craft = new KspCraftObject ()
-				.AddProperty (new KspStringProperty ("name", "thisIsIgnoredIfShipPropertyIsFound"))
-				.AddProperty (new KspStringProperty ("ship", "someCraft")) as KspCraftObject;
+                .AddProperty (new KspStringProperty ("name", "thisIsIgnoredIfShipPropertyIsFound"))
+                .AddProperty (new KspStringProperty ("ship", "someCraft")) as KspCraftObject;
 
             // when / then
             Assert.That (craft.Name, Is.EqualTo ("someCraft"));
@@ -23,7 +23,7 @@ namespace KSPPartRemover.Tests.KspObjects
         {
             // given
             var craft = new KspCraftObject ()
-				.AddProperty (new KspStringProperty ("name", "someCraft")) as KspCraftObject;
+                .AddProperty (new KspStringProperty ("name", "someCraft")) as KspCraftObject;
 
             // when / then
             Assert.That (craft.Name, Is.EqualTo ("someCraft"));

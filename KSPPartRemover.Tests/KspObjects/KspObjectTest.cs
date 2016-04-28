@@ -18,10 +18,10 @@ namespace KSPPartRemover.Tests.KspObjects
 
             // when
             var obj = new KspObject ("OBJ")
-				.AddProperty (properties [0])
-				.AddProperty (properties [1])
-				.AddProperty (properties [2]);
-			
+                .AddProperty (properties [0])
+                .AddProperty (properties [1])
+                .AddProperty (properties [2]);
+            
             // when / then
             Assert.That (obj.Properties, Is.EqualTo (properties));
         }
@@ -38,9 +38,9 @@ namespace KSPPartRemover.Tests.KspObjects
 
             // when
             var obj = new KspObject ("OBJ")
-				.InsertProperty (1, properties [1])
-				.InsertProperty (1, properties [2])
-				.InsertProperty (0, properties [0]);
+                .InsertProperty (1, properties [1])
+                .InsertProperty (1, properties [2])
+                .InsertProperty (0, properties [0]);
 
             // when / then
             Assert.That (obj.Properties, Is.EqualTo (properties));
@@ -58,10 +58,10 @@ namespace KSPPartRemover.Tests.KspObjects
 
             // when
             var obj = new KspObject ("OBJ")
-				.AddProperty (properties [0])
-				.AddProperty (properties [1])
-				.AddProperty (properties [2])
-				.RemoveProperty (properties [1]);
+                .AddProperty (properties [0])
+                .AddProperty (properties [1])
+                .AddProperty (properties [2])
+                .RemoveProperty (properties [1]);
 
             // when / then
             Assert.That (obj.Properties, Is.EqualTo (new[] { properties [0], properties [2] }));
@@ -79,9 +79,9 @@ namespace KSPPartRemover.Tests.KspObjects
 
             // when
             var obj = new KspObject ("OBJ")
-				.AddChild (children [0])
-				.AddChild (children [1])
-				.AddChild (children [2]);
+                .AddChild (children [0])
+                .AddChild (children [1])
+                .AddChild (children [2]);
 
             // when / then
             Assert.That (obj.Children, Is.EqualTo (children));
@@ -99,10 +99,10 @@ namespace KSPPartRemover.Tests.KspObjects
 
             // when
             var obj = new KspObject ("OBJ")
-				.AddChild (children [0])
-				.AddChild (children [1])
-				.AddChild (children [2])
-				.RemoveChild (children [1]);
+                .AddChild (children [0])
+                .AddChild (children [1])
+                .AddChild (children [2])
+                .RemoveChild (children [1]);
 
             // when / then
             Assert.That (obj.Children, Is.EqualTo (new[] { children [0], children [2] }));

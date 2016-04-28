@@ -55,9 +55,9 @@ namespace KSPPartRemover.KspObjects.Format
             var isIdReference = int.TryParse (reference, out id);
             var craft = obj.Parent as KspCraftObject;
             var part = isIdReference
-				? craft.Child<KspPartObject> (id)
-				: craft.Children<KspPartObject> ().FirstOrDefault (p => p.Name.Equals (reference));
-			
+                ? craft.Child<KspPartObject> (id)
+                : craft.Children<KspPartObject> ().FirstOrDefault (p => p.Name.Equals (reference));
+            
             return new KspPartLinkProperty (name, prefix, part, isIdReference);
         }
 

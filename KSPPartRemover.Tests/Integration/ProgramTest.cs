@@ -67,16 +67,16 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-				.AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
+                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
 
             var expectedCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-				.AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
-			
+                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
+            
             var inputText = KspObjectWriter.ToString (inputCraft);
             var expectedResult = KspObjectWriter.ToString (expectedCraft);
 
@@ -94,15 +94,15 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-				.AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
+                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
 
             var expectedCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-				.AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")));
-			
+                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")));
+            
             var inputText = KspObjectWriter.ToString (inputCraft);
             var expectedResult = KspObjectWriter.ToString (expectedCraft);
 
@@ -120,29 +120,29 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCrafts = new KspObject ("GAME")
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft1"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft2"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))));
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft1"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft2"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))));
 
             var expectedCrafts = new KspObject ("GAME")
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft1"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft2"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))));
-					
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft1"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft2"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))));
+                    
             var inputText = KspObjectWriter.ToString (inputCrafts);
             var expectedResult = KspObjectWriter.ToString (expectedCrafts);
 
@@ -160,10 +160,10 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCrafts = new KspObject ("GAME")
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft")))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored")));
-			
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft")))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored")));
+            
             var inputText = KspObjectWriter.ToString (inputCrafts);
             var expectedResult = "someCraft" + Environment.NewLine + "anotherCraft" + Environment.NewLine;
 
@@ -181,15 +181,15 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCrafts = new KspObject ("GAME")
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored"))
-					.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart"))));
-			
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart"))));
+            
             var inputText = KspObjectWriter.ToString (inputCrafts);
             var expectedResult =
                 "someCraft:" + Environment.NewLine +
@@ -213,10 +213,10 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-				.AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "notAPart")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
-			
+                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "notAPart")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
+            
             var inputText = KspObjectWriter.ToString (inputCraft);
 
             // when
@@ -233,9 +233,9 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-				.AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "notAPart")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
-				.AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
+                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "notAPart")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
+                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
 
             var inputText = KspObjectWriter.ToString (inputCraft);
 
@@ -253,9 +253,9 @@ namespace KSPPartRemover.Tests.Integration
         {
             // given
             var inputCrafts = new KspObject ("GAME")
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft")))
-				.AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")));
-			
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft")))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")));
+            
             var inputText = KspObjectWriter.ToString (inputCrafts);
 
             // when

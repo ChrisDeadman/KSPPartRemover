@@ -14,10 +14,10 @@ namespace KSPPartRemover.Tests.Extension
         {
             // given
             var obj = new KspObject ("OBJ")
-				.AddProperty (new KspStringProperty ("property", "value1"))
-				.AddProperty (new KspStringProperty ("anotherProperty", "value2"))
-				.AddProperty (new KspStringProperty ("property", "value3"));
-			
+                .AddProperty (new KspStringProperty ("property", "value1"))
+                .AddProperty (new KspStringProperty ("anotherProperty", "value2"))
+                .AddProperty (new KspStringProperty ("property", "value3"));
+            
             // when / then
             Assert.That (obj.Properties<KspProperty> ("property"), Is.EqualTo (new[] {
                 obj.Properties [0],
@@ -30,13 +30,13 @@ namespace KSPPartRemover.Tests.Extension
         {
             // given
             var obj = new KspObject ("OBJ")
-				.AddChild (new KspPartObject () // found
-					.AddChild (new KspPartObject ())) // not found
-				.AddChild (new KspObject (KspPartObject.TypeId) // not found
-					.AddChild (new KspPartObject ())) // not found
-				.AddChild (new KspPartObject () // found
-					.AddChild (new KspObject (KspPartObject.TypeId))); // not found
-			
+                .AddChild (new KspPartObject () // found
+                    .AddChild (new KspPartObject ())) // not found
+                .AddChild (new KspObject (KspPartObject.TypeId) // not found
+                    .AddChild (new KspPartObject ())) // not found
+                .AddChild (new KspPartObject () // found
+                    .AddChild (new KspObject (KspPartObject.TypeId))); // not found
+            
             // when / then
             Assert.That (obj.Children<KspPartObject> (), Is.EqualTo (new[] { obj.Children [0], obj.Children [2] }));
         }
@@ -46,12 +46,12 @@ namespace KSPPartRemover.Tests.Extension
         {
             // given
             var obj = new KspObject ("OBJ")
-				.AddChild (new KspPartObject () // found
-					.AddChild (new KspPartObject ())) // found
-				.AddChild (new KspObject (KspPartObject.TypeId) // not found
-					.AddChild (new KspPartObject ())) // found
-				.AddChild (new KspPartObject () // found
-					.AddChild (new KspObject (KspPartObject.TypeId))); // not found
+                .AddChild (new KspPartObject () // found
+                    .AddChild (new KspPartObject ())) // found
+                .AddChild (new KspObject (KspPartObject.TypeId) // not found
+                    .AddChild (new KspPartObject ())) // found
+                .AddChild (new KspPartObject () // found
+                    .AddChild (new KspObject (KspPartObject.TypeId))); // not found
 
             // when / then
             Assert.That (obj.Children<KspPartObject> (recursive: true), Is.EqualTo (new[] {
@@ -67,11 +67,11 @@ namespace KSPPartRemover.Tests.Extension
         {
             // given
             var obj = new KspObject ("OBJ")
-				.AddChild (new KspCraftObject ())
-				.AddChild (new KspPartObject ())
-				.AddChild (new KspPartObject ())
-				.AddChild (new KspPartObject ())
-				.AddChild (new KspCraftObject ());
+                .AddChild (new KspCraftObject ())
+                .AddChild (new KspPartObject ())
+                .AddChild (new KspPartObject ())
+                .AddChild (new KspPartObject ())
+                .AddChild (new KspCraftObject ());
 
             // when / then
             Assert.That (obj.Child<KspCraftObject> (-1), Is.Null);
@@ -89,11 +89,11 @@ namespace KSPPartRemover.Tests.Extension
         {
             // given
             var obj = new KspObject ("OBJ")
-				.AddChild (new KspCraftObject ())
-				.AddChild (new KspPartObject ())
-				.AddChild (new KspPartObject ())
-				.AddChild (new KspPartObject ())
-				.AddChild (new KspCraftObject ());
+                .AddChild (new KspCraftObject ())
+                .AddChild (new KspPartObject ())
+                .AddChild (new KspPartObject ())
+                .AddChild (new KspPartObject ())
+                .AddChild (new KspCraftObject ());
 
             // when / then
             Assert.That (obj.IdOfChild (obj.Children [0] as KspCraftObject), Is.EqualTo (0)); // Ids are per object-type

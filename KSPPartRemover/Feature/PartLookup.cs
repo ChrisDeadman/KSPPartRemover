@@ -9,10 +9,10 @@ namespace KSPPartRemover.Feature
     public class PartLookup
     {
         public static IEnumerable<KspPartObject> EvaluateSoftDependencies (KspCraftObject craft, KspPartObject dependency) =>
-			EvaluateDependencies (craft, dependency, HasSoftDependency);
+            EvaluateDependencies (craft, dependency, HasSoftDependency);
 
         public static IEnumerable<KspPartObject> EvaluateHardDependencies (KspCraftObject craft, KspPartObject dependency) =>
-			EvaluateDependencies (craft, dependency, HasHardDependency);
+            EvaluateDependencies (craft, dependency, HasHardDependency);
 
         private static IEnumerable<KspPartObject> EvaluateDependencies (KspCraftObject craft, KspPartObject dependency, Func<KspPartObject, KspPartObject, bool> hasDependency)
         {
@@ -40,7 +40,7 @@ namespace KSPPartRemover.Feature
         {
             Func<IReadOnlyList<KspPartLinkProperty>, bool> hasHardDependency =
                 (refs) => refs.Count > 0 && refs.All (r => Object.Equals (r.Part, dependency));
-			
+            
             return hasHardDependency (part.ParentRefs) ||
             hasHardDependency (part.SymRefs) ||
             hasHardDependency (part.SrfNRefs) ||
@@ -48,11 +48,11 @@ namespace KSPPartRemover.Feature
         }
 
         private static void EvaluateDependencies (List<KspPartObject> parts, KspPartObject dependency, Func<KspPartObject, KspPartObject, bool> hasDependency, Func<KspPartObject, bool> addDependency) =>
-			parts.ForEach (currentPart => {
-				if (hasDependency (currentPart, dependency)) {
-					if (addDependency (currentPart)) {
-						EvaluateDependencies (parts, currentPart, hasDependency, addDependency);
-					}
-			}});
+            parts.ForEach (currentPart => {
+                if (hasDependency (currentPart, dependency)) {
+                    if (addDependency (currentPart)) {
+                        EvaluateDependencies (parts, currentPart, hasDependency, addDependency);
+                    }
+            }});
     }
 }

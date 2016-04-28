@@ -5,14 +5,14 @@ using KSPPartRemover.Extension;
 
 namespace KSPPartRemover.KspObjects
 {
-	public class KspCraftObject : KspObject
-	{
-		public const String TypeId = "VESSEL";
+    public class KspCraftObject : KspObject
+    {
+        public const String TypeId = "VESSEL";
 
-		public KspCraftObject (bool isGlobalObject = false) : base (TypeId, isGlobalObject)
-		{
-		}
+        public KspCraftObject (bool isGlobalObject = false) : base (TypeId, isGlobalObject)
+        {
+        }
 
-		public String Name => (this.Properties<KspStringProperty> ("ship").FirstOrDefault () ?? this.Properties<KspStringProperty> ("name").FirstOrDefault ()).Text;
-	}
+        public String Name => (this.Properties<KspStringProperty> ("ship").FirstOrDefault () ?? this.Properties<KspStringProperty> ("name").FirstOrDefault ()).Text;
+    }
 }

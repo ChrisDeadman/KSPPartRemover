@@ -8,7 +8,7 @@ namespace KSPPartRemover.Extension
     public static class KspObjectSearchExtensions
     {
         public static IEnumerable<TProp> Properties<TProp> (this KspObject obj, String name) where TProp : KspProperty =>
-			obj.Properties.Where (property => property.Name.Equals (name)).OfType<TProp> ();
+            obj.Properties.Where (property => property.Name.Equals (name)).OfType<TProp> ();
 
         public static IEnumerable<TChild> Children<TChild> (this KspObject obj, bool recursive = false) where TChild: KspObject
         {

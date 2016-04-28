@@ -193,15 +193,60 @@ namespace KSPPartRemover.Tests.Integration
             var inputText = KspObjectWriter.ToString (inputCrafts);
             var expectedResult =
                 "someCraft:" + Environment.NewLine +
-                "\t[0] fuelTank" + Environment.NewLine +
-                "\t[1] strut" + Environment.NewLine +
+                "\t[0]fuelTank" + Environment.NewLine +
+                "\t[1]strut" + Environment.NewLine +
                 "anotherCraft:" + Environment.NewLine +
-                "\t[0] strut" + Environment.NewLine +
-                "\t[1] fuelTank" + Environment.NewLine;
+                "\t[0]strut" + Environment.NewLine +
+                "\t[1]fuelTank" + Environment.NewLine;
 
             // when
             File.WriteAllText ("input.txt", inputText);
             var returnCode = Program.Main ("list-parts", "-c", ".*Craft", "-i", "input.txt");
+
+            // then
+            Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
+            Assert.That (returnCode, Is.EqualTo (0));
+        }
+
+
+        [Test]
+        public void CanPrintPartDependencies ()
+        {
+            // given
+            var inputCrafts = new KspObject ("GAME")
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank1")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank2"))))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored"))
+                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart"))));
+
+            var craft1 = inputCrafts.Children [0];
+            var craft2 = inputCrafts.Children [1];
+
+            craft1.Children [0].AddProperty (new KspPartLinkProperty ("link", null, (KspPartObject)craft1.Children [1], true));
+            craft1.Children [1].AddProperty (new KspPartLinkProperty ("parent", null, (KspPartObject)craft1.Children [0], false));
+            craft1.Children [1].AddProperty (new KspPartLinkProperty ("sym", "top", (KspPartObject)craft1.Children [0], false));
+            craft2.Children [0].AddProperty (new KspPartLinkProperty ("attN", "bottom", (KspPartObject)craft2.Children [1], false));
+
+            var inputText = KspObjectWriter.ToString (inputCrafts);
+            var expectedResult =
+                "someCraft:" + Environment.NewLine +
+                "\t[0]fuelTank1:" + Environment.NewLine +
+                "\t\t[1]strut[link]" + Environment.NewLine +
+                "\t[1]strut:" + Environment.NewLine +
+                "\t\t[0]fuelTank1[parent]" + Environment.NewLine +
+                "\t\t[0]fuelTank1[sym(top)]" + Environment.NewLine +
+                "anotherCraft:" + Environment.NewLine +
+                "\t[0]strut:" + Environment.NewLine +
+                "\t\t[1]fuelTank2[attN(bottom)]" + Environment.NewLine +
+                "\t[1]fuelTank2:" + Environment.NewLine;
+
+            // when
+            File.WriteAllText ("input.txt", inputText);
+            var returnCode = Program.Main ("list-partdeps", ".*uelTank.*", "-c", ".*Craft", "-i", "input.txt");
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));

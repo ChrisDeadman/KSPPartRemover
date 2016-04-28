@@ -38,17 +38,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Format\FormatIntegrationTest.cs" />
     <Compile Include="Integration\MunMkICraftTest.cs" />
     <Compile Include="Integration\SpaceStationTest.cs" />
-    <Compile Include="Features\PartRemoverTest.cs" />
-    <Compile Include="TestHelpers\KspObjectGenerator.cs" />
     <Compile Include="Integration\ProgramTest.cs" />
-    <Compile Include="Extension\KspObjectSearchExtensionsTest.cs" />
     <Compile Include="Integration\SaveFileTest.cs" />
-    <Compile Include="Extension\KspCraftObjectTest.cs" />
-    <Compile Include="Extension\KspPartObjectTest.cs" />
-    <Compile Include="Extension\KspCraftFileExtensionsTest.cs" />
+    <Compile Include="KspObjects\KspCraftObjectTest.cs" />
+    <Compile Include="KspObjects\KspPartObjectTest.cs" />
+    <Compile Include="Extension\KspObjectSearchExtensionsTest.cs" />
+    <Compile Include="Feature\PartLookupTest.cs" />
+    <Compile Include="Feature\CraftEditorTest.cs" />
+    <Compile Include="KspObjects\Format\FormatTest.cs" />
+    <Compile Include="KspObjects\KspObjectTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">
@@ -65,8 +65,8 @@
     <EmbeddedResource Include="Resources\Refuel at Minmus.in.sfs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Format\" />
-    <Folder Include="TestHelpers\" />
-    <Folder Include="Features\" />
+    <Folder Include="Feature\" />
+    <Folder Include="KspObjects\" />
+    <Folder Include="KspObjects\Format\" />
   </ItemGroup>
 </Project>

@@ -39,17 +39,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Format\KspProperty.cs" />
-    <Compile Include="Format\KspObject.cs" />
-    <Compile Include="Format\KspObjectReader.cs" />
-    <Compile Include="Format\KspObjectWriter.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Feature\PartLookup.cs" />
+    <Compile Include="KspObjects\KspProperty.cs" />
+    <Compile Include="KspObjects\KspObject.cs" />
+    <Compile Include="KspObjects\KspCraftObject.cs" />
+    <Compile Include="KspObjects\KspPartLinkProperty.cs" />
+    <Compile Include="KspObjects\KspPartObject.cs" />
+    <Compile Include="KspObjects\KspStringProperty.cs" />
+    <Compile Include="Feature\CraftEditor.cs" />
     <Compile Include="Extension\KspObjectSearchExtensions.cs" />
-    <Compile Include="Features\PartRemover.cs" />
-    <Compile Include="Extension\KspCraftFileExtensions.cs" />
-    <Compile Include="Format\KspReference.cs" />
-    <Compile Include="Extension\KspCraftObject.cs" />
-    <Compile Include="Extension\KspPartObject.cs" />
+    <Compile Include="KspObjects\Format\KspObjectReader.cs" />
+    <Compile Include="KspObjects\Format\KspObjectWriter.cs" />
+    <Compile Include="KspObjects\Format\KspProtoObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -63,8 +65,9 @@
   </Target>
   -->
   <ItemGroup>
-    <Folder Include="Format\" />
     <Folder Include="Extension\" />
-    <Folder Include="Features\" />
+    <Folder Include="Feature\" />
+    <Folder Include="KspObjects\" />
+    <Folder Include="KspObjects\Format\" />
   </ItemGroup>
 </Project>

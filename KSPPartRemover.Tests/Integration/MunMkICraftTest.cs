@@ -11,7 +11,7 @@ namespace KSPPartRemover.Tests.Integration
 		public void CanRemoveBoostersAttachedToNoseConeFromCraftFile()
 		{
 			// given
-			const string tempFileName = "temp.txt";
+			const String tempFileName = "temp.txt";
 
 			var inputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft")).ReadToEnd();
 			var expectedOutputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.expected.craft")).ReadToEnd();

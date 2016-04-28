@@ -11,7 +11,7 @@ namespace KSPPartRemover.Tests.Integration
 		public void CanRemoveEnginesFromAllBowserCrafts()
 		{
 			// given
-			const string tempFileName = "temp.txt";
+			const String tempFileName = "temp.txt";
 
 			var inputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Refuel at Minmus.in.sfs")).ReadToEnd();
 			var expectedOutputCraftText = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Refuel at Minmus.expected.sfs")).ReadToEnd();

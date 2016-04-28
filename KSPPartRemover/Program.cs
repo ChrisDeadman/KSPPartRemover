@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using KSPPartRemover.KspObjects;
+using KSPPartRemover.KspObjects.Format;
 using KSPPartRemover.Extension;
-using KSPPartRemover.Format;
-using KSPPartRemover.Features;
+using KSPPartRemover.Feature;
 
 namespace KSPPartRemover
 {
@@ -21,14 +22,14 @@ namespace KSPPartRemover
 		}
 
 		private static Command command;
-		private static string partNamePattern;
-		private static string inputText;
+		private static String partNamePattern;
+		private static String inputText;
 		private static TextWriter outputTextWriter;
-		private static string craftNamePattern;
+		private static String craftNamePattern;
 		private static bool silentExecution;
 
-		private static readonly Dictionary<string, Func<int, string[], int>> ArgumentParsers =
-			new Dictionary<string, Func<int, string[], int>> {
+		private static readonly Dictionary<String, Func<int, String[], int>> ArgumentParsers =
+			new Dictionary<String, Func<int, String[], int>> {
 				{ "remove-part", ParseRemoveCommand },
 				{ "list-crafts", ParseListCraftsCommand },
 				{ "list-parts", ParseListPartsCommand },
@@ -112,7 +113,7 @@ namespace KSPPartRemover
 			silentExecution = false;
 		}
 
-		public static int Main (params string[] args)
+		public static int Main (params String[] args)
 		{
 			try {
 				try {
@@ -160,24 +161,24 @@ namespace KSPPartRemover
 
 		private static int PerformListCraftsCommand ()
 		{
-			var kspObjTree = KspObjectReader.ReadObject (inputText);
+			var kspObjTree = KspObjectReader.ReadProtoObject (inputText);
 			var crafts = Crafts (kspObjTree, craftNamePattern);
 
 			ConsoleWriteLineIfNotSilent ("");
-			PrintList (crafts.Select (craft => craft.Name.Value));
+			PrintList (crafts.Select (craft => craft.Name));
 
 			return 0;
 		}
 
 		private static int PerformListPartsCommand ()
 		{
-			var kspObjTree = KspObjectReader.ReadObject (inputText);
+			var kspObjTree = KspObjectReader.ReadProtoObject (inputText);
 			var crafts = Crafts (kspObjTree, craftNamePattern);
 
 			ConsoleWriteLineIfNotSilent ("");
 			foreach (var craft in crafts) {
-				Console.WriteLine ("{0}:", craft.Name.Value);
-				PrintList (craft.Parts.Value.Select (part => string.Format ("\t{0} (id={1})", part.Name.Value, craft.GetIdOfPart (part))));
+				Console.WriteLine ($"{craft.Name}:");
+				PrintList (craft.Children<KspPartObject> ().Select (part => $"\t[{craft.IdOfChild (part)}] {part.Name}"));
 			}
 
 			return 0;
@@ -188,23 +189,24 @@ namespace KSPPartRemover
 			if (String.IsNullOrEmpty (partNamePattern))
 				throw new ArgumentException ("no part specified");
 
-			var kspObjTree = KspObjectReader.ReadObject (inputText);
+			var kspObjTree = KspObjectReader.ReadProtoObject (inputText);
 			var crafts = Crafts (kspObjTree, craftNamePattern);
 
 			foreach (var craft in crafts) {
 				if (!silentExecution) {
-					Console.WriteLine ("Entering craft '{0}'", craft.Name.Value);
+					Console.WriteLine ($"Entering craft '{craft.Name}'");
 				}
 
 				int partToRemoveId;
 				var matchingParts = int.TryParse (partNamePattern, out partToRemoveId) ? Parts (craft, partToRemoveId) : Parts (craft, partNamePattern);
-				var partRemovalAction = PartRemover.PrepareRemove(craft, matchingParts);
+				var dependentParts = matchingParts.SelectMany (part => PartLookup.EvaluateHardDependencies (craft, part)).Distinct ();
+				var removedParts = matchingParts.Concat (dependentParts).Distinct ().ToArray ();
 
 				if (!silentExecution) {
 					Console.WriteLine ();
 					Console.WriteLine ("The following parts will be removed:");
 					Console.WriteLine ("====================================");
-					PrintList (partRemovalAction.partsToBeRemoved.Select (part => string.Format ("[id={0}] {1}", part.Key, part.Value.Name.Value)));
+					PrintList (removedParts.Select (part => $"[id={craft.IdOfChild (part)}] {part.Name}"));
 					Console.WriteLine ("====================================");
 					if (!ConfirmPartRemoval ()) {
 						continue;
@@ -213,7 +215,7 @@ namespace KSPPartRemover
 					}
 				}
 
-				partRemovalAction.RemoveParts ();
+				craft.Edit ().RemoveParts (removedParts);
 			}
 
 			outputTextWriter.Write (KspObjectWriter.ToString (kspObjTree));
@@ -223,36 +225,41 @@ namespace KSPPartRemover
 
 		private static IReadOnlyList<KspCraftObject> Crafts (KspObject kspObjTree, String craftNamePattern)
 		{
-			ConsoleWriteLineIfNotSilent (string.Format ("Searching for crafts matching '{0}'...", craftNamePattern));
-			var occurrences = (String.IsNullOrEmpty (craftNamePattern))
-				? kspObjTree.GetCrafts ().ToList ()
-				: kspObjTree.GetCrafts ().Where (craft => MatchesRegex (craft.Name.Value, craftNamePattern)).ToList ();
+			ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNamePattern}'...");
+			var crafts = kspObjTree.Children <KspCraftObject> (recursive: true).ToList ();
+			if (kspObjTree is KspCraftObject) {
+				crafts.Add (kspObjTree as KspCraftObject);
+			}
 
-			if (occurrences.Count <= 0)
-				throw new ArgumentException (string.Format ("No craft matching '{0}' found, aborting.", craftNamePattern));
+			if (!String.IsNullOrEmpty (craftNamePattern)) {
+				crafts = crafts.Where (craft => MatchesRegex (craft.Name, craftNamePattern)).ToList ();
+				if (crafts.Count <= 0) {
+					throw new KeyNotFoundException ($"No craft matching '{craftNamePattern}' found, aborting.");
+				}
+			}
 
-			return occurrences;
+			return crafts;
 		}
 
 		private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, int partId)
 		{
-			ConsoleWriteLineIfNotSilent (string.Format ("Searching for part with id={0}...", partId));
-			var part = craft.GetPartById (partId);
+			ConsoleWriteLineIfNotSilent ($"Searching for part with id={partId}...");
+			var part = craft.Child<KspPartObject> (partId);
 			if (part == null)
-				throw new ArgumentException (string.Format ("No part with id={0} found, aborting.", partId));
+				throw new KeyNotFoundException ($"No part with id={partId} found, aborting.");
 
 			return new List<KspPartObject> (new[] { part });
 		}
 
-		private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, string partName)
+		private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, String partName)
 		{
-			ConsoleWriteLineIfNotSilent (string.Format ("Searching for parts with name '{0}'...", partName));
+			ConsoleWriteLineIfNotSilent ($"Searching for parts with name '{partName}'...");
 			var occurrences = (String.IsNullOrEmpty (partNamePattern))
-				? craft.Parts.Value.ToList ()
-				: craft.Parts.Value.Where (part => MatchesRegex (part.Name.Value, partNamePattern)).ToList ();
+				? craft.Children <KspPartObject> ().ToList ()
+				: craft.Children <KspPartObject> ().Where (part => MatchesRegex (part.Name, partNamePattern)).ToList ();
 			
 			if (occurrences.Count <= 0)
-				throw new ArgumentException (string.Format ("No parts with a name of '{0}' found, aborting.", partName));
+				throw new KeyNotFoundException ($"No parts with a name of '{partName}' found, aborting.");
 
 			return occurrences;
 		}
@@ -283,7 +290,7 @@ namespace KSPPartRemover
 			return answeredYes;
 		}
 
-		private static void ConsoleWriteIfNotSilent (string value)
+		private static void ConsoleWriteIfNotSilent (String value)
 		{
 			if (silentExecution)
 				return;
@@ -291,15 +298,15 @@ namespace KSPPartRemover
 			Console.Write (value);
 		}
 
-		private static void ConsoleWriteLineIfNotSilent (string value = null)
+		private static void ConsoleWriteLineIfNotSilent (String value = null)
 		{
 			if (silentExecution)
 				return;
 
-			Console.WriteLine (value ?? string.Empty);
+			Console.WriteLine (value ?? String.Empty);
 		}
 
-		private static int ParseRemoveCommand (int argIdx, params string[] args)
+		private static int ParseRemoveCommand (int argIdx, params String[] args)
 		{
 			argIdx++;
 			if (args.Length <= argIdx)
@@ -314,7 +321,7 @@ namespace KSPPartRemover
 			return argIdx;
 		}
 
-		private static int ParseListCraftsCommand (int argIdx, params string[] args)
+		private static int ParseListCraftsCommand (int argIdx, params String[] args)
 		{
 			if (command != Command.Unspecified)
 				throw new ArgumentException ("");
@@ -324,7 +331,7 @@ namespace KSPPartRemover
 			return argIdx;
 		}
 
-		private static int ParseListPartsCommand (int argIdx, params string[] args)
+		private static int ParseListPartsCommand (int argIdx, params String[] args)
 		{
 			if (command != Command.Unspecified)
 				throw new ArgumentException ("");
@@ -334,10 +341,10 @@ namespace KSPPartRemover
 			return argIdx;
 		}
 
-		private static void ParseArguments (params string[] args)
+		private static void ParseArguments (params String[] args)
 		{
 			for (var argIdx = 0; argIdx < args.Length; argIdx++) {
-				Func<int, string[], int> parser;
+				Func<int, String[], int> parser;
 				if (!ArgumentParsers.TryGetValue (args [argIdx], out parser))
 					throw new ArgumentException ("Illegal argument", args [argIdx]);
 
@@ -345,7 +352,7 @@ namespace KSPPartRemover
 			}
 		}
 
-		private static int ParseInputFilePathArgument (int argIdx, params string[] args)
+		private static int ParseInputFilePathArgument (int argIdx, params String[] args)
 		{
 			argIdx++;
 			if (args.Length <= argIdx)
@@ -357,7 +364,7 @@ namespace KSPPartRemover
 			return argIdx;
 		}
 
-		private static int ParseOutputFilePathArgument (int argIdx, params string[] args)
+		private static int ParseOutputFilePathArgument (int argIdx, params String[] args)
 		{
 			argIdx++;
 			if (args.Length <= argIdx)
@@ -367,7 +374,7 @@ namespace KSPPartRemover
 			return argIdx;
 		}
 
-		private static int ParseCraftNameArgument (int argIdx, params string[] args)
+		private static int ParseCraftNameArgument (int argIdx, params String[] args)
 		{
 			argIdx++;
 			if (args.Length <= argIdx)
@@ -377,7 +384,7 @@ namespace KSPPartRemover
 			return argIdx;
 		}
 
-		private static int ParseSilentExecutionArgument (int argIdx, params string[] args)
+		private static int ParseSilentExecutionArgument (int argIdx, params String[] args)
 		{
 			silentExecution = true;
 			return argIdx;

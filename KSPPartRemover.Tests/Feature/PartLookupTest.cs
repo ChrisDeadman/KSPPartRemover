@@ -61,13 +61,12 @@ namespace KSPPartRemover.Tests.Feature
             var craft = createTestCraft ();
             var parts = craft.Children<KspPartObject> ().ToArray ();
 
-            var dependency = parts [2];
+            var dependency = parts [0];
             var expectedDependencies = new[] {
-                parts [1], // parent is [2]
-                parts [3], // srfN to [1]
-                parts [4], // attN to [3]
-                parts [5], // sym to [1]
-                parts [8] // link to [1]
+                parts [3], // srfN to [0]
+                parts [6], // link to [0]
+                parts [7], // srfN to [0]
+                parts [8], // attN to [0]
             };
 
             // when

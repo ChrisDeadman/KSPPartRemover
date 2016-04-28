@@ -7,7 +7,7 @@ namespace KSPPartRemover.KspObjects.Format
 {
     public class KspObjectReader
     {
-        public static KspObject ReadProtoObject (String text)
+        public static KspObject ReadObject (String text)
         {
             var lines = text.Split (new [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select (str => str.TrimStart ()).ToArray ();
 

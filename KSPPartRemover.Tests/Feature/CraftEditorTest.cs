@@ -57,7 +57,7 @@ namespace KSPPartRemover.Tests.Feature
                 .AddProperty (new KspPartLinkProperty ("attN", "bottom", parts [2]))
                 .AddProperty (new KspPartLinkProperty ("attN", "top", parts [0]));
 
-            var partsToRemove = new[] {    parts [1], parts [2] };
+            var partsToRemove = new[] { parts [1], parts [2] };
 
             var expectedRemainingParts = new[] { parts [0], parts [3] };
 

@@ -189,7 +189,7 @@ namespace KSPPartRemover
             if (String.IsNullOrEmpty (partNamePattern))
                 throw new ArgumentException ("no part specified");
 
-            var kspObjTree = KspObjectReader.ReadProtoObject (inputText);
+            var kspObjTree = KspObjectReader.ReadObject (inputText);
             var crafts = Crafts (kspObjTree, craftNamePattern);
 
             foreach (var craft in crafts) {

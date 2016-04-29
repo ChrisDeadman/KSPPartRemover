@@ -236,6 +236,7 @@ namespace KSPPartRemover
 
             var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
             var crafts = Crafts (kspObjTree, craftNameRegex);
+            var removedPartCount = 0;
 
             foreach (var craft in crafts) {
                 if (!silentExecution) {
@@ -248,9 +249,11 @@ namespace KSPPartRemover
                 var dependentParts = matchingParts.SelectMany (part => PartLookup.EvaluateHardDependencies (craft, part)).Distinct ();
                 var removedParts = matchingParts.Concat (dependentParts).Distinct ().ToArray ();
 
-                if (removedParts.Length <= 0)
-                    throw new KeyNotFoundException ($"No parts matching '{partNamePattern}' found, aborting.");
-                
+                if (removedParts.Length <= 0) {
+                    ConsoleWriteLineIfNotSilent ($"No parts matching '{partNamePattern}' found");
+                    continue;
+                }
+
                 if (!silentExecution) {
                     Console.WriteLine ();
                     Console.WriteLine ("The following parts will be removed:");
@@ -265,13 +268,14 @@ namespace KSPPartRemover
                 }
 
                 craft.Edit ().RemoveParts (removedParts);
+                removedPartCount += removedParts.Length;
             }
 
             var craftToken = KspObjectWriter.WriteObject (kspObjTree);
             var craftString = KspTokenWriter.WriteToken(craftToken, new StringBuilder()).ToString();
             outputTextWriter.Write (craftString);
 
-            return 0;
+            return (removedPartCount > 0) ? 0 : -1;
         }
 
         private static IReadOnlyList<KspCraftObject> Crafts (KspObject kspObjTree, String craftNameRegex)

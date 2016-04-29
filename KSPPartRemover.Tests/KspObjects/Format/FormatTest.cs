@@ -13,28 +13,32 @@ namespace KSPPartRemover.Tests.KspObjects.Format
         public void CanReadAndWriteKspObjectsFromCraftFileString ()
         {
             // given
-            var inputCraftText = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft")).ReadToEnd ();
+            var textIn = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft")).ReadToEnd ();
 
             // when
-            var deserialized = KspObjectReader.ReadObject (KspTokenReader.ReadToken (inputCraftText));
-            var serialized = KspObjectWriter.WriteObject (deserialized, new StringBuilder ()).ToString ();
+            var tokenIn = KspTokenReader.ReadToken (textIn);
+            var kspObject = KspObjectReader.ReadObject (tokenIn);
+            var tokenOut = KspObjectWriter.WriteObject (kspObject);
+            var textOut = KspTokenWriter.WriteToken (tokenOut, new StringBuilder ()).ToString ();
 
             // then
-            Assert.That (serialized, Is.EqualTo (inputCraftText));
+            Assert.That (textOut, Is.EqualTo (textIn));
         }
 
         [Test]
         public void CanReadAndWriteKspObjectsFromSaveFileString ()
         {
             // given
-            var inputCraftText = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Refuel at Minmus.in.sfs")).ReadToEnd ();
+            var textIn = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Refuel at Minmus.in.sfs")).ReadToEnd ();
 
             // when
-            var deserialized = KspObjectReader.ReadObject (KspTokenReader.ReadToken (inputCraftText));
-            var serialized = KspObjectWriter.WriteObject (deserialized, new StringBuilder ()).ToString ();
+            var tokenIn = KspTokenReader.ReadToken (textIn);
+            var kspObject = KspObjectReader.ReadObject (tokenIn);
+            var tokenOut = KspObjectWriter.WriteObject (kspObject);
+            var textOut = KspTokenWriter.WriteToken (tokenOut, new StringBuilder ()).ToString ();
 
             // then
-            Assert.That (serialized, Is.EqualTo (inputCraftText));
+            Assert.That (textOut, Is.EqualTo (textIn));
         }
     }
 }

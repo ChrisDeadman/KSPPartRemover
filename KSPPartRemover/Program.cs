@@ -262,7 +262,9 @@ namespace KSPPartRemover
                 craft.Edit ().RemoveParts (removedParts);
             }
 
-            outputTextWriter.Write (KspObjectWriter.WriteObject (kspObjTree, new StringBuilder()).ToString());
+            var craftToken = KspObjectWriter.WriteObject (kspObjTree);
+            var craftString = KspTokenWriter.WriteToken(craftToken, new StringBuilder()).ToString();
+            outputTextWriter.Write (craftString);
 
             return 0;
         }

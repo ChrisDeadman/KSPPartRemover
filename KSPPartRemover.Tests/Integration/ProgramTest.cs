@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
 using NUnit.Framework;
 using KSPPartRemover.KspObjects;
 using KSPPartRemover.KspObjects.Format;
-using KSPPartRemover.Extension;
 
 namespace KSPPartRemover.Tests.Integration
 {
@@ -76,9 +74,9 @@ namespace KSPPartRemover.Tests.Integration
                 .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
                 .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
                 .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
-            
-            var inputText = KspObjectWriter.WriteObject (inputCraft, new StringBuilder ()).ToString ();
-            var expectedResult = KspObjectWriter.WriteObject (expectedCraft, new StringBuilder ()).ToString ();
+
+            var inputText = KspObjToString (inputCraft);
+            var expectedResult = KspObjToString (expectedCraft);
 
             // when
             File.WriteAllText ("input.txt", inputText);
@@ -102,9 +100,9 @@ namespace KSPPartRemover.Tests.Integration
             var expectedCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
                 .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
                 .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")));
-            
-            var inputText = KspObjectWriter.WriteObject (inputCraft, new StringBuilder ()).ToString ();
-            var expectedResult = KspObjectWriter.WriteObject (expectedCraft, new StringBuilder ()).ToString ();
+
+            var inputText = KspObjToString (inputCraft);
+            var expectedResult = KspObjToString (expectedCraft);
 
             // when
             File.WriteAllText ("input.txt", inputText);
@@ -142,9 +140,9 @@ namespace KSPPartRemover.Tests.Integration
                     .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))
                     .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))));
-                    
-            var inputText = KspObjectWriter.WriteObject (inputCrafts, new StringBuilder ()).ToString ();
-            var expectedResult = KspObjectWriter.WriteObject (expectedCrafts, new StringBuilder ()).ToString ();
+            
+            var inputText = KspObjToString (inputCrafts);
+            var expectedResult = KspObjToString (expectedCrafts);
 
             // when
             File.WriteAllText ("input.txt", inputText);
@@ -164,7 +162,7 @@ namespace KSPPartRemover.Tests.Integration
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")))
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored")));
             
-            var inputText = KspObjectWriter.WriteObject (inputCrafts, new StringBuilder ()).ToString ();
+            var inputText = KspObjToString (inputCrafts);
 
             var expectedResult = "someCraft" + Environment.NewLine + "anotherCraft" + Environment.NewLine;
 
@@ -192,7 +190,7 @@ namespace KSPPartRemover.Tests.Integration
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored"))
                     .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart"))));
             
-            var inputText = KspObjectWriter.WriteObject (inputCrafts, new StringBuilder ()).ToString ();
+            var inputText = KspObjToString (inputCrafts);
 
             var expectedResult =
                 "someCraft:" + Environment.NewLine +
@@ -234,7 +232,7 @@ namespace KSPPartRemover.Tests.Integration
             craft1.Children [1].AddProperty (new KspPartLinkProperty ("sym", "top", (KspPartObject)craft1.Children [0], false));
             craft2.Children [0].AddProperty (new KspPartLinkProperty ("attN", "bottom", (KspPartObject)craft2.Children [1], false));
 
-            var inputText = KspObjectWriter.WriteObject (inputCrafts, new StringBuilder ()).ToString ();
+            var inputText = KspObjToString (inputCrafts);
 
             var expectedResult =
                 "someCraft:" + Environment.NewLine +
@@ -263,7 +261,7 @@ namespace KSPPartRemover.Tests.Integration
                 .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
                 .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
             
-            var inputText = KspObjectWriter.WriteObject (inputCraft, new StringBuilder ()).ToString ();
+            var inputText = KspObjToString (inputCraft);
 
             // when
             File.WriteAllText ("input.txt", inputText);
@@ -283,7 +281,7 @@ namespace KSPPartRemover.Tests.Integration
                 .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
                 .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
 
-            var inputText = KspObjectWriter.WriteObject (inputCraft, new StringBuilder ()).ToString ();
+            var inputText = KspObjToString (inputCraft);
 
             // when
             File.WriteAllText ("input.txt", inputText);
@@ -302,7 +300,7 @@ namespace KSPPartRemover.Tests.Integration
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft")))
                 .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")));
             
-            var inputText = KspObjectWriter.WriteObject (inputCrafts, new StringBuilder ()).ToString ();
+            var inputText = KspObjToString (inputCrafts);
 
             // when
             File.WriteAllText ("input.txt", inputText);
@@ -311,6 +309,12 @@ namespace KSPPartRemover.Tests.Integration
             // then
             Assert.That (StdOutput.ToString (), Is.StringContaining ("No craft matching 'nonExistingCraft' found, aborting"));
             Assert.That (returnCode, Is.LessThan (0));
+        }
+
+        private String KspObjToString (KspObject obj)
+        {
+            var token = KspObjectWriter.WriteObject (obj);
+            return KspTokenWriter.WriteToken (token, new StringBuilder ()).ToString ();
         }
     }
 }

@@ -1,68 +1,57 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Collections.Generic;
 using KSPPartRemover.Extension;
 
 namespace KSPPartRemover.KspObjects.Format
 {
     public class KspObjectWriter
     {
-        public static StringBuilder WriteObject (KspObject obj, StringBuilder sb)
+        public static KspToken WriteObject (KspObject obj)
         {
-            WriteObject (obj, sb, 0);
-            return sb;
+            var attributes = obj.Properties.Select (p => ResolveProperty (obj, p)).ToList ();
+            var tokens = obj.Children.Select (WriteObject).ToList ();
+
+            return obj.IsGlobalObject
+                ? KspGlobalTokenExtension.CreateGlobalToken (attributes, tokens)
+                : new KspToken (obj.Type, attributes, tokens);
         }
 
-        private static void WriteObject (KspObject obj, StringBuilder sb, int lvl)
+        private static KeyValuePair<String, String> ResolveProperty (KspObject obj, KspProperty property)
         {
-            if (!obj.IsGlobalObject) {
-                WriteLine (obj.Type, sb, lvl);
-                WriteLine ("{", sb, lvl);
-            }
+            var value = "<INVALID>";
 
-            foreach (var property in obj.Properties) {
-                WriteProperty (obj, property, sb, lvl + (obj.IsGlobalObject ? 0 : 1));
-            }
-
-            foreach (var child in obj.Children) {
-                WriteObject (child, sb, lvl + (obj.IsGlobalObject ? 0 : 1));
-            }
-
-            if (!obj.IsGlobalObject) {
-                WriteLine ("}", sb, lvl);
-            }
-        }
-
-        private static void WriteProperty (KspObject obj, KspProperty property, StringBuilder sb, int lvl)
-        {
             var stringProperty = property as KspStringProperty;
             if (stringProperty != null) {
-                WriteLine ($"{property.Name} = {stringProperty.Text}", sb, lvl      );
-                return;
+                value = stringProperty.Text;
             }
 
             var partLinkProperty = property as KspPartLinkProperty;
             if (partLinkProperty != null) {
-                var craft = obj.Parent as KspCraftObject;
-                var refStr = partLinkProperty.IsIdReference ? craft.IdOfChild (partLinkProperty.Part).ToString () : partLinkProperty.Part.Name;
-
-                if (partLinkProperty.Prefix != null) {
-                    WriteLine ($"{partLinkProperty.Name} = {partLinkProperty.Prefix}, {refStr}", sb, lvl); 
-                } else {
-                    WriteLine ($"{partLinkProperty.Name} = {refStr}",sb, lvl     );
-                }
-                return;
+                value = ResolvePartLinkString (obj, partLinkProperty);
             }
 
-            throw new NotSupportedException ($"Property of type '{property.GetType ().Name}' not supported");
+            return new KeyValuePair<String, String> (property.Name, value);
         }
 
-        private static void WriteLine (String line, StringBuilder sb, int level)
+        private static String ResolvePartLinkString (KspObject obj, KspPartLinkProperty property)
         {
-            for (var i = 0; i < level; i++) {
-                sb.Append ("\t");
+            var craft = obj.Parent as KspCraftObject;
+
+            var sb = new StringBuilder ();
+
+            if (property.Prefix != null) {
+                sb.Append ($"{property.Prefix}, ");
             }
-            sb.AppendLine (line);
+
+            if (property.IsIdReference) {
+                sb.Append ($"{craft.IdOfChild (property.Part)}");
+            } else {
+                sb.Append ($"{property.Part.Name}");
+            }
+
+            return sb.ToString ();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace KSPPartRemover.KspObjects.Format
 
             var name = lines [index].Trim ();
             var isGlobalToken = name.Contains ("=");
-            var attributes = new List<KeyValuePair<string, string>> ();
+            var attributes = new List<KeyValuePair<String, String>> ();
             var tokens = new List<KspToken> ();
 
             if (!isGlobalToken) {

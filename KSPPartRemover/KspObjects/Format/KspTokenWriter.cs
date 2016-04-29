@@ -37,7 +37,7 @@ namespace KSPPartRemover.KspObjects.Format
 
         private static void WriteAttribute (KeyValuePair<String, String> attribute, StringBuilder sb, int lvl)
         {
-            WriteLine ($"{attribute.Key} = {attribute.Value}", sb, lvl      );
+            WriteLine ($"{attribute.Key} = {attribute.Value}", sb, lvl );
         }
 
         private static void WriteLine (String line, StringBuilder sb, int level)

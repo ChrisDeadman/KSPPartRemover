@@ -3,11 +3,11 @@ using System.IO;
 using System.Text;
 using System.Reflection;
 using NUnit.Framework;
-using KSPPartRemover.KspObjects.Format;
+using KSPPartRemover.KspFormat;
 
-namespace KSPPartRemover.Tests.KspObjects.Format
+namespace KSPPartRemover.Tests.KspFormat
 {
-    public class FormatTest
+    public class KspFormatTest
     {
         [Test]
         public void CanReadAndWriteKspObjectsFromCraftFileString ()

@@ -41,20 +41,20 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Feature\PartLookup.cs" />
-    <Compile Include="KspObjects\KspProperty.cs" />
-    <Compile Include="KspObjects\KspObject.cs" />
-    <Compile Include="KspObjects\KspCraftObject.cs" />
-    <Compile Include="KspObjects\KspPartLinkProperty.cs" />
-    <Compile Include="KspObjects\KspPartObject.cs" />
-    <Compile Include="KspObjects\KspStringProperty.cs" />
     <Compile Include="Feature\CraftEditor.cs" />
-    <Compile Include="Extension\KspObjectSearchExtensions.cs" />
-    <Compile Include="KspObjects\Format\KspObjectReader.cs" />
-    <Compile Include="KspObjects\Format\KspObjectWriter.cs" />
-    <Compile Include="KspObjects\Format\KspToken.cs" />
-    <Compile Include="KspObjects\Format\KspGlobalTokenExtension.cs" />
-    <Compile Include="KspObjects\Format\KspTokenReader.cs" />
-    <Compile Include="KspObjects\Format\KspTokenWriter.cs" />
+    <Compile Include="KspFormat\Objects\KspCraftObject.cs" />
+    <Compile Include="KspFormat\Objects\KspObject.cs" />
+    <Compile Include="KspFormat\Objects\KspObjectSearchExtensions.cs" />
+    <Compile Include="KspFormat\Objects\KspPartLinkProperty.cs" />
+    <Compile Include="KspFormat\Objects\KspPartObject.cs" />
+    <Compile Include="KspFormat\Objects\KspProperty.cs" />
+    <Compile Include="KspFormat\Objects\KspStringProperty.cs" />
+    <Compile Include="KspFormat\KspObjectReader.cs" />
+    <Compile Include="KspFormat\KspObjectWriter.cs" />
+    <Compile Include="KspFormat\KspToken.cs" />
+    <Compile Include="KspFormat\KspTokenGlobalExtension.cs" />
+    <Compile Include="KspFormat\KspTokenReader.cs" />
+    <Compile Include="KspFormat\KspTokenWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -68,9 +68,8 @@
   </Target>
   -->
   <ItemGroup>
-    <Folder Include="Extension\" />
     <Folder Include="Feature\" />
-    <Folder Include="KspObjects\" />
-    <Folder Include="KspObjects\Format\" />
+    <Folder Include="KspFormat\" />
+    <Folder Include="KspFormat\Objects\" />
   </ItemGroup>
 </Project>

@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
-using KSPPartRemover.Extension;
+using KSPPartRemover.KspFormat.Objects;
 
-namespace KSPPartRemover.KspObjects.Format
+namespace KSPPartRemover.KspFormat
 {
     public class KspObjectWriter
     {
@@ -14,7 +14,7 @@ namespace KSPPartRemover.KspObjects.Format
             var tokens = obj.Children.Select (WriteObject).ToList ();
 
             return obj.IsGlobalObject
-                ? KspGlobalTokenExtension.CreateGlobalToken (attributes, tokens)
+                ? KspTokenGlobalExtension.CreateGlobalToken (attributes, tokens)
                 : new KspToken (obj.Type, attributes, tokens);
         }
 

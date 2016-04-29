@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KSPPartRemover.KspObjects
+namespace KSPPartRemover.KspFormat.Objects
 {
     public class KspPartLinkProperty : KspProperty
     {

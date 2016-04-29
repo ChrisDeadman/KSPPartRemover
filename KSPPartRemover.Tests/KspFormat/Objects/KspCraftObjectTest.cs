@@ -1,8 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
-using KSPPartRemover.KspObjects;
+using KSPPartRemover.KspFormat.Objects;
 
-namespace KSPPartRemover.Tests.KspObjects
+namespace KSPPartRemover.Tests.KspFormat.Objects
 {
     public class KspCraftObjectTest
     {

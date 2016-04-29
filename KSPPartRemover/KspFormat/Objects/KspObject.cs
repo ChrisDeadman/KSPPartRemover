@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace KSPPartRemover.KspObjects
+namespace KSPPartRemover.KspFormat.Objects
 {
     public class KspObject
     {

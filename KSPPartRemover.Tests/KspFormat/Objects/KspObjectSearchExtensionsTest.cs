@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using NUnit.Framework;
-using KSPPartRemover.KspObjects;
-using KSPPartRemover.Extension;
+using KSPPartRemover.KspFormat.Objects;
 
-namespace KSPPartRemover.Tests.Extension
+namespace KSPPartRemover.Tests.KspFormat.Objects
 {
     public class KspObjectSearchExtensionsTest
     {

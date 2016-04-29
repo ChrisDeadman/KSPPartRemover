@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
-using KSPPartRemover.KspObjects;
-using KSPPartRemover.Extension;
+using KSPPartRemover.KspFormat.Objects;
 
-namespace KSPPartRemover.Tests.KspObjects
+namespace KSPPartRemover.Tests.KspFormat.Objects
 {
     public class KspPartObjectTest
     {

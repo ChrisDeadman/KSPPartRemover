@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KSPPartRemover.KspObjects.Format
+namespace KSPPartRemover.KspFormat
 {
-    public static class KspGlobalTokenExtension
+    public static class KspTokenGlobalExtension
     {
         private const String GlobalTokenName = "KSPPR_GLOBAL_TOKEN";
 

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using KSPPartRemover.KspObjects;
 
-namespace KSPPartRemover.Extension
+namespace KSPPartRemover.KspFormat.Objects
 {
     public static class KspObjectSearchExtensions
     {

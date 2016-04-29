@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using KSPPartRemover.Extension;
+using KSPPartRemover.KspFormat.Objects;
 
-namespace KSPPartRemover.KspObjects.Format
+namespace KSPPartRemover.KspFormat
 {
     public class KspObjectReader
     {

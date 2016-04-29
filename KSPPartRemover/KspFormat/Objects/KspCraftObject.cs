@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
-using KSPPartRemover.Extension;
 
-namespace KSPPartRemover.KspObjects
+namespace KSPPartRemover.KspFormat.Objects
 {
     public class KspCraftObject : KspObject
     {

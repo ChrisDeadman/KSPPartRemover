@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace KSPPartRemover.KspObjects.Format
+namespace KSPPartRemover.KspFormat
 {
     public class KspTokenReader
     {
@@ -42,7 +42,7 @@ namespace KSPPartRemover.KspObjects.Format
             }
 
             token = isGlobalToken
-                ? KspGlobalTokenExtension.CreateGlobalToken (attributes, tokens)
+                ? KspTokenGlobalExtension.CreateGlobalToken (attributes, tokens)
                 : new KspToken (name, attributes, tokens);
 
             return index;

@@ -42,13 +42,13 @@
     <Compile Include="Integration\SpaceStationTest.cs" />
     <Compile Include="Integration\ProgramTest.cs" />
     <Compile Include="Integration\SaveFileTest.cs" />
-    <Compile Include="KspObjects\KspCraftObjectTest.cs" />
-    <Compile Include="KspObjects\KspPartObjectTest.cs" />
-    <Compile Include="Extension\KspObjectSearchExtensionsTest.cs" />
     <Compile Include="Feature\PartLookupTest.cs" />
     <Compile Include="Feature\CraftEditorTest.cs" />
-    <Compile Include="KspObjects\Format\FormatTest.cs" />
-    <Compile Include="KspObjects\KspObjectTest.cs" />
+    <Compile Include="KspFormat\Objects\KspCraftObjectTest.cs" />
+    <Compile Include="KspFormat\Objects\KspObjectSearchExtensionsTest.cs" />
+    <Compile Include="KspFormat\Objects\KspObjectTest.cs" />
+    <Compile Include="KspFormat\Objects\KspPartObjectTest.cs" />
+    <Compile Include="KspFormat\KspFormatTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">
@@ -66,7 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Feature\" />
-    <Folder Include="KspObjects\" />
-    <Folder Include="KspObjects\Format\" />
+    <Folder Include="KspFormat\" />
+    <Folder Include="KspFormat\Objects\" />
   </ItemGroup>
 </Project>

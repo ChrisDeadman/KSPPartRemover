@@ -2,8 +2,8 @@
 using System.IO;
 using System.Text;
 using NUnit.Framework;
-using KSPPartRemover.KspObjects;
-using KSPPartRemover.KspObjects.Format;
+using KSPPartRemover.KspFormat;
+using KSPPartRemover.KspFormat.Objects;
 
 namespace KSPPartRemover.Tests.Integration
 {

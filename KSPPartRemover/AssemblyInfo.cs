@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("KSPPartRemover")]
 [assembly: AssemblyDescription ("Removes parts from KSP craft and save files")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("Deadman")]
+[assembly: AssemblyCompany ("Deads Inc.")]
 [assembly: AssemblyProduct ("KSPPartRemover")]
 [assembly: AssemblyCopyright ("Copyright © 2016")]
 [assembly: AssemblyTrademark ("")]

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KSPPartRemover.KspObjects.Format
+namespace KSPPartRemover.KspFormat
 {
     public class KspToken
     {

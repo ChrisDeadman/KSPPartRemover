@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using KSPPartRemover.KspObjects;
-using KSPPartRemover.KspObjects.Format;
-using KSPPartRemover.Extension;
+using KSPPartRemover.KspFormat;
+using KSPPartRemover.KspFormat.Objects;
 using KSPPartRemover.Feature;
 
 namespace KSPPartRemover

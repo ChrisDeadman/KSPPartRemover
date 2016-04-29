@@ -51,7 +51,10 @@
     <Compile Include="Extension\KspObjectSearchExtensions.cs" />
     <Compile Include="KspObjects\Format\KspObjectReader.cs" />
     <Compile Include="KspObjects\Format\KspObjectWriter.cs" />
-    <Compile Include="KspObjects\Format\KspProtoObject.cs" />
+    <Compile Include="KspObjects\Format\KspToken.cs" />
+    <Compile Include="KspObjects\Format\KspGlobalTokenExtension.cs" />
+    <Compile Include="KspObjects\Format\KspTokenReader.cs" />
+    <Compile Include="KspObjects\Format\KspTokenWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

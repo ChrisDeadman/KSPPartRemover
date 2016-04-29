@@ -162,7 +162,7 @@ namespace KSPPartRemover
 
         private static int PerformListCraftsCommand ()
         {
-            var kspObjTree = KspObjectReader.ReadObject (inputText);
+            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
             var crafts = Crafts (kspObjTree, craftNameRegex);
 
             ConsoleWriteLineIfNotSilent ("");
@@ -173,7 +173,7 @@ namespace KSPPartRemover
 
         private static int PerformListPartsCommand ()
         {
-            var kspObjTree = KspObjectReader.ReadObject (inputText);
+            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
             var crafts = Crafts (kspObjTree, craftNameRegex);
 
             ConsoleWriteLineIfNotSilent ("");
@@ -190,7 +190,7 @@ namespace KSPPartRemover
 
         private static int PerformListPartDepsCommand ()
         {
-            var kspObjTree = KspObjectReader.ReadObject (inputText);
+            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
             var crafts = Crafts (kspObjTree, craftNameRegex);
 
             ConsoleWriteLineIfNotSilent ("");
@@ -229,7 +229,7 @@ namespace KSPPartRemover
                 throw new ArgumentException ("no part specified");
             }
 
-            var kspObjTree = KspObjectReader.ReadObject (inputText);
+            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
             var crafts = Crafts (kspObjTree, craftNameRegex);
 
             foreach (var craft in crafts) {
@@ -262,7 +262,7 @@ namespace KSPPartRemover
                 craft.Edit ().RemoveParts (removedParts);
             }
 
-            outputTextWriter.Write (KspObjectWriter.ToString (kspObjTree));
+            outputTextWriter.Write (KspObjectWriter.WriteObject (kspObjTree, new StringBuilder()).ToString());
 
             return 0;
         }

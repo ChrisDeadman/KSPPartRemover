@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Reflection;
 using NUnit.Framework;
 using KSPPartRemover.KspObjects.Format;
@@ -15,8 +16,8 @@ namespace KSPPartRemover.Tests.KspObjects.Format
             var inputCraftText = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft")).ReadToEnd ();
 
             // when
-            var deserialized = KspObjectReader.ReadObject (inputCraftText);
-            var serialized = KspObjectWriter.ToString (deserialized);
+            var deserialized = KspObjectReader.ReadObject (KspTokenReader.ReadToken (inputCraftText));
+            var serialized = KspObjectWriter.WriteObject (deserialized, new StringBuilder ()).ToString ();
 
             // then
             Assert.That (serialized, Is.EqualTo (inputCraftText));
@@ -29,8 +30,8 @@ namespace KSPPartRemover.Tests.KspObjects.Format
             var inputCraftText = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Refuel at Minmus.in.sfs")).ReadToEnd ();
 
             // when
-            var deserialized = KspObjectReader.ReadObject (inputCraftText);
-            var serialized = KspObjectWriter.ToString (deserialized);
+            var deserialized = KspObjectReader.ReadObject (KspTokenReader.ReadToken (inputCraftText));
+            var serialized = KspObjectWriter.WriteObject (deserialized, new StringBuilder ()).ToString ();
 
             // then
             Assert.That (serialized, Is.EqualTo (inputCraftText));

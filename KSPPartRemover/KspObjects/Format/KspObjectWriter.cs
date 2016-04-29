@@ -7,11 +7,10 @@ namespace KSPPartRemover.KspObjects.Format
 {
     public class KspObjectWriter
     {
-        public static String ToString (KspObject obj)
+        public static StringBuilder WriteObject (KspObject obj, StringBuilder sb)
         {
-            var sb = new StringBuilder ();
             WriteObject (obj, sb, 0);
-            return sb.ToString ();
+            return sb;
         }
 
         private static void WriteObject (KspObject obj, StringBuilder sb, int lvl)
@@ -38,7 +37,7 @@ namespace KSPPartRemover.KspObjects.Format
         {
             var stringProperty = property as KspStringProperty;
             if (stringProperty != null) {
-                WriteLine ($"{property.Name} = {stringProperty.Text}", sb, lvl   );
+                WriteLine ($"{property.Name} = {stringProperty.Text}", sb, lvl      );
                 return;
             }
 
@@ -50,7 +49,7 @@ namespace KSPPartRemover.KspObjects.Format
                 if (partLinkProperty.Prefix != null) {
                     WriteLine ($"{partLinkProperty.Name} = {partLinkProperty.Prefix}, {refStr}", sb, lvl); 
                 } else {
-                    WriteLine ($"{partLinkProperty.Name} = {refStr}",sb, lvl  );
+                    WriteLine ($"{partLinkProperty.Name} = {refStr}",sb, lvl     );
                 }
                 return;
             }

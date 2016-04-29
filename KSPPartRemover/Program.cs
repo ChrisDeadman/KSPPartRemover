@@ -318,7 +318,7 @@ namespace KSPPartRemover
 
         private static void PrintList (IEnumerable<String> entries)
         {
-            const int entriesPerPage = 50;
+            const int entriesPerPage = 20;
 
             var currentEntry = 1;
             foreach (var entry in entries) {

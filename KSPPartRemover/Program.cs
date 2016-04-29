@@ -384,7 +384,9 @@ namespace KSPPartRemover
             if (args.Length <= argIdx)
                 throw new ArgumentException ("");
 
-            using (var inputTextReader = new StreamReader (new FileStream (args [argIdx], FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
+            var fileName = args [argIdx];
+
+            using (var inputTextReader = new StreamReader (new FileStream (fileName, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
                 inputText = inputTextReader.ReadToEnd ();
 
             return argIdx;
@@ -396,7 +398,15 @@ namespace KSPPartRemover
             if (args.Length <= argIdx)
                 throw new ArgumentException ("");
 
-            outputTextWriter = new StreamWriter (new FileStream (args [argIdx], FileMode.Truncate, FileAccess.ReadWrite, FileShare.Read), Encoding.UTF8);
+            var fileName = args [argIdx];
+
+            if (!File.Exists(fileName)) {
+                using (File.Create(fileName)) {
+                    
+                };
+            }
+
+            outputTextWriter = new StreamWriter (new FileStream (fileName, FileMode.Truncate, FileAccess.ReadWrite, FileShare.Read), Encoding.UTF8);
             return argIdx;
         }
 

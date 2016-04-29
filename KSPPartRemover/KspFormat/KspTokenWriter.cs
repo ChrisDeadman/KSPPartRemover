@@ -14,6 +14,10 @@ namespace KSPPartRemover.KspFormat
 
         private static void WriteToken (KspToken token, StringBuilder sb, int lvl)
         {
+            if (String.IsNullOrEmpty (token.Name)) {
+                return;
+            }
+
             if (!token.IsGlobalToken ()) {
                 WriteLine (token.Name, sb, lvl);
                 WriteLine ("{", sb, lvl);
@@ -36,7 +40,7 @@ namespace KSPPartRemover.KspFormat
 
         private static void WriteAttribute (KeyValuePair<String, String> attribute, StringBuilder sb, int lvl)
         {
-            WriteLine ($"{attribute.Key} = {attribute.Value}", sb, lvl   );
+            WriteLine ($"{attribute.Key} = {attribute.Value}", sb, lvl );
         }
 
         private static void WriteLine (String line, StringBuilder sb, int level)

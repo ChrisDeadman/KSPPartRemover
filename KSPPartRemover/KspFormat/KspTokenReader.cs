@@ -6,13 +6,15 @@ namespace KSPPartRemover.KspFormat
 {
     public class KspTokenReader
     {
+        private static readonly KspToken emptyToken = new KspToken ("", new KeyValuePair<String, String>[0], new KspToken[0]);
+
         public static KspToken ReadToken (String text)
         {
             var lines = text.Split (new [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select (str => str.TrimStart ()).ToArray ();
 
             KspToken token;
             ReadToken (lines, 0, out token);
-            return token;
+            return token ?? emptyToken;
         }
 
         private static int ReadToken (String[] lines, int index, out KspToken token)

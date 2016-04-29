@@ -40,5 +40,21 @@ namespace KSPPartRemover.Tests.KspFormat
             // then
             Assert.That (textOut, Is.EqualTo (textIn));
         }
+
+        [Test]
+        public void ReturnsEmptyObjectForEmptyFile ()
+        {
+            // given
+            var textIn = "";
+
+            // when
+            var tokenIn = KspTokenReader.ReadToken (textIn);
+            var kspObject = KspObjectReader.ReadObject (tokenIn);
+            var tokenOut = KspObjectWriter.WriteObject (kspObject);
+            var textOut = KspTokenWriter.WriteToken (tokenOut, new StringBuilder ()).ToString ();
+
+            // then
+            Assert.That (textOut, Is.EqualTo (textIn));
+        }
     }
 }

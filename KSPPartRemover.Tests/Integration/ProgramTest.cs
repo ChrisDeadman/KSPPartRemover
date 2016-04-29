@@ -146,7 +146,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "-p", "fuelTank", "-c", ".*raft[1,3]", "-i", "input.txt", "-s");
+            var returnCode = Program.Main ("remove-part", "-p", "fuelTank", "-c", "!craft2", "-i", "input.txt", "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));

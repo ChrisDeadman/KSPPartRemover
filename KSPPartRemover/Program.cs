@@ -89,10 +89,16 @@ namespace KSPPartRemover
             Console.WriteLine ("\t[Optional]");
             Console.WriteLine ("\t -c, --craft <craftNameRegex>");
             Console.WriteLine ("\t\t apply craft filter (applies to all crafts if not specified)");
+            Console.WriteLine ("\t\t '!' in front of the regex performs inverse matching");
+            Console.WriteLine ("\t\t example: '--craft \'!^Asteroid\''");
+            Console.WriteLine ("\t\t example: '--craft \'.*Mün.*\''");
             Console.WriteLine ();
             Console.WriteLine ("\t[Optional]");
             Console.WriteLine ("\t -p, --part <partId or partNameRegex>");
             Console.WriteLine ("\t\t apply part filter (applies to all parts if not specified)");
+            Console.WriteLine ("\t\t '!' in front of the regex performs inverse matching");
+            Console.WriteLine ("\t\t example: '--part \'!^PotatoRoid$\''");
+            Console.WriteLine ("\t\t example: '--part \'fuelTank.*\''");
             Console.WriteLine ();
             Console.WriteLine ("\t[Optional]");
             Console.WriteLine ("\t -s, --silent");
@@ -426,7 +432,7 @@ namespace KSPPartRemover
             if (args.Length <= argIdx)
                 throw new ArgumentException ("");
 
-            partNamePattern = args [argIdx].Trim ('\"');
+            partNamePattern = args [argIdx].Trim ('\"','\'');
             return argIdx;
         }
 
@@ -457,7 +463,13 @@ namespace KSPPartRemover
 
         private static bool MatchesRegex (String str, String pattern)
         {
-            return String.IsNullOrEmpty (pattern) || Regex.Match (str, pattern).Success;
+            if (String.IsNullOrEmpty (pattern)) {
+                return true;
+            }
+
+            return (pattern.StartsWith("!"))
+                ? !Regex.Match (str, pattern.Substring(1)).Success
+                : Regex.Match (str, pattern).Success;
         }
     }
 }

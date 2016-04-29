@@ -46,10 +46,16 @@ Switches:
 	[Optional]
 	 -c, --craft <craftNameRegex>
 		 apply craft filter (applies to all crafts if not specified)
+		 '!' in front of the regex performs inverse matching
+		 example: '--craft '!^Asteroid''
+		 example: '--craft '.*Mün.*''
 
 	[Optional]
 	 -p, --part <partId or partNameRegex>
 		 apply part filter (applies to all parts if not specified)
+		 '!' in front of the regex performs inverse matching
+		 example: '--part '!^PotatoRoid$''
+		 example: '--part 'fuelTank.*''
 
 	[Optional]
 	 -s, --silent
@@ -76,7 +82,7 @@ Release notes
 * New command **list-crafts**: list crafts in the input file
 * New command **list-parts**: list parts in the input file
 * New command **list-partdeps**: same as **list-parts** but also prints dependencies
-* Add craft- and part-filter support
+* Add craft- and part-filter support via regex (inverse matching supported)
 * Dependent parts are now only removed if they have a "hard" dependency
 * Compatible with KSP version: 1.1
 

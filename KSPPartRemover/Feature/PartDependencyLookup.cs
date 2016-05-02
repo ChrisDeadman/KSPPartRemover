@@ -5,7 +5,7 @@ using KSPPartRemover.KspFormat.Objects;
 
 namespace KSPPartRemover.Feature
 {
-    public class PartLookup
+    public class PartDependencyLookup
     {
         public static IEnumerable<KspPartObject> EvaluateSoftDependencies (KspCraftObject craft, KspPartObject dependency) =>
             craft.Children<KspPartObject> ().Where (part => HasSoftDependency (part, dependency));

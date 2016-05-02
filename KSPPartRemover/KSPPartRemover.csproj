@@ -40,7 +40,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Feature\PartLookup.cs" />
     <Compile Include="Feature\CraftEditor.cs" />
     <Compile Include="KspFormat\Objects\KspCraftObject.cs" />
     <Compile Include="KspFormat\Objects\KspObject.cs" />
@@ -55,6 +54,7 @@
     <Compile Include="KspFormat\KspTokenGlobalExtension.cs" />
     <Compile Include="KspFormat\KspTokenReader.cs" />
     <Compile Include="KspFormat\KspTokenWriter.cs" />
+    <Compile Include="Feature\PartDependencyLookup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

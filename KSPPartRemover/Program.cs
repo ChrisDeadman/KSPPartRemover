@@ -202,12 +202,13 @@ namespace KSPPartRemover
             foreach (var craft in crafts) {
                 Console.WriteLine ($"{craft.Name}:");
 
-                foreach (var part in Parts(craft)) {
-                    var matchingPartLinks = PartLinks(craft, part, partNamePattern);
-                    if (matchingPartLinks.Count > 0) {
-                        Console.WriteLine ($"\t{PartObjectToString (craft, part)}:");
-                        PrintList (matchingPartLinks.Select (link => ($"\t\t{PartLinkPropertyToString (craft, link)}")));
-                    }
+                var matchingParts = Parts (craft, partNamePattern);
+                var dependentParts = matchingParts.SelectMany (part => PartDependencyLookup.EvaluateSoftDependencies (craft, part)).Distinct ();
+
+                foreach (var part in dependentParts) {
+                    var links = part.Properties.OfType<KspPartLinkProperty> ().Where (link => matchingParts.Contains (link.Part));
+                    Console.WriteLine ($"\t{PartObjectToString (craft, part)}:");
+                    PrintList (links.Select (link => ($"\t\t{PartLinkPropertyToString (craft, link)}")));
                 }
             }
 
@@ -246,7 +247,7 @@ namespace KSPPartRemover
                 ConsoleWriteLineIfNotSilent ($"Searching for parts matching '{partNamePattern}'...");
 
                 var matchingParts = Parts (craft, partNamePattern);
-                var dependentParts = matchingParts.SelectMany (part => PartLookup.EvaluateHardDependencies (craft, part)).Distinct ();
+                var dependentParts = matchingParts.SelectMany (part => PartDependencyLookup.EvaluateHardDependencies (craft, part)).Distinct ();
                 var removedParts = matchingParts.Concat (dependentParts).Distinct ().ToArray ();
 
                 if (removedParts.Length <= 0) {
@@ -317,14 +318,6 @@ namespace KSPPartRemover
 
             return dependencies;
         }
-
-        private static IReadOnlyList<KspPartLinkProperty> PartLinks (KspCraftObject craft, KspPartObject part, String partNamePattern = null)
-        {
-            return PartLinks(part, Parts(craft, partNamePattern));
-        }
-
-        private static IReadOnlyList<KspPartLinkProperty> PartLinks (KspPartObject part, IReadOnlyList<KspPartObject> dependencies) =>
-            part.Properties.OfType<KspPartLinkProperty> ().Where (link => dependencies.Any(dep => Object.Equals(link.Part, dep))).ToList();
 
         private static void PrintList (IEnumerable<String> entries)
         {

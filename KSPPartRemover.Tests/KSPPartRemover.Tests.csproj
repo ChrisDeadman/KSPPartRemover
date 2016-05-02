@@ -35,20 +35,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Integration\MunMkICraftTest.cs" />
     <Compile Include="Integration\SpaceStationTest.cs" />
     <Compile Include="Integration\ProgramTest.cs" />
     <Compile Include="Integration\SaveFileTest.cs" />
-    <Compile Include="Feature\PartLookupTest.cs" />
     <Compile Include="Feature\CraftEditorTest.cs" />
     <Compile Include="KspFormat\Objects\KspCraftObjectTest.cs" />
     <Compile Include="KspFormat\Objects\KspObjectSearchExtensionsTest.cs" />
     <Compile Include="KspFormat\Objects\KspObjectTest.cs" />
     <Compile Include="KspFormat\Objects\KspPartObjectTest.cs" />
     <Compile Include="KspFormat\KspFormatTest.cs" />
+    <Compile Include="Feature\PartDependencyLookupTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">
@@ -68,5 +65,8 @@
     <Folder Include="Feature\" />
     <Folder Include="KspFormat\" />
     <Folder Include="KspFormat\Objects\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

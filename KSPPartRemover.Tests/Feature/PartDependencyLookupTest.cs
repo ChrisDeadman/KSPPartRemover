@@ -6,7 +6,7 @@ using KSPPartRemover.Feature;
 
 namespace KSPPartRemover.Tests.Feature
 {
-    public class PartLookupTest
+    public class PartDependencyLookupTest
     {
         private static KspCraftObject createTestCraft ()
         {
@@ -68,7 +68,7 @@ namespace KSPPartRemover.Tests.Feature
             };
 
             // when
-            var actualDependencies = PartLookup.EvaluateSoftDependencies (craft, dependency);
+            var actualDependencies = PartDependencyLookup.EvaluateSoftDependencies (craft, dependency);
 
             // then
             Assert.That (actualDependencies, Is.EqualTo (expectedDependencies));
@@ -89,7 +89,7 @@ namespace KSPPartRemover.Tests.Feature
             };
 
             // when
-            var actualDependencies = PartLookup.EvaluateHardDependencies (craft, dependency);
+            var actualDependencies = PartDependencyLookup.EvaluateHardDependencies (craft, dependency);
 
             // then
             Assert.That (actualDependencies, Is.EqualTo (expectedDependencies));

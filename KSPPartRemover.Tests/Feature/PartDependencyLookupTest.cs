@@ -67,8 +67,10 @@ namespace KSPPartRemover.Tests.Feature
                 parts [8], // attN to [0]
             };
 
+            var target = new PartLookup (craft);
+
             // when
-            var actualDependencies = PartDependencyLookup.EvaluateSoftDependencies (craft, dependency);
+            var actualDependencies = target.LookupSoftDependencies (dependency);
 
             // then
             Assert.That (actualDependencies, Is.EqualTo (expectedDependencies));
@@ -88,8 +90,10 @@ namespace KSPPartRemover.Tests.Feature
                 // parts [8] links do not not matter for hard-dependency check
             };
 
+            var target = new PartLookup (craft);
+
             // when
-            var actualDependencies = PartDependencyLookup.EvaluateHardDependencies (craft, dependency);
+            var actualDependencies = target.LookupHardDependencies (dependency);
 
             // then
             Assert.That (actualDependencies, Is.EqualTo (expectedDependencies));

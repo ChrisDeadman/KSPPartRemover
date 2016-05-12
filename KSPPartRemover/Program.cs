@@ -167,23 +167,27 @@ namespace KSPPartRemover
 
         private static int PerformListCraftsCommand ()
         {
-            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
-            var crafts = Crafts (kspObjTree, craftNameRegex);
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+
+            var allCrafts = CraftLoader.Load (inputText);
+            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name);
 
             ConsoleWriteLineIfNotSilent ("");
-            PrintList (crafts.Select (craft => craft.Name));
+            PrintList (filteredCrafts.Select (craft => craft.Name));
 
             return 0;
         }
 
         private static int PerformListPartsCommand ()
         {
-            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
-            var crafts = Crafts (kspObjTree, craftNameRegex);
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+
+            var allCrafts = CraftLoader.Load (inputText);
+            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name);
 
             ConsoleWriteLineIfNotSilent ("");
-            foreach (var craft in crafts) {
-                var matchingParts = Parts (craft, partNamePattern);
+            foreach (var craft in filteredCrafts) {
+                var matchingParts = new PartLookup(craft).LookupParts(new RegexFilter(partNamePattern)).ToList();
                 if (matchingParts.Count > 0) {
                     Console.WriteLine ($"{craft.Name}:");
                     PrintList (matchingParts.Select (part => $"\t{PartObjectToString (craft, part)}"));   
@@ -195,15 +199,17 @@ namespace KSPPartRemover
 
         private static int PerformListPartDepsCommand ()
         {
-            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
-            var crafts = Crafts (kspObjTree, craftNameRegex);
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+
+            var allCrafts = CraftLoader.Load (inputText);
+            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name);
 
             ConsoleWriteLineIfNotSilent ("");
-            foreach (var craft in crafts) {
+            foreach (var craft in filteredCrafts) {
                 Console.WriteLine ($"{craft.Name}:");
 
-                var matchingParts = Parts (craft, partNamePattern);
-                var dependentParts = matchingParts.SelectMany (part => PartDependencyLookup.EvaluateSoftDependencies (craft, part)).Distinct ();
+                var matchingParts = new PartLookup(craft).LookupParts(new RegexFilter(partNamePattern)).ToList();
+                var dependentParts = matchingParts.SelectMany (part => new PartLookup(craft).LookupSoftDependencies (part)).Distinct ();
 
                 foreach (var part in dependentParts) {
                     var links = part.Properties.OfType<KspPartLinkProperty> ().Where (link => matchingParts.Contains (link.Part));
@@ -235,19 +241,27 @@ namespace KSPPartRemover
                 throw new ArgumentException ("no part specified");
             }
 
-            var kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken(inputText));
-            var crafts = Crafts (kspObjTree, craftNameRegex);
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+
+            KspObject kspObjTree;
+            var allCrafts = CraftLoader.Load (inputText, out kspObjTree);
+            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name).ToList();
+
+            if (filteredCrafts.Count <= 0) { 
+                throw new KeyNotFoundException ($"No craft matching '{craftNameRegex}' found, aborting."); 
+            } 
+
             var removedPartCount = 0;
 
-            foreach (var craft in crafts) {
+            foreach (var craft in filteredCrafts) {
                 if (!silentExecution) {
                     Console.WriteLine ($"Entering craft '{craft.Name}'");
                 }
 
                 ConsoleWriteLineIfNotSilent ($"Searching for parts matching '{partNamePattern}'...");
 
-                var matchingParts = Parts (craft, partNamePattern);
-                var dependentParts = matchingParts.SelectMany (part => PartDependencyLookup.EvaluateHardDependencies (craft, part)).Distinct ();
+                var matchingParts = new PartLookup(craft).LookupParts(new RegexFilter(partNamePattern)).ToList();
+                var dependentParts = matchingParts.SelectMany (part => new PartLookup(craft).LookupHardDependencies (part)).Distinct ();
                 var removedParts = matchingParts.Concat (dependentParts).Distinct ().ToArray ();
 
                 if (removedParts.Length <= 0) {
@@ -277,46 +291,6 @@ namespace KSPPartRemover
             outputTextWriter.Write (craftString);
 
             return (removedPartCount > 0) ? 0 : -1;
-        }
-
-        private static IReadOnlyList<KspCraftObject> Crafts (KspObject kspObjTree, String craftNameRegex)
-        {
-            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
-            var crafts = kspObjTree.Children <KspCraftObject> (recursive: true).ToList ();
-            if (kspObjTree is KspCraftObject) {
-                crafts.Add (kspObjTree as KspCraftObject);
-            }
-
-            if (!String.IsNullOrEmpty (craftNameRegex)) {
-                crafts = crafts.Where (craft => MatchesRegex (craft.Name, craftNameRegex)).ToList ();
-                if (crafts.Count <= 0) {
-                    throw new KeyNotFoundException ($"No craft matching '{craftNameRegex}' found, aborting.");
-                }
-            }
-
-            return crafts;
-        }
-
-        private static IReadOnlyList<KspPartObject> Parts (KspCraftObject craft, String partNamePattern = null)
-        {
-            int id;
-            List<KspPartObject> dependencies;
-
-            if (String.IsNullOrEmpty (partNamePattern)) {
-                dependencies = craft.Children <KspPartObject> ().ToList ();
-            }
-            else if (int.TryParse (partNamePattern, out id)) {
-                dependencies = new List<KspPartObject>();
-                var dependency = craft.Child<KspPartObject>(id);
-                if (dependency != null) {
-                    dependencies.Add(dependency);
-                }
-            }
-            else {
-                dependencies = craft.Children <KspPartObject> ().Where (part => MatchesRegex (part.Name, partNamePattern)).ToList ();
-            }
-
-            return dependencies;
         }
 
         private static void PrintList (IEnumerable<String> entries)
@@ -456,17 +430,6 @@ namespace KSPPartRemover
             Console.Write ("EXCEPTION: ");
             Console.WriteLine (exception.ToString ());
             Console.WriteLine ();
-        }
-
-        private static bool MatchesRegex (String str, String pattern)
-        {
-            if (String.IsNullOrEmpty (pattern)) {
-                return true;
-            }
-
-            return (pattern.StartsWith("!"))
-                ? !Regex.Match (str, pattern.Substring(1)).Success
-                : Regex.Match (str, pattern).Success;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace KSPPartRemover.Tests.Integration
             File.WriteAllText (tempFileName, inputCraftText);
 
             // when
-            var returnCode = Program.Main ("remove-part", "--part", "liquidEngine.*", "--craft", "Bowser.*", "-i", tempFileName, "-o", tempFileName, "--silent");
+            var returnCode = Program.Main ("remove-parts", "--part", "liquidEngine.*", "--craft", "Bowser.*", "-i", tempFileName, "-o", tempFileName, "--silent");
 
             // then
             Assert.That (returnCode, Is.EqualTo (0));

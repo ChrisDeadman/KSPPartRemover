@@ -10,48 +10,24 @@ using KSPPartRemover.Feature;
 
 namespace KSPPartRemover
 {
-    public static class Program
+    public class Program
     {
-        private static Func<int> commandHandler;
-        private static String partNamePattern;
-        private static String inputText;
-        private static TextWriter outputTextWriter;
-        private static String craftNameRegex;
-        private static bool silentExecution;
+        private readonly Parameters parameters;
 
-        private static readonly Dictionary<String, Func<int, String[], int>> ArgumentParsers =
-            new Dictionary<String, Func<int, String[], int>> {
-                { "remove-part", ParseRemoveCommand },
-                { "list-crafts", ParseListCraftsCommand },
-                { "list-parts", ParseListPartsCommand },
-                { "list-partdeps", ParseListPartDepsCommand },
-                { "-i", ParseInputFilePathArgument },
-                { "-o", ParseOutputFilePathArgument },
-                { "-c", ParseCraftNameRegexArgument },
-                { "--craft", ParseCraftNameRegexArgument },
-                { "-p", ParsePartNamePatternArgument },
-                { "--part", ParsePartNamePatternArgument },
-                { "-s", ParseSilentExecutionArgument },
-                { "--silent", ParseSilentExecutionArgument }
-            };
-
-        private static int ParseRemoveCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformRemovePartCommand);
-        private static int ParseListCraftsCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformListCraftsCommand);
-        private static int ParseListPartsCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformListPartsCommand);
-        private static int ParseListPartDepsCommand (int argIdx, params String[] args) => ParseCommand(argIdx, PerformListPartDepsCommand);
+        public Program(Parameters parameters)
+        {
+            this.parameters = parameters;
+        }
 
         private static void PrintInfoHeader ()
         {
             var assemblyName = typeof(Program).Assembly.GetName ();
 
             var infoHeader = new StringBuilder ();
-            infoHeader.AppendFormat ("{0} v{1}", assemblyName.Name, assemblyName.Version);
-            infoHeader.AppendLine ();   
-            infoHeader.Append ("Compatible with KSP version: 1.1");
+            infoHeader.AppendLine ($"{assemblyName.Name} v{assemblyName.Version}");
+            infoHeader.AppendLine ("Compatible with KSP version: 1.1");
 
-            Console.WriteLine ();
             Console.WriteLine (infoHeader.ToString ());
-            Console.WriteLine ();
         }
 
         private static void PrintUsage ()
@@ -60,11 +36,11 @@ namespace KSPPartRemover
 
             Console.Write ("usage: ");
             Console.Write (Path.GetFileName (assemblyName.CodeBase));
-            Console.WriteLine (" <command> [<args>] -i <inputFilePath> [-o <outputFilePath>]");
+            Console.WriteLine (" <command> [<args>] -i <input-file> [-o <output-file>]");
             Console.WriteLine ();
             Console.WriteLine ("Commands:"); 
             Console.WriteLine (); 
-            Console.WriteLine ("\t remove-part");
+            Console.WriteLine ("\t remove-parts");
             Console.WriteLine ("\t\t remove one or more parts from one or more crafts");
             Console.WriteLine ();
             Console.WriteLine ("\t list-crafts");
@@ -79,26 +55,27 @@ namespace KSPPartRemover
             Console.WriteLine ();
             Console.WriteLine ("Switches:"); 
             Console.WriteLine (); 
-            Console.WriteLine ("\t -i <FilePath>");
+            Console.WriteLine ("\t -i <path>");
             Console.WriteLine ("\t\t specifies the input file");
             Console.WriteLine ();
             Console.WriteLine ("\t[Optional]");
-            Console.WriteLine ("\t -o <FilePath>");
+            Console.WriteLine ("\t -o <path>");
             Console.WriteLine ("\t\t specifies the output file (prints to stdout if not specified)");
             Console.WriteLine ();
             Console.WriteLine ("\t[Optional]");
-            Console.WriteLine ("\t -c, --craft <craftNameRegex>");
+            Console.WriteLine ("\t -c, --craft <name-pattern>");
             Console.WriteLine ("\t\t apply craft filter (applies to all crafts if not specified)");
             Console.WriteLine ("\t\t '!' in front of the regex performs inverse matching");
-            Console.WriteLine ("\t\t example: '--craft \'!^Asteroid\''");
-            Console.WriteLine ("\t\t example: '--craft \'.*Mün.*\''");
+            Console.WriteLine ("\t\t example for name pattern: --craft \'!^Asteroid\'");
+            Console.WriteLine ("\t\t example for inverse matching: --craft \'!Mün\'");
             Console.WriteLine ();
             Console.WriteLine ("\t[Optional]");
-            Console.WriteLine ("\t -p, --part <partId or partNameRegex>");
+            Console.WriteLine ("\t -p, --part <id or name-pattern>");
             Console.WriteLine ("\t\t apply part filter (applies to all parts if not specified)");
             Console.WriteLine ("\t\t '!' in front of the regex performs inverse matching");
-            Console.WriteLine ("\t\t example: '--part \'!^PotatoRoid$\''");
-            Console.WriteLine ("\t\t example: '--part \'fuelTank.*\''");
+            Console.WriteLine ("\t\t example for id: --part 1");
+            Console.WriteLine ("\t\t example for name pattern: --part \'fuelTank.*\'");
+            Console.WriteLine ("\t\t example for inverse matching: --part \'!^PotatoRoid$\'");
             Console.WriteLine ();
             Console.WriteLine ("\t[Optional]");
             Console.WriteLine ("\t -s, --silent");
@@ -106,71 +83,76 @@ namespace KSPPartRemover
             Console.WriteLine ();
         }
 
-        private static void SetDefaultArguments ()
-        {
-            commandHandler = null;
-            partNamePattern = null;
-            inputText = null;
-            outputTextWriter = Console.Out;
-            craftNameRegex = null;
-            silentExecution = false;
-        }
-
         public static int Main (params String[] args)
         {
+            var parameters = new Parameters() {
+                CraftFilter = new RegexFilter(""),
+                PartFilter = new RegexFilter(""),
+                OutputTextWriter = Console.Out
+            };
+
+            var program = new Program (parameters);
+
+            var errors = new List<String> ();
+
+            var commandLineParser = new CommandLineParser().
+                Command(cmd => {switch(cmd) {
+                case "list-crafts":
+                    parameters.Command = program.ListCrafts;
+                    break;
+                case "list-parts":
+                    parameters.Command = program.ListParts;
+                    break;
+                case "list-partdeps":
+                    parameters.Command = program.ListPartDeps;
+                    break;
+                case "remove-parts":
+                    parameters.Command = program.PerformRemovePartCommand;
+                    break;
+                default:
+                    errors.Add ($"Invalid command '{cmd}'...");
+                    break;
+                }}).
+                Required<String>("-i", fileName => parameters.InputText = ReadInputFile (fileName)).
+                Optional<String>("-o", fileName => parameters.OutputTextWriter = OpenOutputFile(fileName)).
+                Optional<String>("-c", pattern => parameters.CraftFilter = new RegexFilter(pattern)).
+                Optional<String>("--craft", pattern => parameters.CraftFilter = new RegexFilter(pattern)).
+                Optional<String>("-p", pattern => parameters.PartFilter = new RegexFilter(pattern)).
+                Optional<String>("--part", pattern => parameters.PartFilter = new RegexFilter(pattern)).
+                Optional("-s", () => parameters.SilentExecution = true).
+                Optional("--silent", () => parameters.SilentExecution = true).
+                Error(errors.Add);
+
             try {
-                try {
-                    SetDefaultArguments ();
-                    ParseArguments (args);
-                } catch (ArgumentException ex) {
+                commandLineParser.Parse (args);
+
+                if (errors.Count > 0) {
                     PrintInfoHeader ();
                     PrintUsage ();
-                    OutputExceptionBrief (ex);
-                    return -1;
-                } catch (FileNotFoundException ex) {
-                    PrintInfoHeader ();
-                    OutputExceptionBrief (ex);
-                    return -1;
-                } catch (Exception ex) {
-                    PrintInfoHeader ();
-                    OutputExceptionDetailed (ex);
+                    errors.ForEach(error => Console.WriteLine($"ERROR: {error}"));
                     return -1;
                 }
 
-                try {
-                    if (!silentExecution)
-                        PrintInfoHeader ();
+                if (!parameters.SilentExecution)
+                    PrintInfoHeader ();
 
-                    if (commandHandler == null)
-                        throw new ArgumentException ("No command specified");
-
-                    if (inputText == null)
-                        throw new ArgumentException ("No input file specified");
-
-                    return commandHandler ();
-                } catch (ArgumentException ex) {
-                    PrintUsage ();
-                    OutputExceptionBrief (ex);
-                    return -1;
-                } catch (KeyNotFoundException ex) {
-                    OutputExceptionBrief (ex);
-                    return -1;
-                } catch (Exception ex) {
-                    OutputExceptionDetailed (ex);
-                    return -1;
-                }
+                return parameters.Command ();
+            } catch (Exception ex) {
+                PrintException (ex);
+                return -1;
             } finally {
-                if (outputTextWriter != Console.Out)
-                    outputTextWriter.Dispose ();
+                if (parameters.OutputTextWriter != Console.Out) {
+                    parameters.OutputTextWriter.Dispose ();
+                }
             }
         }
 
-        private static int PerformListCraftsCommand ()
+        public int ListCrafts ()
         {
-            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{parameters.CraftFilter}'...");
 
-            var allCrafts = CraftLoader.Load (inputText);
-            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name);
+            var allCrafts = CraftLoader.Load (parameters.InputText);
+            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name);
 
             ConsoleWriteLineIfNotSilent ("");
             PrintList (filteredCrafts.Select (craft => craft.Name));
@@ -178,16 +160,16 @@ namespace KSPPartRemover
             return 0;
         }
 
-        private static int PerformListPartsCommand ()
+        public int ListParts ()
         {
-            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{parameters.CraftFilter}'...");
 
-            var allCrafts = CraftLoader.Load (inputText);
-            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name);
+            var allCrafts = CraftLoader.Load (parameters.InputText);
+            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name);
 
             ConsoleWriteLineIfNotSilent ("");
             foreach (var craft in filteredCrafts) {
-                var matchingParts = new PartLookup(craft).LookupParts(new RegexFilter(partNamePattern)).ToList();
+                var matchingParts = new PartLookup(craft).LookupParts(parameters.PartFilter).ToList();
                 if (matchingParts.Count > 0) {
                     Console.WriteLine ($"{craft.Name}:");
                     PrintList (matchingParts.Select (part => $"\t{PartObjectToString (craft, part)}"));   
@@ -197,18 +179,18 @@ namespace KSPPartRemover
             return 0;
         }
 
-        private static int PerformListPartDepsCommand ()
+        public int ListPartDeps ()
         {
-            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{parameters.CraftFilter}'...");
 
-            var allCrafts = CraftLoader.Load (inputText);
-            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name);
+            var allCrafts = CraftLoader.Load (parameters.InputText);
+            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name);
 
             ConsoleWriteLineIfNotSilent ("");
             foreach (var craft in filteredCrafts) {
                 Console.WriteLine ($"{craft.Name}:");
 
-                var matchingParts = new PartLookup(craft).LookupParts(new RegexFilter(partNamePattern)).ToList();
+                var matchingParts = new PartLookup(craft).LookupParts(parameters.PartFilter).ToList();
                 var dependentParts = matchingParts.SelectMany (part => new PartLookup(craft).LookupSoftDependencies (part)).Distinct ();
 
                 foreach (var part in dependentParts) {
@@ -221,55 +203,38 @@ namespace KSPPartRemover
             return 0;
         }
 
-        private static String PartObjectToString (KspCraftObject craft, KspPartObject part) => $"[{craft.IdOfChild (part)}]{part.Name}";
-
-        private static String PartLinkPropertyToString (KspCraftObject craft, KspPartLinkProperty reference)
+        public int PerformRemovePartCommand ()
         {
-            var sb = new StringBuilder ();
-            sb.Append ($"{PartObjectToString (craft, reference.Part)}");
-            sb.Append ($"[{reference.Name}");
-            if (reference.Prefix != null) {
-                sb.Append ($"({reference.Prefix})");
-            }
-            sb.Append("]");
-            return sb.ToString ();
-        }
-
-        private static int PerformRemovePartCommand ()
-        {
-            if (String.IsNullOrEmpty (partNamePattern)) {
-                throw new ArgumentException ("no part specified");
-            }
-
-            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{craftNameRegex}'...");
+            ConsoleWriteLineIfNotSilent ($"Searching for crafts matching '{parameters.CraftFilter}'...");
 
             KspObject kspObjTree;
-            var allCrafts = CraftLoader.Load (inputText, out kspObjTree);
-            var filteredCrafts = new RegexFilter(craftNameRegex).Apply (allCrafts, craft => craft.Name).ToList();
+            var allCrafts = CraftLoader.Load (parameters.InputText, out kspObjTree);
+            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name).ToList();
 
             if (filteredCrafts.Count <= 0) { 
-                throw new KeyNotFoundException ($"No craft matching '{craftNameRegex}' found, aborting."); 
+                Console.WriteLine ($"No craft matching '{parameters.CraftFilter}' found, aborting"); 
+                return -1;
             } 
 
             var removedPartCount = 0;
 
             foreach (var craft in filteredCrafts) {
-                if (!silentExecution) {
+                if (!parameters.SilentExecution) {
                     Console.WriteLine ($"Entering craft '{craft.Name}'");
                 }
 
-                ConsoleWriteLineIfNotSilent ($"Searching for parts matching '{partNamePattern}'...");
+                ConsoleWriteLineIfNotSilent ($"Searching for parts matching '{parameters.PartFilter}'...");
 
-                var matchingParts = new PartLookup(craft).LookupParts(new RegexFilter(partNamePattern)).ToList();
+                var matchingParts = new PartLookup(craft).LookupParts(parameters.PartFilter).ToList();
                 var dependentParts = matchingParts.SelectMany (part => new PartLookup(craft).LookupHardDependencies (part)).Distinct ();
                 var removedParts = matchingParts.Concat (dependentParts).Distinct ().ToArray ();
 
                 if (removedParts.Length <= 0) {
-                    ConsoleWriteLineIfNotSilent ($"No parts matching '{partNamePattern}' found");
+                    ConsoleWriteLineIfNotSilent ($"No parts matching '{parameters.PartFilter}' found");
                     continue;
                 }
 
-                if (!silentExecution) {
+                if (!parameters.SilentExecution) {
                     Console.WriteLine ();
                     Console.WriteLine ("The following parts will be removed:");
                     Console.WriteLine ("====================================");
@@ -288,19 +253,19 @@ namespace KSPPartRemover
 
             var craftToken = KspObjectWriter.WriteObject (kspObjTree);
             var craftString = KspTokenWriter.WriteToken(craftToken, new StringBuilder()).ToString();
-            outputTextWriter.Write (craftString);
+            parameters.OutputTextWriter.Write (craftString);
 
             return (removedPartCount > 0) ? 0 : -1;
         }
 
-        private static void PrintList (IEnumerable<String> entries)
+        private void PrintList (IEnumerable<String> entries)
         {
             const int entriesPerPage = 20;
 
             var currentEntry = 1;
             foreach (var entry in entries) {
                 if (currentEntry++ % entriesPerPage == 0)
-                if (!silentExecution) {
+                if (!parameters.SilentExecution) {
                     Console.WriteLine ();
                     Console.Write ("Press any key for next page...");
                     Console.ReadKey ();
@@ -309,6 +274,30 @@ namespace KSPPartRemover
                 Console.WriteLine (entry);
             }
         }
+
+        private void ConsoleWriteIfNotSilent (String value)
+        {
+            if (parameters.SilentExecution)
+                return;
+
+            Console.Write (value);
+        }
+
+        private void ConsoleWriteLineIfNotSilent (String value = null)
+        {
+            if (parameters.SilentExecution)
+                return;
+
+            Console.WriteLine (value ?? String.Empty);
+        }
+
+        private static String ReadInputFile(String fileName)
+        {
+            using (var inputTextReader = new StreamReader (new FileStream (fileName, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
+                return inputTextReader.ReadToEnd ();
+        }
+
+        private static TextWriter OpenOutputFile(String fileName) => new StreamWriter (new FileStream (fileName, FileMode.Truncate, FileAccess.ReadWrite, FileShare.Read), Encoding.UTF8);
 
         private static bool ConfirmPartRemoval ()
         {
@@ -319,117 +308,26 @@ namespace KSPPartRemover
             return answeredYes;
         }
 
-        private static void ConsoleWriteIfNotSilent (String value)
-        {
-            if (silentExecution)
-                return;
-
-            Console.Write (value);
-        }
-
-        private static void ConsoleWriteLineIfNotSilent (String value = null)
-        {
-            if (silentExecution)
-                return;
-
-            Console.WriteLine (value ?? String.Empty);
-        }
-
-        private static int ParseCommand (int argIdx, Func<int> handler)
-        {
-            if (commandHandler != null)
-                throw new ArgumentException ("");
-
-            commandHandler = handler;
-            return argIdx;
-        }
-
-        private static void ParseArguments (params String[] args)
-        {
-            for (var argIdx = 0; argIdx < args.Length; argIdx++) {
-                Func<int, String[], int> parser;
-                if (!ArgumentParsers.TryGetValue (args [argIdx], out parser))
-                    throw new ArgumentException ("Illegal argument", args [argIdx]);
-
-                argIdx = parser (argIdx, args);
-            }
-        }
-
-        private static int ParseInputFilePathArgument (int argIdx, params String[] args)
-        {
-            argIdx++;
-            if (args.Length <= argIdx)
-                throw new ArgumentException ("");
-
-            var fileName = args [argIdx];
-
-            using (var inputTextReader = new StreamReader (new FileStream (fileName, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
-                inputText = inputTextReader.ReadToEnd ();
-
-            return argIdx;
-        }
-
-        private static int ParseOutputFilePathArgument (int argIdx, params String[] args)
-        {
-            argIdx++;
-            if (args.Length <= argIdx)
-                throw new ArgumentException ("");
-
-            var fileName = args [argIdx];
-
-            if (!File.Exists(fileName)) {
-                using (File.Create(fileName)) {
-                    
-                };
-            }
-
-            outputTextWriter = new StreamWriter (new FileStream (fileName, FileMode.Truncate, FileAccess.ReadWrite, FileShare.Read), Encoding.UTF8);
-            return argIdx;
-        }
-
-        private static int ParseCraftNameRegexArgument (int argIdx, params String[] args)
-        {
-            argIdx++;
-            if (args.Length <= argIdx)
-                throw new ArgumentException ("");
-
-            craftNameRegex = args [argIdx];
-            return argIdx;
-        }
-
-        private static int ParsePartNamePatternArgument (int argIdx, params String[] args)
-        {
-            argIdx++;
-            if (args.Length <= argIdx)
-                throw new ArgumentException ("");
-
-            partNamePattern = args [argIdx].Trim ('\"','\'');
-            return argIdx;
-        }
-
-        private static int ParseSilentExecutionArgument (int argIdx, params String[] args)
-        {
-            silentExecution = true;
-            return argIdx;
-        }
-
-        private static void OutputExceptionBrief (Exception exception)
-        {
-            var message = exception.Message;
-            if (String.IsNullOrEmpty (message))
-                message = "Invalid command line arguments.";
-            
-            Console.Write ("ERROR: ");
-            Console.WriteLine (message);
-            Console.WriteLine ();
-        }
-
-        private static void OutputExceptionDetailed (Exception exception)
+        private static void PrintException (Exception exception)
         {
             Console.WriteLine ();
             Console.Write ("EXCEPTION: ");
             Console.WriteLine (exception.ToString ());
             Console.WriteLine ();
+        }
+
+        private static String PartObjectToString (KspCraftObject craft, KspPartObject part) => $"[{craft.IdOfChild (part)}]{part.Name}";
+
+        private static String PartLinkPropertyToString (KspCraftObject craft, KspPartLinkProperty reference)
+        {
+            var sb = new StringBuilder ();
+            sb.Append ($"{PartObjectToString (craft, reference.Part)}");
+            sb.Append ($"[{reference.Name}");
+            if (reference.Prefix != null) {
+                sb.Append ($"({reference.Prefix})");
+            }
+            sb.Append("]");
+            return sb.ToString ();
         }
     }
 }

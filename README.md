@@ -17,11 +17,11 @@ Removes parts from Kerbal Space Program crafts
 KSPPartRemover v0.3.0.0
 Compatible with KSP version: 1.1
 
-usage: KSPPartRemover.exe <command> [<args>] -i <inputFilePath> [-o <outputFilePath>]
+usage: KSPPartRemover.exe <command> [<args>] -i <input-file> [-o <output-file>]
 
 Commands:
 
-	 remove-part
+	 remove-parts
 		 remove one or more parts from one or more crafts
 
 	 list-crafts
@@ -36,26 +36,27 @@ Commands:
 
 Switches:
 
-	 -i <FilePath>
+	 -i <path>
 		 specifies the input file
 
 	[Optional]
-	 -o <FilePath>
+	 -o <path>
 		 specifies the output file (prints to stdout if not specified)
 
 	[Optional]
-	 -c, --craft <craftNameRegex>
+	 -c, --craft <name-pattern>
 		 apply craft filter (applies to all crafts if not specified)
 		 '!' in front of the regex performs inverse matching
-		 example: '--craft '!^Asteroid''
-		 example: '--craft '.*Mün.*''
+		 example for name pattern: --craft '!^Asteroid'
+		 example for inverse matching: --craft '!Mün'
 
 	[Optional]
-	 -p, --part <partId or partNameRegex>
+	 -p, --part <id or name-pattern>
 		 apply part filter (applies to all parts if not specified)
 		 '!' in front of the regex performs inverse matching
-		 example: '--part '!^PotatoRoid$''
-		 example: '--part 'fuelTank.*''
+		 example for id: --part 1
+		 example for name pattern: --part 'fuelTank.*'
+		 example for inverse matching: --part '!^PotatoRoid$'
 
 	[Optional]
 	 -s, --silent
@@ -64,7 +65,7 @@ Switches:
 
 ## General notes
 
-If no output file is specified, StdOut is used.
+If no output file is specified, standard output (console) is used.
 That way, if used in combination with --silent, it can be used programmatically should you desire.
 
 This tool has been tested with the following types of files so far :
@@ -84,6 +85,8 @@ Release notes
 * New command **list-partdeps**: same as **list-parts** but also prints dependencies
 * Add craft- and part-filter support via regex (inverse matching supported)
 * Dependent parts are now only removed if they have a "hard" dependency
+* Reduce displayed entries per page from 50 to 20
+* Fix "output file not found" error - *facepalm*
 * Compatible with KSP version: 1.1
 
 ### KSPPartRemover v0.2.1.1

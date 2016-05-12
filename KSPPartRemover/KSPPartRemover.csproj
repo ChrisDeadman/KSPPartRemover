@@ -54,9 +54,11 @@
     <Compile Include="KspFormat\KspTokenGlobalExtension.cs" />
     <Compile Include="KspFormat\KspTokenReader.cs" />
     <Compile Include="KspFormat\KspTokenWriter.cs" />
+    <Compile Include="Parameters.cs" />
     <Compile Include="Feature\CraftLoader.cs" />
     <Compile Include="Feature\PartLookup.cs" />
     <Compile Include="Feature\RegexFilter.cs" />
+    <Compile Include="Feature\CommandLineParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

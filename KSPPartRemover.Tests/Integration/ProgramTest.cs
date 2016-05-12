@@ -31,6 +31,32 @@ namespace KSPPartRemover.Tests.Integration
         }
 
         [Test]
+        public void PrintsInfoHeaderIfSilentSwitchIsNotOn ()
+        {
+            // given
+            var inputCrafts = new KspObject ("GAME");
+            var inputText = KspObjToString (inputCrafts);
+
+            // when
+            File.WriteAllText ("input.txt", inputText);
+            var returnCode = Program.Main ("list-crafts", "-i", "input.txt");
+
+            // then
+            Assert.That (StdOutput.ToString (), Is.StringStarting ("KSPPartRemover v"));
+            Assert.That (returnCode, Is.EqualTo (0));
+        }
+
+        [Test]
+        public void PrintsInfoHeaderOnError ()
+        {
+            // when
+            Program.Main ();
+
+            // then
+            Assert.That (StdOutput.ToString (), Is.StringStarting ("KSPPartRemover v"));
+        }
+
+        [Test]
         public void PrintsUsageOnError ()
         {
             // when
@@ -44,10 +70,13 @@ namespace KSPPartRemover.Tests.Integration
         public void PrintsErrorMessageOnError ()
         {
             // when
-            Program.Main ();
+            var returnCode = Program.Main ();
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringContaining ("ERROR: "));
+            Assert.That (StdOutput.ToString (), Is.StringEnding (
+                "ERROR: Command argument missing" + Environment.NewLine +
+                "ERROR: Required argument '-i' missing" + Environment.NewLine));
+            Assert.That (returnCode, Is.LessThan (0));
         }
 
         [Test]
@@ -80,7 +109,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "-p", "0", "-i", "input.txt", "-s");
+            var returnCode = Program.Main ("remove-parts", "-p", "0", "-i", "input.txt", "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
@@ -106,7 +135,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "-p", "fuelTank", "-i", "input.txt", "-s");
+            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-i", "input.txt", "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
@@ -148,7 +177,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "-p", "fuelTank", "-c", "!craft2", "-i", "input.txt", "-s");
+            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-c", "!craft2", "-i", "input.txt", "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
@@ -211,7 +240,6 @@ namespace KSPPartRemover.Tests.Integration
             Assert.That (returnCode, Is.EqualTo (0));
         }
 
-
         [Test]
         public void CanPrintPartDependencies ()
         {
@@ -267,7 +295,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "-p", "2", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-parts", "-p", "2", "-i", "input.txt");
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringContaining ("No parts matching '2' found"));
@@ -287,7 +315,7 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "-p", "nonExistingPart", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-parts", "-p", "nonExistingPart", "-i", "input.txt");
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringContaining ("No parts matching 'nonExistingPart' found"));
@@ -306,10 +334,10 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-part", "-p", "somePart", "--craft", "nonExistingCraft", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-parts", "-p", "somePart", "--craft", "nonExistingCraft", "-i", "input.txt", "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringContaining ("No craft matching 'nonExistingCraft' found, aborting"));
+            Assert.That (StdOutput.ToString (), Is.EqualTo ("No craft matching 'nonExistingCraft' found, aborting" + Environment.NewLine));
             Assert.That (returnCode, Is.LessThan (0));
         }
 

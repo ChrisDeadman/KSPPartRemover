@@ -29,5 +29,10 @@ namespace KSPPartRemover.Feature
         {
             return source.Where (element => Matches (selector (element)));
         }
+
+        public override string ToString ()
+        {
+            return Pattern;
+        }
     }
 }

@@ -295,10 +295,10 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "2", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-parts", "-p", "2", "-i", "input.txt", "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringContaining ("No parts matching '2' found"));
+            Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No parts removed\n"));
             Assert.That (returnCode, Is.LessThan (0));
         }
 
@@ -315,10 +315,10 @@ namespace KSPPartRemover.Tests.Integration
 
             // when
             File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "nonExistingPart", "-i", "input.txt");
+            var returnCode = Program.Main ("remove-parts", "-p", "nonExistingPart", "-i", "input.txt", "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringContaining ("No parts matching 'nonExistingPart' found"));
+            Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No parts removed\n"));
             Assert.That (returnCode, Is.LessThan (0));
         }
 

@@ -6,7 +6,7 @@ namespace KSPPartRemover
 {
     public class CommandLineParser
     {
-        private static readonly Dictionary<Type, Func<String, Object>> ArgumentParsers = new Dictionary<Type, Func<string, object>> {
+        private static readonly Dictionary<Type, Func<String, Object>> ArgumentParsers = new Dictionary<Type, Func<String, object>> {
             [typeof(String) ] = str => str,
             [typeof(int) ] = str => {
                 int result;

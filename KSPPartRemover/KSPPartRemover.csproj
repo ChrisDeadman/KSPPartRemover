@@ -54,11 +54,18 @@
     <Compile Include="KspFormat\KspTokenGlobalExtension.cs" />
     <Compile Include="KspFormat\KspTokenReader.cs" />
     <Compile Include="KspFormat\KspTokenWriter.cs" />
+    <Compile Include="ProgramUI.cs" />
     <Compile Include="Parameters.cs" />
     <Compile Include="Feature\CraftLoader.cs" />
     <Compile Include="Feature\PartLookup.cs" />
     <Compile Include="Feature\RegexFilter.cs" />
     <Compile Include="Feature\CommandLineParser.cs" />
+    <Compile Include="Command\Help.cs" />
+    <Compile Include="Command\Info.cs" />
+    <Compile Include="Command\ListCrafts.cs" />
+    <Compile Include="Command\ListParts.cs" />
+    <Compile Include="Command\ListPartDeps.cs" />
+    <Compile Include="Command\RemoveParts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -75,5 +82,6 @@
     <Folder Include="Feature\" />
     <Folder Include="KspFormat\" />
     <Folder Include="KspFormat\Objects\" />
+    <Folder Include="Command\" />
   </ItemGroup>
 </Project>

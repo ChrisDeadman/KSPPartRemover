@@ -6,7 +6,7 @@ using KSPPartRemover.Feature;
 
 namespace KSPPartRemover.Tests.Feature
 {
-    public class PartDependencyLookupTest
+    public class PartLookupTest
     {
         private static KspCraftObject createTestCraft ()
         {
@@ -53,7 +53,20 @@ namespace KSPPartRemover.Tests.Feature
         }
 
         [Test]
-        public void CanEvaluateSoftDependenciesOnAGivenPart ()
+        public void CanLookupPartsUsingTheProvidedFilter ()
+        {
+            // given
+            var craft = createTestCraft ();
+            var parts = craft.Children<KspPartObject> ().ToArray ();
+            var target = new PartLookup (craft);
+
+            // when / then
+            Assert.That (target.LookupParts (new RegexFilter ("2")), Is.EqualTo (new[] { parts [2] }));
+            Assert.That (target.LookupParts (new RegexFilter ("part[5-7]")), Is.EqualTo (new[] { parts [4], parts [5], parts [6] }));
+        }
+
+        [Test]
+        public void CanLookupSoftDependenciesOnAGivenPart ()
         {
             // given
             var craft = createTestCraft ();
@@ -77,7 +90,7 @@ namespace KSPPartRemover.Tests.Feature
         }
 
         [Test]
-        public void CanEvaluateHardDependenciesOnAGivenPart ()
+        public void CanLookupHardDependenciesOnAGivenPart ()
         {
             // given
             var craft = createTestCraft ();

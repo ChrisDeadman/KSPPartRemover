@@ -19,11 +19,7 @@ namespace KSPPartRemover.Feature
             int id;
             if (int.TryParse (partFilter.Pattern, out id)) {
                 var dependency = craft.Child<KspPartObject> (id);
-                if (dependency != null) {
-                    return new [] { dependency };
-                } else {
-                    return Enumerable.Empty<KspPartObject> ();
-                }
+                return dependency != null ? new[] { dependency } : Enumerable.Empty<KspPartObject> ();
             }
 
             return partFilter.Apply (craft.Children <KspPartObject> (), part => part.Name);

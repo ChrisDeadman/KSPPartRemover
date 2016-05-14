@@ -29,7 +29,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework" />
+    <Reference Include="nunit.framework">
+      <Package>nunit</Package>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -43,8 +45,8 @@
     <Compile Include="KspFormat\Objects\KspObjectTest.cs" />
     <Compile Include="KspFormat\Objects\KspPartObjectTest.cs" />
     <Compile Include="KspFormat\KspFormatTest.cs" />
-    <Compile Include="Feature\PartDependencyLookupTest.cs" />
     <Compile Include="Feature\CommandLineParserTest.cs" />
+    <Compile Include="Feature\PartLookupTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">

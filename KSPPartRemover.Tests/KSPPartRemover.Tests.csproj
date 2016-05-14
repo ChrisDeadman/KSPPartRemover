@@ -48,6 +48,7 @@
     <Compile Include="Feature\CommandLineParserTest.cs" />
     <Compile Include="Feature\PartLookupTest.cs" />
     <Compile Include="Feature\CraftLoaderTest.cs" />
+    <Compile Include="Feature\RegexFilterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">

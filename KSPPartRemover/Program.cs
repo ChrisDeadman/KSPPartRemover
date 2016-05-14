@@ -17,8 +17,7 @@ namespace KSPPartRemover
         {
             var parameters = new Parameters () {
                 CraftFilter = new RegexFilter (""),
-                PartFilter = new RegexFilter (""),
-                OutputTextWriter = Console.Out
+                PartFilter = new RegexFilter ("")
             };
             var ui = new ProgramUI (parameters);
 
@@ -48,8 +47,8 @@ namespace KSPPartRemover
 
             var commandLineParser = new CommandLineParser ()
                 .RequiredArgument (0, parseCommand)
-                .RequiredSwitchArg<String> ("-i", fileName => parameters.InputText = ReadInputFile (fileName))
-                .OptionalSwitchArg<String> ("-o", fileName => parameters.OutputTextWriter = OpenOutputFile (fileName))
+                .RequiredSwitchArg<String> ("-i", filePath => parameters.InputFilePath = filePath)
+                .OptionalSwitchArg<String> ("-o", filePath => parameters.OutputFilePath = filePath)
                 .OptionalSwitchArg<String> ("-c", pattern => parameters.CraftFilter = new RegexFilter (pattern))
                 .OptionalSwitchArg<String> ("--craft", pattern => parameters.CraftFilter = new RegexFilter (pattern))
                 .OptionalSwitchArg<String> ("-p", pattern => parameters.PartFilter = new RegexFilter (pattern))
@@ -60,6 +59,9 @@ namespace KSPPartRemover
             
             try {
                 commandLineParser.Parse (args);
+                if (parameters.OutputFilePath == null) {
+                    parameters.OutputFilePath = parameters.InputFilePath;
+                }
 
                 if (errors.Count > 0) {
                     printInfoHeader.Execute ();

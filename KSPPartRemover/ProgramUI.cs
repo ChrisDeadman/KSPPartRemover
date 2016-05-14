@@ -17,12 +17,12 @@ namespace KSPPartRemover
             this.parameters = parameters;
         }
 
-        public void DisplayCraftList (IEnumerable<KspCraftObject> crafts)
+        public void DisplayCraftList (List<KspCraftObject> crafts)
         {
             PrintList ("Crafts", crafts.Select (CraftObjectToString));
         }
 
-        public void DisplayPartList (IReadOnlyDictionary<KspCraftObject, List<KspPartObject>> craftParts)
+        public void DisplayPartList (Dictionary<KspCraftObject, List<KspPartObject>> craftParts)
         {
             var listEntries = new List<String> ();
 
@@ -34,7 +34,7 @@ namespace KSPPartRemover
             PrintList ("Parts", listEntries);
         }
 
-        public void DisplayPartDependencyList (IReadOnlyDictionary<KspCraftObject, IReadOnlyDictionary<KspPartObject, List<KspPartLinkProperty>>> craftPartLinks)
+        public void DisplayPartDependencyList (Dictionary<KspCraftObject, Dictionary<KspPartObject, List<KspPartLinkProperty>>> craftPartLinks)
         {
             var listEntries = new List<String> ();
 

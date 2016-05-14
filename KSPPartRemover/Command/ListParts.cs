@@ -26,7 +26,9 @@ namespace KSPPartRemover.Command
             ui.DisplayUserMessage ($"Searching for parts matching '{parameters.PartFilter}'...");
             var filteredParts = filteredCrafts.ToDictionary (craft => craft, craft => FindParts (craft, parameters.PartFilter));
 
-            ui.DisplayPartList (filteredParts);
+            if (filteredParts.Any (entry => entry.Value.Count > 0)) {
+                ui.DisplayPartList (filteredParts);
+            }
 
             return 0;
         }

@@ -9,6 +9,7 @@ namespace KSPPartRemover.Tests.Integration
 {
     public class ProgramTest
     {
+        private static readonly String TestFilePath = "test.sfs";
         private static readonly StringBuilder StdOutput = new StringBuilder ();
         private static readonly StringWriter StdOutputWriter = new StringWriter (StdOutput);
 
@@ -38,8 +39,8 @@ namespace KSPPartRemover.Tests.Integration
             var inputText = KspObjToString (inputCrafts);
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("list-crafts", "-i", "input.txt");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("list-crafts", "-i", TestFilePath);
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringStarting ("KSPPartRemover v"));
@@ -108,11 +109,11 @@ namespace KSPPartRemover.Tests.Integration
             var expectedResult = KspObjToString (expectedCraft);
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "0", "-i", "input.txt", "-s");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("remove-parts", "-p", "0", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
+            Assert.That (File.ReadAllText (TestFilePath), Is.EqualTo (expectedResult));
             Assert.That (returnCode, Is.EqualTo (0));
         }
 
@@ -134,11 +135,11 @@ namespace KSPPartRemover.Tests.Integration
             var expectedResult = KspObjToString (expectedCraft);
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-i", "input.txt", "-s");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
+            Assert.That (File.ReadAllText (TestFilePath), Is.EqualTo (expectedResult));
             Assert.That (returnCode, Is.EqualTo (0));
         }
 
@@ -176,11 +177,11 @@ namespace KSPPartRemover.Tests.Integration
             var expectedResult = KspObjToString (expectedCrafts);
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-c", "!craft2", "-i", "input.txt", "-s");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-c", "!craft2", "-i", TestFilePath, "-o", TestFilePath, "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.EqualTo (expectedResult));
+            Assert.That (File.ReadAllText (TestFilePath), Is.EqualTo (expectedResult));
             Assert.That (returnCode, Is.EqualTo (0));
         }
 
@@ -198,8 +199,8 @@ namespace KSPPartRemover.Tests.Integration
             var expectedResult = "someCraft" + Environment.NewLine + "anotherCraft" + Environment.NewLine;
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("list-crafts", "-c", ".*Craft", "-i", "input.txt");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("list-crafts", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
@@ -232,8 +233,8 @@ namespace KSPPartRemover.Tests.Integration
                 "\t[1]fuelTank" + Environment.NewLine;
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("list-parts", "-p", "[s,f].*", "-c", ".*Craft", "-i", "input.txt");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("list-parts", "-p", "[s,f].*", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
@@ -274,8 +275,8 @@ namespace KSPPartRemover.Tests.Integration
                 "\t\t[1]fuelTank2[attN(bottom)]" + Environment.NewLine;
             
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("list-partdeps", "-p", ".*uelTank.*", "-c", ".*Craft", "-i", "input.txt");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("list-partdeps", "-p", ".*uelTank.*", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
@@ -294,8 +295,8 @@ namespace KSPPartRemover.Tests.Integration
             var inputText = KspObjToString (inputCraft);
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "2", "-i", "input.txt", "-s");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("remove-parts", "-p", "2", "-i", TestFilePath, "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No parts removed\n"));
@@ -314,8 +315,8 @@ namespace KSPPartRemover.Tests.Integration
             var inputText = KspObjToString (inputCraft);
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "nonExistingPart", "-i", "input.txt", "-s");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("remove-parts", "-p", "nonExistingPart", "-i", TestFilePath, "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No parts removed\n"));
@@ -333,8 +334,8 @@ namespace KSPPartRemover.Tests.Integration
             var inputText = KspObjToString (inputCrafts);
 
             // when
-            File.WriteAllText ("input.txt", inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "somePart", "--craft", "nonExistingCraft", "-i", "input.txt", "-s");
+            File.WriteAllText (TestFilePath, inputText);
+            var returnCode = Program.Main ("remove-parts", "-p", "somePart", "--craft", "nonExistingCraft", "-i", TestFilePath, "-s");
 
             // then
             Assert.That (StdOutput.ToString (), Is.EqualTo ("No craft matching 'nonExistingCraft' found, aborting" + Environment.NewLine));

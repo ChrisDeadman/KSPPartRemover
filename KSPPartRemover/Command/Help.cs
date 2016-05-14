@@ -20,7 +20,7 @@ namespace KSPPartRemover.Command
             var sb = new StringBuilder ();
             sb.Append ("usage: ");
             sb.Append (Path.GetFileName (assemblyName.CodeBase));
-            sb.AppendLine (" <command> [<args>] -i <input-file> [-o <output-file>]");
+            sb.AppendLine (" <command> [<switches>] -i <input-file>");
             sb.AppendLine ();
             sb.AppendLine ("Commands:"); 
             sb.AppendLine (); 
@@ -44,7 +44,7 @@ namespace KSPPartRemover.Command
             sb.AppendLine ();
             sb.AppendLine ("\t[Optional]");
             sb.AppendLine ("\t -o <path>");
-            sb.AppendLine ("\t\t specifies the output file (prints to stdout if not specified)");
+            sb.AppendLine ("\t\t specifies the output file (modifies input file if not specified)");
             sb.AppendLine ();
             sb.AppendLine ("\t[Optional]");
             sb.AppendLine ("\t -c, --craft <name-pattern>");

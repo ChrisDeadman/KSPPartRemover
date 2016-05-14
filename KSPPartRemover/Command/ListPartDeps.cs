@@ -27,12 +27,14 @@ namespace KSPPartRemover.Command
             ui.DisplayUserMessage ($"Searching for parts with dependencies to '{parameters.PartFilter}'...");
             var partDependencies = filteredCrafts.ToDictionary (craft => craft, craft => FindPartDependencies (craft, parameters.PartFilter));
 
-            ui.DisplayPartDependencyList (partDependencies);
+            if (partDependencies.Any (entry => entry.Value.Count > 0)) {
+                ui.DisplayPartDependencyList (partDependencies);
+            }
 
             return 0;
         }
 
-        private IReadOnlyDictionary<KspPartObject, List<KspPartLinkProperty>> FindPartDependencies (KspCraftObject craft, RegexFilter filter)
+        private Dictionary<KspPartObject, List<KspPartLinkProperty>> FindPartDependencies (KspCraftObject craft, RegexFilter filter)
         {
             ui.DisplayUserMessage ($"Entering craft '{craft.Name}'...");
             var partLookup = new PartLookup (craft);

@@ -22,9 +22,11 @@ namespace KSPPartRemover.Command
         {
             var allCrafts = CraftLoader.LoadFromFile (parameters.InputFilePath);
             ui.DisplayUserMessage ($"Searching for crafts matching '{parameters.CraftFilter}'...");
-            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name);
+            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name).ToList ();
 
-            ui.DisplayCraftList (filteredCrafts);
+            if (filteredCrafts.Count > 0) {
+                ui.DisplayCraftList (filteredCrafts);
+            }
 
             return 0;
         }

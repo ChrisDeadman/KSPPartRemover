@@ -1,6 +1,5 @@
 KSPPartRemover v0.3
 =======================
-**(NO RELEASED YET, WORK IN PROGRESS)**
 
 Author: ChrisDeadman
 

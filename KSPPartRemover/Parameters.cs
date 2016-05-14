@@ -8,9 +8,9 @@ namespace KSPPartRemover
     {
         public Func<int> Command { get; set; }
 
-        public String InputText { get; set; }
+        public String InputFilePath { get; set; }
 
-        public TextWriter OutputTextWriter { get; set; }
+        public String OutputFilePath { get; set; }
 
         public RegexFilter CraftFilter { get; set; }
 

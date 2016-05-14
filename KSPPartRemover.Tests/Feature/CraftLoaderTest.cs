@@ -19,7 +19,7 @@ namespace KSPPartRemover.Tests.Feature
             KspObject kspObjTree;
 
             // when
-            var crafts = CraftLoader.Load (textIn, out kspObjTree);
+            var crafts = CraftLoader.LoadFromText (textIn, out kspObjTree);
 
             // then
             Assert.That (crafts.Select (craft => craft.Name), Is.EqualTo (new[] { "Mün Mk I" }));
@@ -35,7 +35,7 @@ namespace KSPPartRemover.Tests.Feature
             KspObject kspObjTree;
 
             // when
-            var crafts = CraftLoader.Load (textIn, out kspObjTree);
+            var crafts = CraftLoader.LoadFromText (textIn, out kspObjTree);
 
             // then
             Assert.That (kspObjTree.Children<KspCraftObject> (recursive: true), Is.EqualTo (crafts));
@@ -55,7 +55,7 @@ namespace KSPPartRemover.Tests.Feature
         }
 
         [Test]
-        public void ReturnsNothingForEmptyFile ()
+        public void ReturnsEmptyObjectTreeForEmptyFile ()
         {
             // given
             var textIn = "";
@@ -63,11 +63,29 @@ namespace KSPPartRemover.Tests.Feature
             KspObject kspObjTree;
 
             // when
-            var crafts = CraftLoader.Load (textIn, out kspObjTree);
+            var crafts = CraftLoader.LoadFromText (textIn, out kspObjTree);
 
             // then
             Assert.That (crafts, Is.Empty);
             Assert.That (kspObjTree.Children, Is.Empty);
+        }
+
+        [Test]
+        public void CanLoadAndSaveFromFiles ()
+        {
+            // given / when
+            CraftLoader.SaveToFile ("test.sfs", new KspObject ("GAME")
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft1")))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft2")))
+                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))));
+
+            // and when
+            KspObject kspObjTreeLoaded;
+            var crafts = CraftLoader.LoadFromFile ("test.sfs", out kspObjTreeLoaded);
+
+            // then
+            Assert.That (kspObjTreeLoaded.Children<KspCraftObject> (recursive: true), Is.EqualTo (crafts));
+            Assert.That (crafts.Select (craft => craft.Name), Is.EqualTo (new[] { "craft1", "craft2", "craft3" }));
         }
     }
 }

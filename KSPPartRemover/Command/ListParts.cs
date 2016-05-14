@@ -20,7 +20,7 @@ namespace KSPPartRemover.Command
 
         public int Execute (Parameters parameters)
         {
-            var allCrafts = CraftLoader.Load (parameters.InputText);
+            var allCrafts = CraftLoader.LoadFromFile (parameters.InputFilePath);
             ui.DisplayUserMessage ($"Searching for crafts matching '{parameters.CraftFilter}'...");
             var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name);
             ui.DisplayUserMessage ($"Searching for parts matching '{parameters.PartFilter}'...");

@@ -22,7 +22,7 @@ namespace KSPPartRemover.Command
         public int Execute (Parameters parameters)
         {
             KspObject kspObjTree;
-            var allCrafts = CraftLoader.Load (parameters.InputText, out kspObjTree);
+            var allCrafts = CraftLoader.LoadFromFile (parameters.InputFilePath, out kspObjTree);
             ui.DisplayUserMessage ($"Searching for crafts matching '{parameters.CraftFilter}'...");
             var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name).ToList ();
 
@@ -57,9 +57,7 @@ namespace KSPPartRemover.Command
                 return -1;
             }
 
-            var craftToken = KspObjectWriter.WriteObject (kspObjTree);
-            var craftString = KspTokenWriter.WriteToken (craftToken, new StringBuilder ()).ToString ();
-            parameters.OutputTextWriter.Write (craftString);
+            CraftLoader.SaveToFile (parameters.OutputFilePath, kspObjTree);
 
             return 0;
         }

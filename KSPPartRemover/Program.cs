@@ -76,19 +76,7 @@ namespace KSPPartRemover
                 printInfoHeader.Execute ();
                 ui.DisplayErrorMessage (ex.ToString ());
                 return -1;
-            } finally {
-                if (parameters.OutputTextWriter != Console.Out) {
-                    parameters.OutputTextWriter.Dispose ();
-                }
             }
         }
-
-        private static String ReadInputFile (String fileName)
-        {
-            using (var inputTextReader = new StreamReader (new FileStream (fileName, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
-                return inputTextReader.ReadToEnd ();
-        }
-
-        private static TextWriter OpenOutputFile (String fileName) => new StreamWriter (new FileStream (fileName, FileMode.Truncate, FileAccess.ReadWrite, FileShare.Read), Encoding.UTF8);
     }
 }

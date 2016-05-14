@@ -47,6 +47,7 @@
     <Compile Include="KspFormat\KspFormatTest.cs" />
     <Compile Include="Feature\CommandLineParserTest.cs" />
     <Compile Include="Feature\PartLookupTest.cs" />
+    <Compile Include="Feature\CraftLoaderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">

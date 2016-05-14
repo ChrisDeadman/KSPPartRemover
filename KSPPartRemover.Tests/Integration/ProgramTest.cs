@@ -74,8 +74,8 @@ namespace KSPPartRemover.Tests.Integration
 
             // then
             Assert.That (StdOutput.ToString (), Is.StringEnding (
-                "ERROR: Command argument missing" + Environment.NewLine +
-                "ERROR: Required argument '-i' missing" + Environment.NewLine));
+                "ERROR: Required argument 0 missing" + Environment.NewLine +
+                "ERROR: Required switch argument '-i' missing" + Environment.NewLine));
             Assert.That (returnCode, Is.LessThan (0));
         }
 

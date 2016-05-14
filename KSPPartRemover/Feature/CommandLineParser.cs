@@ -6,145 +6,129 @@ namespace KSPPartRemover
 {
     public class CommandLineParser
     {
-        private static readonly Dictionary<Type, Func<String, Object>> ArgumentParsers = new Dictionary<Type, Func<String, object>> {
-            [typeof(String) ] = str => str,
-            [typeof(int) ] = str => {
-                int result;
-                return int.TryParse (str, out result) ? (Object)result : null;
+        private readonly List<Parser> parsers = new List<Parser> ();
+
+        private int currentArgNum = 0;
+
+        private Action<String> handleError;
+
+        public CommandLineParser RequiredArgument (int argIdx, Action<String> handler)
+        {
+            return Argument (argIdx, true, handler);
+        }
+
+        public CommandLineParser OptionalArgument (int argIdx, Action<String> handler)
+        {
+            return Argument (argIdx, false, handler);
+        }
+
+        public CommandLineParser RequiredSwitch (String name, Action handler)
+        {
+            return Switch (name, true, handler);
+        }
+
+        public CommandLineParser OptionalSwitch (String name, Action handler)
+        {
+            return Switch (name, false, handler);
+        }
+
+        public CommandLineParser RequiredSwitchArg <TArg> (String name, Action<TArg> handler)
+        {
+            return SwitchArg<TArg> (name, true, handler);
+        }
+
+        public CommandLineParser OptionalSwitchArg <TArg> (String name, Action<TArg> handler)
+        {
+            return SwitchArg<TArg> (name, false, handler);
+        }
+
+        public CommandLineParser Argument (int argIdx, bool required, Action<String> handler)
+        {
+            var argHandler = new Parser {
+                Parse = argQueue => (!argQueue.Peek ().StartsWith ("-") && currentArgNum++ == argIdx) ? argQueue.Dequeue () : null,
+                Accept = arg => handler ((String)arg)
+            };
+
+            if (required) {
+                argHandler.Error = $"Required argument {argIdx} missing";
             }
-        };
 
-        private readonly List<ArgumentHandler> argumentHandlers = new List<ArgumentHandler> ();
-
-        private Action<String> errorHandler;
-
-        public CommandLineParser Command (Action<String> handler)
-        {
-            String error = "Command argument missing";
-
-            argumentHandlers.Add (new ArgumentHandler (
-                (idx, current, next) => {
-                    if (current == null || idx != 0) {
-                        return error;
-                    }
-                    handler (current);
-                    return error = null;
-                }
-            ));
-
+            parsers.Add (argHandler);
             return this;
         }
 
-        public CommandLineParser Required (String name, Action handler)
+        public CommandLineParser Switch (String name, bool required, Action handler)
         {
-            String error = $"Required argument '{name}' missing";
+            var argHandler = new Parser {
+                Parse = argQueue => name.Equals (argQueue.Peek ()) ? argQueue.Dequeue () : null,
+                Accept = n => handler ()
+            };
 
-            argumentHandlers.Add (new ArgumentHandler (
-                (idx, current, next) => {
-                    if (current == null || !name.Equals (current)) {
-                        return error;
-                    }
-                    handler ();
-                    return error = null;
-                }
-            ));
+            if (required) {
+                argHandler.Error = $"Required switch '{name}' missing";
+            }
 
+            parsers.Add (argHandler);
             return this;
         }
 
-        public CommandLineParser Required <TArg> (String name, Action<TArg> handler)
+        public CommandLineParser SwitchArg <TArg> (String name, bool required, Action<TArg> handler)
         {
-            String error = $"Required argument '{name}' missing";
-
-            argumentHandlers.Add (new ArgumentHandler (
-                (idx, current, next) => {
-                    if (current == null || next == null || !name.Equals (current)) {
-                        return error;
-                    }
-                    TArg arg;
-                    if (!ParseArg (next, out arg)) {
-                        return error = $"Argument '{name}': '{next}' is not of expected type {typeof(TArg).Name}";
-                    }
-
-                    handler (arg);
-                    return error = null;
-                }
-            ));
-
-            return this;
-        }
-
-        public CommandLineParser Optional (String name, Action handler)
-        {
-            argumentHandlers.Add (new ArgumentHandler (
-                (idx, current, next) => {
-                    if (current == null || !name.Equals (current)) {
-                        return null;
-                    }
-                    handler ();
+            var argHandler = new Parser ();
+            argHandler.Parse = argQueue => {
+                if (!name.Equals (argQueue.Peek ())) {
                     return null;
                 }
-            ));
 
-            return this;
-        }
-
-        public CommandLineParser Optional <TArg> (String name, Action<TArg> handler)
-        {
-            String error = null;
-
-            argumentHandlers.Add (new ArgumentHandler (
-                (idx, current, next) => {
-                    if (current == null || next == null || !name.Equals (current)) {
-                        return error;
-                    }
-                    TArg arg;
-                    if (!ParseArg (next, out arg)) {
-                        return error = $"Argument '{name}': '{next}' is not of expected type {typeof(TArg).Name}";
-                    }
-
-                    handler (arg);
-                    return error = null;
+                if (argQueue.Count < 2) {
+                    argHandler.Error = null;
+                    return null;
                 }
-            ));
 
+                argQueue.Dequeue ();
+                var switchArg = argQueue.Dequeue ();
+
+                TArg arg;
+                if (ParseArg (switchArg, out arg)) {
+                    return arg;
+                }
+
+                argHandler.Error = $"'{name}': '{switchArg}' is not of expected type {typeof(TArg).Name}";
+                return null;
+            };
+            argHandler.Accept = arg => handler ((TArg)arg);
+
+            if (required) {
+                argHandler.Error = $"Required switch argument '{name}' missing";
+            }
+
+            parsers.Add (argHandler);
             return this;
         }
 
-        public CommandLineParser Error (Action<String> handler)
+        public CommandLineParser OnError (Action<String> handleError)
         {
-            errorHandler = handler;
+            this.handleError = handleError;
             return this;
         }
 
         public void Parse (params String[] args)
         {
-            var enumerator = args.ToList ().GetEnumerator ();
-            var current = enumerator.MoveNext () ? enumerator.Current : null;
+            currentArgNum = 0;
 
-            var idx = 0;
-            do {
-                var next = enumerator.MoveNext () ? enumerator.Current : null;
-
-                foreach (var handler in argumentHandlers) {
-                    try {
-                        handler.Handle (idx, current, next);
-                    } catch (Exception ex) {
-                        errorHandler?.Invoke (ex.Message);
-                        return;
-                    }
+            var argQueue = new Queue<String> (args);
+            while (argQueue.Count > 0) {
+                if (!parsers.Any (parser => parser.Handle (argQueue))) {
+                    handleError?.Invoke ($"Error while parsing argument '{argQueue.Dequeue()}'");
                 }
+            }
 
-                current = next;
-                idx++;
-            } while (current != null);
-
-            argumentHandlers.ForEach (handler => handler.Finish (errorHandler));
+            parsers.ForEach (handler => handler.Finish (handleError));
         }
 
         private static bool ParseArg<TArg> (String text, out TArg arg)
         {
-            var parse = ArgumentParsers [typeof(TArg)];
+            var parse = StringParsers [typeof(TArg)];
 
             var result = parse (text);
             if (result == null) {
@@ -156,26 +140,43 @@ namespace KSPPartRemover
             return true;
         }
 
-        private class ArgumentHandler
+        private static readonly Dictionary<Type, Func<String, Object>> StringParsers = new Dictionary<Type, Func<String, object>> {
+            [typeof(String) ] = str => str,
+            [typeof(int) ] = str => {
+                int result;
+                return int.TryParse (str, out result) ? (Object)result : null;
+            }
+        };
+
+        private class Parser
         {
-            private readonly Func<int, String, String, String> handle;
+            public Func<Queue<String>, Object> Parse { get; set; }
 
-            private String error;
+            public Action<Object> Accept { get; set; }
 
-            public ArgumentHandler (Func<int, String, String, String> handle)
+            public String Error { get; set; }
+
+            private bool handled;
+
+            public bool Handle (Queue<String> args)
             {
-                this.handle = handle;
+                if (handled || args.Count < 1) {
+                    return false;
+                }
+
+                var result = Parse (args);
+                if (result == null) {
+                    return false;
+                }
+
+                Accept (result);
+                return handled = true;
             }
 
-            public void Handle (int idx, String current, String next)
+            public void Finish (Action<String> handleError)
             {
-                error = handle?.Invoke (idx, current, next);
-            }
-
-            public void Finish (Action<String> errorHandler)
-            {
-                if (error != null) {
-                    errorHandler?.Invoke (error);
+                if (!handled && Error != null) {
+                    handleError?.Invoke (Error);
                 }
             }
         }

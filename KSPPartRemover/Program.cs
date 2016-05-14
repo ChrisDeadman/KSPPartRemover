@@ -47,16 +47,16 @@ namespace KSPPartRemover
             };
 
             var commandLineParser = new CommandLineParser ()
-                .Command (parseCommand)
-                .Required<String> ("-i", fileName => parameters.InputText = ReadInputFile (fileName))
-                .Optional<String> ("-o", fileName => parameters.OutputTextWriter = OpenOutputFile (fileName))
-                .Optional<String> ("-c", pattern => parameters.CraftFilter = new RegexFilter (pattern))
-                .Optional<String> ("--craft", pattern => parameters.CraftFilter = new RegexFilter (pattern))
-                .Optional<String> ("-p", pattern => parameters.PartFilter = new RegexFilter (pattern))
-                .Optional<String> ("--part", pattern => parameters.PartFilter = new RegexFilter (pattern))
-                .Optional ("-s", () => parameters.SilentExecution = true)
-                .Optional ("--silent", () => parameters.SilentExecution = true)
-                .Error (errors.Add);
+                .RequiredArgument (0, parseCommand)
+                .RequiredSwitchArg<String> ("-i", fileName => parameters.InputText = ReadInputFile (fileName))
+                .OptionalSwitchArg<String> ("-o", fileName => parameters.OutputTextWriter = OpenOutputFile (fileName))
+                .OptionalSwitchArg<String> ("-c", pattern => parameters.CraftFilter = new RegexFilter (pattern))
+                .OptionalSwitchArg<String> ("--craft", pattern => parameters.CraftFilter = new RegexFilter (pattern))
+                .OptionalSwitchArg<String> ("-p", pattern => parameters.PartFilter = new RegexFilter (pattern))
+                .OptionalSwitchArg<String> ("--part", pattern => parameters.PartFilter = new RegexFilter (pattern))
+                .OptionalSwitch ("-s", () => parameters.SilentExecution = true)
+                .OptionalSwitch ("--silent", () => parameters.SilentExecution = true)
+                .OnError (errors.Add);
             
             try {
                 commandLineParser.Parse (args);

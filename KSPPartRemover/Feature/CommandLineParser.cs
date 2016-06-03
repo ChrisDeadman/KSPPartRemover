@@ -10,40 +10,31 @@ namespace KSPPartRemover
         private static readonly String ArgPrefix = "-";
 
         private readonly List<Parser> parsers = new List<Parser> ();
+        private readonly List<Parser> handledParsers = new List<Parser> ();
 
-        private int currentArgNum = 0;
+        private int currentArgNum;
 
         private Action<String> handleError;
 
-        public CommandLineParser RequiredArgument (int argIdx, Action<String> handler)
-        {
-            return Argument (argIdx, true, handler);
-        }
+        public CommandLineParser RequiredArgument (int argIdx, Action<String> handler) => Argument (argIdx, true, handler);
 
-        public CommandLineParser OptionalArgument (int argIdx, Action<String> handler)
-        {
-            return Argument (argIdx, false, handler);
-        }
+        public CommandLineParser OptionalArgument (int argIdx, Action<String> handler) => Argument (argIdx, false, handler);
 
-        public CommandLineParser RequiredSwitch (String name, Action handler)
-        {
-            return Switch (name, true, handler);
-        }
+        public CommandLineParser RequiredSwitch (String name, Action handler) => Switch (name, null, true, handler);
 
-        public CommandLineParser OptionalSwitch (String name, Action handler)
-        {
-            return Switch (name, false, handler);
-        }
+        public CommandLineParser RequiredSwitch (String name, String longName, Action handler) => Switch (name, longName, true, handler);
 
-        public CommandLineParser RequiredSwitchArg <TArg> (String name, Action<TArg> handler)
-        {
-            return SwitchArg<TArg> (name, true, handler);
-        }
+        public CommandLineParser OptionalSwitch (String name, Action handler) => Switch (name, null, false, handler);
 
-        public CommandLineParser OptionalSwitchArg <TArg> (String name, Action<TArg> handler)
-        {
-            return SwitchArg<TArg> (name, false, handler);
-        }
+        public CommandLineParser OptionalSwitch (String name, String longName, Action handler) => Switch (name, longName, false, handler);
+
+        public CommandLineParser RequiredSwitchArg <TArg> (String name, Action<TArg> handler) => SwitchArg<TArg> (name, null, true, handler);
+
+        public CommandLineParser RequiredSwitchArg <TArg> (String name, String longName, Action<TArg> handler) => SwitchArg<TArg> (name, longName, true, handler);
+
+        public CommandLineParser OptionalSwitchArg <TArg> (String name, Action<TArg> handler) => SwitchArg<TArg> (name, null, false, handler);
+
+        public CommandLineParser OptionalSwitchArg <TArg> (String name, String longName, Action<TArg> handler) => SwitchArg<TArg> (name, longName, false, handler);
 
         public CommandLineParser Argument (int argIdx, bool required, Action<String> handler)
         {
@@ -60,10 +51,10 @@ namespace KSPPartRemover
             return this;
         }
 
-        public CommandLineParser Switch (String name, bool required, Action handler)
+        public CommandLineParser Switch (String name, String longName, bool required, Action handler)
         {
             var argHandler = new Parser {
-                Parse = argQueue => IsExpectedArgument (name, argQueue.Peek ()) ? argQueue.Dequeue () : null,
+                Parse = argQueue => IsExpectedSwitch (name, longName, argQueue.Peek ()) ? argQueue.Dequeue () : null,
                 Accept = n => handler ()
             };
 
@@ -75,11 +66,11 @@ namespace KSPPartRemover
             return this;
         }
 
-        public CommandLineParser SwitchArg <TArg> (String name, bool required, Action<TArg> handler)
+        public CommandLineParser SwitchArg <TArg> (String name, String longName, bool required, Action<TArg> handler)
         {
             var argHandler = new Parser ();
             argHandler.Parse = argQueue => {
-                if (!IsExpectedArgument (name, argQueue.Peek ())) {
+                if (!IsExpectedSwitch (name, longName, argQueue.Peek ())) {
                     return null;
                 }
 
@@ -119,11 +110,25 @@ namespace KSPPartRemover
         public void Parse (params String[] args)
         {
             currentArgNum = 0;
+            handledParsers.Clear ();
 
             var argQueue = new Queue<String> (args);
             while (argQueue.Count > 0) {
                 try {
-                    if (!parsers.Any (parser => parser.Handle (argQueue))) {
+                    var handled = false;
+
+                    foreach (var parser in parsers) {
+                        if (handledParsers.Contains (parser)) {
+                            continue;
+                        }
+
+                        if (handled = parser.Handle (argQueue)) {
+                            handledParsers.Add (parser);
+                            break;
+                        }
+                    }
+
+                    if (!handled) {
                         handleError?.Invoke ($"Error while parsing argument '{argQueue.Dequeue()}'");
                     }
                 } catch (Exception ex) {
@@ -131,25 +136,36 @@ namespace KSPPartRemover
                 }
             }
 
-            parsers.ForEach (handler => handler.Finish (handleError));
+            foreach (var parser in parsers) {
+                if (!handledParsers.Contains (parser) && parser.Error != null) {
+                    handleError?.Invoke (parser.Error);
+                }
+            }
         }
 
-        private static bool IsExpectedArgument (String name, String cmdLine)
+        private static bool IsExpectedSwitch (String name, String longName, String cmdLine)
         {
-            var expected = new StringBuilder ()
-                .Append (ArgPrefix)
-                .Append (name);
-
-            if (name.Length > 1) {
-                expected.Insert (0, ArgPrefix);
+            if (name != null && IsExpectedSwitch (name, cmdLine)) {
+                return true;
             }
+            if (longName != null && IsExpectedSwitch (longName, cmdLine)) {
+                return true;
+            }
+            return false;
+        }
 
-            return expected.ToString ().Equals (cmdLine);
+        private static bool IsExpectedSwitch (String name, String cmdLine)
+        {
+            var expected = (name.Length <= 1)
+                ? ArgPrefix + name
+                : ArgPrefix + ArgPrefix + name;
+
+            return expected.Equals (cmdLine);
         }
 
         private static bool ParseArg<TArg> (String text, out TArg arg)
         {
-            var parse = StringParsers [typeof(TArg)];
+            var parse = Deserializers [typeof(TArg)];
 
             var result = parse (text);
             if (result == null) {
@@ -161,7 +177,7 @@ namespace KSPPartRemover
             return true;
         }
 
-        private static readonly Dictionary<Type, Func<String, Object>> StringParsers = new Dictionary<Type, Func<String, object>> {
+        private static readonly Dictionary<Type, Func<String, Object>> Deserializers = new Dictionary<Type, Func<String, object>> {
             [typeof(String) ] = str => str,
             [typeof(int) ] = str => {
                 int result;
@@ -177,11 +193,9 @@ namespace KSPPartRemover
 
             public String Error { get; set; }
 
-            private bool handled;
-
             public bool Handle (Queue<String> args)
             {
-                if (handled || args.Count < 1) {
+                if (args.Count < 1) {
                     return false;
                 }
 
@@ -191,14 +205,7 @@ namespace KSPPartRemover
                 }
 
                 Accept (result);
-                return handled = true;
-            }
-
-            public void Finish (Action<String> handleError)
-            {
-                if (!handled && Error != null) {
-                    handleError?.Invoke (Error);
-                }
+                return true;
             }
         }
     }

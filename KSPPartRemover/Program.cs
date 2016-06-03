@@ -9,13 +9,13 @@ namespace KSPPartRemover
     {
         public static int Main (params String[] args)
         {
+            var errors = new List<String> ();
             var parameters = new Parameters () {
                 CraftFilter = new RegexFilter (""),
                 PartFilter = new RegexFilter ("")
             };
-            var ui = new ProgramUI (parameters);
 
-            var errors = new List<String> ();
+            var ui = new ProgramUI (parameters);
             var printInfoHeader = new Info (ui);
             var printUsage = new Help (ui);
 
@@ -23,12 +23,9 @@ namespace KSPPartRemover
                 .RequiredArgument (0, cmd => parameters.Command = ParseCommand (cmd, ui, parameters))
                 .RequiredSwitchArg<String> ("i", filePath => parameters.InputFilePath = filePath)
                 .OptionalSwitchArg<String> ("o", filePath => parameters.OutputFilePath = filePath)
-                .OptionalSwitchArg<String> ("c", pattern => parameters.CraftFilter = new RegexFilter (pattern))
-                .OptionalSwitchArg<String> ("craft", pattern => parameters.CraftFilter = new RegexFilter (pattern))
-                .OptionalSwitchArg<String> ("p", pattern => parameters.PartFilter = new RegexFilter (pattern))
-                .OptionalSwitchArg<String> ("part", pattern => parameters.PartFilter = new RegexFilter (pattern))
-                .OptionalSwitch ("s", () => parameters.SilentExecution = true)
-                .OptionalSwitch ("silent", () => parameters.SilentExecution = true)
+                .OptionalSwitchArg<String> ("c", "craft", pattern => parameters.CraftFilter = new RegexFilter (pattern))
+                .OptionalSwitchArg<String> ("p", "part", pattern => parameters.PartFilter = new RegexFilter (pattern))
+                .OptionalSwitch ("s", "silent", () => parameters.SilentExecution = true)
                 .OnError (errors.Add);
             
             try {

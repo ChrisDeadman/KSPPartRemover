@@ -208,6 +208,31 @@ namespace KSPPartRemover.Tests.Feature
         }
 
         [Test]
+        public void SupportsBothShortAndLongSwitchNames ()
+        {
+            // given
+            var obtainedSwitches = new List<String> ();
+            var obtainedErrors = new List<String> ();
+
+            // when
+            var target = new CommandLineParser ()
+                .RequiredSwitch ("t", "test", () => obtainedSwitches.Add ("test"))
+                .OnError (obtainedErrors.Add);
+
+            // parse short name
+            target.Parse (new[] { "-t" });
+            Assert.That (obtainedErrors, Is.Empty);
+            Assert.That (obtainedSwitches, Is.EqualTo (new[] { "test" }));
+
+            obtainedSwitches.Clear ();
+
+            // parse long name
+            target.Parse (new[] { "--test" });
+            Assert.That (obtainedErrors, Is.Empty);
+            Assert.That (obtainedSwitches, Is.EqualTo (new[] { "test" }));
+        }
+
+        [Test]
         public void HandlesErrorsThrownByArgumentHandlers ()
         {
             // given

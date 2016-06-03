@@ -17,11 +17,11 @@ namespace KSPPartRemover.Feature
         public void RemoveParts (IReadOnlyList<KspPartObject> parts)
         {
             foreach (var part in Craft.Children<KspPartObject>().Except(parts)) {
-                part.LinkRefs = RemovePartLinks (part.LinkRefs, parts);
-                part.ParentRefs = RemovePartLinks (part.ParentRefs, parts);
-                part.SymRefs = RemovePartLinks (part.SymRefs, parts);
-                part.SrfNRefs = RemovePartLinks (part.SrfNRefs, parts);
-                part.AttNRefs = RemovePartLinks (part.AttNRefs, parts);
+                part.UpdatePartLinks (KspPartLinkProperty.Types.Link, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.Link), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.Parent, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.Parent), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.Sym, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.Sym), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.SrfN, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.SrfN), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.AttN, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.AttN), parts));
             }
 
             foreach (var part in parts) {

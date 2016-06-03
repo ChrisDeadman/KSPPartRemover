@@ -258,10 +258,10 @@ namespace KSPPartRemover.Tests.Integration
             var craft1 = inputCrafts.Children [0];
             var craft2 = inputCrafts.Children [1];
 
-            craft1.Children [0].AddProperty (new KspPartLinkProperty ("link", null, (KspPartObject)craft1.Children [1], true));
-            craft1.Children [1].AddProperty (new KspPartLinkProperty ("parent", null, (KspPartObject)craft1.Children [0], false));
-            craft1.Children [1].AddProperty (new KspPartLinkProperty ("sym", "top", (KspPartObject)craft1.Children [0], false));
-            craft2.Children [0].AddProperty (new KspPartLinkProperty ("attN", "bottom", (KspPartObject)craft2.Children [1], false));
+            craft1.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, null, (KspPartObject)craft1.Children [1], true));
+            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, null, (KspPartObject)craft1.Children [0], false));
+            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "top", (KspPartObject)craft1.Children [0], false));
+            craft2.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", (KspPartObject)craft2.Children [1], false));
 
             var inputText = KspObjToString (inputCrafts);
 

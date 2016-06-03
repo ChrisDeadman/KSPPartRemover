@@ -52,11 +52,11 @@ namespace KSPPartRemover.Feature
             Func<IReadOnlyList<KspPartLinkProperty>, bool> hasSoftDependency =
                 (refs) => refs.Any (r => Object.Equals (r.Part, dependency));
 
-            return hasSoftDependency (part.LinkRefs) ||
-            hasSoftDependency (part.ParentRefs) ||
-            hasSoftDependency (part.SymRefs) ||
-            hasSoftDependency (part.SrfNRefs) ||
-            hasSoftDependency (part.AttNRefs);
+            return hasSoftDependency (part.PartLinks (KspPartLinkProperty.Types.Link)) ||
+            hasSoftDependency (part.PartLinks (KspPartLinkProperty.Types.Parent)) ||
+            hasSoftDependency (part.PartLinks (KspPartLinkProperty.Types.Sym)) ||
+            hasSoftDependency (part.PartLinks (KspPartLinkProperty.Types.SrfN)) ||
+            hasSoftDependency (part.PartLinks (KspPartLinkProperty.Types.AttN));
         }
 
         private static bool HasHardDependency (KspPartObject part, KspPartObject dependency)
@@ -64,10 +64,10 @@ namespace KSPPartRemover.Feature
             Func<IReadOnlyList<KspPartLinkProperty>, bool> hasHardDependency =
                 (refs) => refs.Count > 0 && refs.All (r => Object.Equals (r.Part, dependency));
             
-            return hasHardDependency (part.ParentRefs) ||
-            hasHardDependency (part.SymRefs) ||
-            hasHardDependency (part.SrfNRefs) ||
-            hasHardDependency (part.AttNRefs);
+            return hasHardDependency (part.PartLinks (KspPartLinkProperty.Types.Parent)) ||
+            hasHardDependency (part.PartLinks (KspPartLinkProperty.Types.Sym)) ||
+            hasHardDependency (part.PartLinks (KspPartLinkProperty.Types.SrfN)) ||
+            hasHardDependency (part.PartLinks (KspPartLinkProperty.Types.AttN));
         }
     }
 }

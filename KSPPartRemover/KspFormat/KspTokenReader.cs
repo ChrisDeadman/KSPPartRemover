@@ -19,7 +19,7 @@ namespace KSPPartRemover.KspFormat
 
         private static int ReadToken (String[] lines, int index, out KspToken token)
         {
-            if (lines.Length <= (index + 1)) {
+            if ((index + 1) >= lines.Length) {
                 token = null;
                 return index;
             }
@@ -39,20 +39,21 @@ namespace KSPPartRemover.KspFormat
             index = ReadAttributes (lines, index, attributes.Add);
             index = ReadTokens (lines, index, tokens.Add);
 
-            if ((lines.Length > index) && lines [index++] != "}") {
-                throw new FormatException ();
+            if (!isGlobalToken) {
+                if (index >= lines.Length || lines [index++] != "}") {
+                    throw new FormatException ();
+                }
+                token = new KspToken (name, attributes, tokens);
+            } else {
+                token = KspTokenGlobalExtension.CreateGlobalToken (attributes, tokens);
             }
-
-            token = isGlobalToken
-                ? KspTokenGlobalExtension.CreateGlobalToken (attributes, tokens)
-                : new KspToken (name, attributes, tokens);
 
             return index;
         }
 
         private static int ReadTokens (String[] lines, int index, Action<KspToken> addToken)
         {
-            while (lines.Length > index) {
+            while (index < lines.Length) {
                 if (lines [index] == "}") {
                     break;
                 }
@@ -72,7 +73,7 @@ namespace KSPPartRemover.KspFormat
 
         private static int ReadAttributes (String[] lines, int index, Action<KeyValuePair<String, String>> addAttribute)
         {
-            while (lines.Length > index) {
+            while (index < lines.Length) {
                 var keyValue = lines [index].Split ('=');
 
                 if (keyValue.Length == 2) {

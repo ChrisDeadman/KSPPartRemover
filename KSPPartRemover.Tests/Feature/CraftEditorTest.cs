@@ -21,38 +21,38 @@ namespace KSPPartRemover.Tests.Feature
             var parts = craft.Children<KspPartObject> ().ToArray ();
 
             parts [0]
-                .AddProperty (new KspPartLinkProperty ("link", "", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("link", "", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("link", "", parts [3]))
-                .AddProperty (new KspPartLinkProperty ("parent", "", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("parent", "", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("parent", "", parts [3]))
-                .AddProperty (new KspPartLinkProperty ("sym", "top", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("sym", "bottom", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("sym", "left", parts [3]))
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [3]))
-                .AddProperty (new KspPartLinkProperty ("attN", "left", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("attN", "bottom", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("attN", "top", parts [3]));
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "", parts [3]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "", parts [3]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "top", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "bottom", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "left", parts [3]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [3]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "left", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "top", parts [3]));
 
             parts [3]
-                .AddProperty (new KspPartLinkProperty ("link", "", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("link", "", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("link", "", parts [0]))
-                .AddProperty (new KspPartLinkProperty ("parent", "", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("parent", "", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("parent", "", parts [0]))
-                .AddProperty (new KspPartLinkProperty ("sym", "top", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("sym", "bottom", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("sym", "left", parts [0]))
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [0]))
-                .AddProperty (new KspPartLinkProperty ("attN", "left", parts [1]))
-                .AddProperty (new KspPartLinkProperty ("attN", "bottom", parts [2]))
-                .AddProperty (new KspPartLinkProperty ("attN", "top", parts [0]));
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "", parts [0]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "", parts [0]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "top", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "bottom", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "left", parts [0]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [0]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "left", parts [1]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", parts [2]))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "top", parts [0]));
 
             var partsToRemove = new[] { parts [1], parts [2] };
 

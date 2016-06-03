@@ -24,30 +24,30 @@ namespace KSPPartRemover.Tests.Feature
             var parts = craft.Children<KspPartObject> ().ToArray ();
 
             parts [1]
-                .AddProperty (new KspPartLinkProperty ("parent", "", parts [2])); // parent is [2]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "", parts [2])); // parent is [2]
 
             parts [3]
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [0])) // srfN to [0]
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [1])); // srfN to [1]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [0])) // srfN to [0]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [1])); // srfN to [1]
 
             parts [4]
-                .AddProperty (new KspPartLinkProperty ("attN", "top", null)) // attN to nirvana
-                .AddProperty (new KspPartLinkProperty ("attN", "bottom", parts [3])); // attN to [3]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "top", null)) // attN to nirvana
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", parts [3])); // attN to [3]
 
             parts [5]
-                .AddProperty (new KspPartLinkProperty ("sym", "bottom", parts [1])); // sym to [1]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "bottom", parts [1])); // sym to [1]
 
             parts [6]
-                .AddProperty (new KspPartLinkProperty ("link", "bottom", parts [0])); // link to [0]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "bottom", parts [0])); // link to [0]
 
             parts [7]
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [6])) // srfN to [6]
-                .AddProperty (new KspPartLinkProperty ("srfN", "srfAttach", parts [0])); // srfN to [0]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [6])) // srfN to [6]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.SrfN, "srfAttach", parts [0])); // srfN to [0]
 
             parts [8]
-                .AddProperty (new KspPartLinkProperty ("attN", "top", parts [0])) // attN to [0]
-                .AddProperty (new KspPartLinkProperty ("attN", "bottom", parts [7])) // attN to [7]
-                .AddProperty (new KspPartLinkProperty ("link", "bottom", parts [1])); // link to [1]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "top", parts [0])) // attN to [0]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", parts [7])) // attN to [7]
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "bottom", parts [1])); // link to [1]
 
             return craft;
         }

@@ -31,9 +31,9 @@ namespace KSPPartRemover.KspFormat
             KspObject obj;
 
             // Treat global tokens as craft object -> needed for .craft file support
-            var name = token.IsGlobalToken () ? KspCraftObject.TypeId : token.Name;
+            var type = token.IsGlobalToken () ? KspCraftObject.TypeId : token.Name;
 
-            switch (name) {
+            switch (type) {
             case KspCraftObject.TypeId:
                 obj = new KspCraftObject (token.IsGlobalToken ());
                 break;
@@ -68,7 +68,7 @@ namespace KSPPartRemover.KspFormat
         {
             foreach (var attribute in attributes) {
                 if (IsStringAttribute (obj, attribute)) {
-                    obj.InsertProperty (PropertyInsertIndex (attribute, attributes), new KspStringProperty (attribute.Key, attribute.Value));
+                    obj.InsertProperty (attributes.IndexOf (attribute), new KspStringProperty (attribute.Key, attribute.Value));
                 }
             }
         }
@@ -77,12 +77,10 @@ namespace KSPPartRemover.KspFormat
         {
             foreach (var attribute in attributes) {
                 if (IsPartLinkAttribute (obj, attribute)) {
-                    obj.InsertProperty (PropertyInsertIndex (attribute, attributes), ReadPartLinkProperty (obj, attribute));
+                    obj.InsertProperty (attributes.IndexOf (attribute), ReadPartLinkProperty (obj, attribute));
                 }
             }
         }
-
-        private static int PropertyInsertIndex (KeyValuePair<String, String> attribute, List<KeyValuePair<String, String>> allAttributes) => allAttributes.IndexOf (attribute);
 
         private static bool IsStringAttribute (KspObject obj, KeyValuePair<String, String> attribute) => !IsPartLinkAttribute (obj, attribute);
 
@@ -93,11 +91,11 @@ namespace KSPPartRemover.KspFormat
             }
 
             return
-            attribute.Key.Equals ("link") ||
-            attribute.Key.Equals ("parent") ||
-            attribute.Key.Equals ("sym") ||
-            attribute.Key.Equals ("srfN") ||
-            attribute.Key.Equals ("attN");
+            attribute.Key.Equals (KspPartLinkProperty.Types.Link) ||
+            attribute.Key.Equals (KspPartLinkProperty.Types.Parent) ||
+            attribute.Key.Equals (KspPartLinkProperty.Types.Sym) ||
+            attribute.Key.Equals (KspPartLinkProperty.Types.SrfN) ||
+            attribute.Key.Equals (KspPartLinkProperty.Types.AttN);
         }
 
         private static KspPartLinkProperty ReadPartLinkProperty (KspObject obj, KeyValuePair<String, String> attribute)

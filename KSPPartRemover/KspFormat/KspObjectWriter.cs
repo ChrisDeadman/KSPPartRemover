@@ -20,7 +20,7 @@ namespace KSPPartRemover.KspFormat
 
         private static KeyValuePair<String, String> ResolveProperty (KspObject obj, KspProperty property)
         {
-            var value = "<INVALID>";
+            var value = "<KSPPR_NOT_SUPPORTED>";
 
             var stringProperty = property as KspStringProperty;
             if (stringProperty != null) {
@@ -42,13 +42,14 @@ namespace KSPPartRemover.KspFormat
             var sb = new StringBuilder ();
 
             if (property.Prefix != null) {
-                sb.Append ($"{property.Prefix}, ");
+                sb.Append (property.Prefix);
+                sb.Append (", ");
             }
 
             if (property.IsIdReference) {
-                sb.Append ($"{craft.IdOfChild (property.Part)}");
+                sb.Append (craft.IdOfChild (property.Part));
             } else {
-                sb.Append ($"{property.Part.Name}");
+                sb.Append (property.Part.Name);
             }
 
             return sb.ToString ();

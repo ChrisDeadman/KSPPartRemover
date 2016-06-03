@@ -28,7 +28,7 @@ namespace KSPPartRemover.Tests.Feature
 
             // when
             new CommandLineParser ()
-                .OptionalSwitchArg<String> ("-s", s => s = null)
+                .OptionalSwitchArg<String> ("s", s => s = null)
                 .RequiredArgument (0, obtainedArgs.Add)
                 .RequiredArgument (1, obtainedArgs.Add)
                 .RequiredArgument (2, obtainedArgs.Add)
@@ -56,14 +56,14 @@ namespace KSPPartRemover.Tests.Feature
             var obtainedErrors = new List<String> ();
             var expectedErrors = new[] {
                 "Error while parsing argument 's'",
-                "Required switch '--missing' missing"
+                "Required switch 'missing' missing"
             };
 
             // when
             new CommandLineParser ()
-                .RequiredSwitch ("-s", () => obtainedSwitches.Add ("-s"))
-                .RequiredSwitch ("--switch", () => obtainedSwitches.Add ("--switch"))
-                .RequiredSwitch ("--missing", () => obtainedSwitches.Add ("--missing"))
+                .RequiredSwitch ("s", () => obtainedSwitches.Add ("-s"))
+                .RequiredSwitch ("switch", () => obtainedSwitches.Add ("--switch"))
+                .RequiredSwitch ("missing", () => obtainedSwitches.Add ("--missing"))
                 .OnError (obtainedErrors.Add)
                 .Parse (args);
 
@@ -91,17 +91,17 @@ namespace KSPPartRemover.Tests.Feature
             var expectedErrors = new[] {
                 "Error while parsing argument 'x'",
                 "Error while parsing argument '--arg-missing'",
-                "'-x': 'not an integer' is not of expected type Int32",
-                "Required switch argument '--missing' missing"
+                "'x': 'not an integer' is not of expected type Int32",
+                "Required switch argument 'missing' missing"
             };
 
             // when
             new CommandLineParser ()
-                .RequiredSwitchArg<int> ("-x", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<int> ("--int", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<String> ("--string", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<String> ("--arg-missing", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<String> ("--missing", arg => obtainedSwitchArguments.Add (arg))
+                .RequiredSwitchArg<int> ("x", arg => obtainedSwitchArguments.Add (arg))
+                .RequiredSwitchArg<int> ("int", arg => obtainedSwitchArguments.Add (arg))
+                .RequiredSwitchArg<String> ("string", arg => obtainedSwitchArguments.Add (arg))
+                .RequiredSwitchArg<String> ("arg-missing", arg => obtainedSwitchArguments.Add (arg))
+                .RequiredSwitchArg<String> ("missing", arg => obtainedSwitchArguments.Add (arg))
                 .OnError (obtainedErrors.Add)
                 .Parse (args);
 
@@ -129,7 +129,7 @@ namespace KSPPartRemover.Tests.Feature
 
             // when
             new CommandLineParser ()
-                .OptionalSwitchArg<String> ("-s", s => s = null)
+                .OptionalSwitchArg<String> ("s", s => s = null)
                 .OptionalArgument (0, obtainedArgs.Add)
                 .OptionalArgument (1, obtainedArgs.Add)
                 .OptionalArgument (2, obtainedArgs.Add)
@@ -159,9 +159,9 @@ namespace KSPPartRemover.Tests.Feature
 
             // when
             new CommandLineParser ()
-                .OptionalSwitch ("-s", () => obtainedSwitches.Add ("-s"))
-                .OptionalSwitch ("--switch", () => obtainedSwitches.Add ("--switch"))
-                .OptionalSwitch ("--missing", () => obtainedSwitches.Add ("--missing"))
+                .OptionalSwitch ("s", () => obtainedSwitches.Add ("-s"))
+                .OptionalSwitch ("switch", () => obtainedSwitches.Add ("--switch"))
+                .OptionalSwitch ("missing", () => obtainedSwitches.Add ("--missing"))
                 .OnError (obtainedErrors.Add)
                 .Parse (args);
 
@@ -189,16 +189,16 @@ namespace KSPPartRemover.Tests.Feature
             var expectedErrors = new[] {
                 "Error while parsing argument 'x'",
                 "Error while parsing argument '--arg-missing'",
-                "'-x': 'not an integer' is not of expected type Int32"
+                "'x': 'not an integer' is not of expected type Int32"
             };
 
             // when
             new CommandLineParser ()
-                .OptionalSwitchArg<int> ("-x", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<int> ("--int", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<String> ("--string", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<String> ("--arg-missing", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<String> ("--missing", arg => obtainedSwitchArguments.Add (arg))
+                .OptionalSwitchArg<int> ("x", arg => obtainedSwitchArguments.Add (arg))
+                .OptionalSwitchArg<int> ("int", arg => obtainedSwitchArguments.Add (arg))
+                .OptionalSwitchArg<String> ("string", arg => obtainedSwitchArguments.Add (arg))
+                .OptionalSwitchArg<String> ("arg-missing", arg => obtainedSwitchArguments.Add (arg))
+                .OptionalSwitchArg<String> ("missing", arg => obtainedSwitchArguments.Add (arg))
                 .OnError (obtainedErrors.Add)
                 .Parse (args);
 

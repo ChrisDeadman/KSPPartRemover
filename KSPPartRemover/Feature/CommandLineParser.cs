@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 
 namespace KSPPartRemover
 {
     public class CommandLineParser
     {
+        private static readonly String ArgPrefix = "-";
+
         private readonly List<Parser> parsers = new List<Parser> ();
 
         private int currentArgNum = 0;
@@ -45,7 +48,7 @@ namespace KSPPartRemover
         public CommandLineParser Argument (int argIdx, bool required, Action<String> handler)
         {
             var argHandler = new Parser {
-                Parse = argQueue => (!argQueue.Peek ().StartsWith ("-") && currentArgNum++ == argIdx) ? argQueue.Dequeue () : null,
+                Parse = argQueue => (!argQueue.Peek ().StartsWith (ArgPrefix) && currentArgNum++ == argIdx) ? argQueue.Dequeue () : null,
                 Accept = arg => handler ((String)arg)
             };
 
@@ -60,7 +63,7 @@ namespace KSPPartRemover
         public CommandLineParser Switch (String name, bool required, Action handler)
         {
             var argHandler = new Parser {
-                Parse = argQueue => name.Equals (argQueue.Peek ()) ? argQueue.Dequeue () : null,
+                Parse = argQueue => IsExpectedArgument (name, argQueue.Peek ()) ? argQueue.Dequeue () : null,
                 Accept = n => handler ()
             };
 
@@ -76,12 +79,13 @@ namespace KSPPartRemover
         {
             var argHandler = new Parser ();
             argHandler.Parse = argQueue => {
-                if (!name.Equals (argQueue.Peek ())) {
+                if (!IsExpectedArgument (name, argQueue.Peek ())) {
                     return null;
                 }
 
+                argHandler.Error = null;
+
                 if (argQueue.Count < 2) {
-                    argHandler.Error = null;
                     return null;
                 }
 
@@ -124,6 +128,19 @@ namespace KSPPartRemover
             }
 
             parsers.ForEach (handler => handler.Finish (handleError));
+        }
+
+        private static bool IsExpectedArgument (String name, String cmdLine)
+        {
+            var expected = new StringBuilder ()
+                .Append (ArgPrefix)
+                .Append (name);
+
+            if (name.Length > 1) {
+                expected.Insert (0, ArgPrefix);
+            }
+
+            return expected.ToString ().Equals (cmdLine);
         }
 
         private static bool ParseArg<TArg> (String text, out TArg arg)

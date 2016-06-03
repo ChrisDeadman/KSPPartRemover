@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 
 namespace KSPPartRemover
 {
@@ -122,8 +122,12 @@ namespace KSPPartRemover
 
             var argQueue = new Queue<String> (args);
             while (argQueue.Count > 0) {
-                if (!parsers.Any (parser => parser.Handle (argQueue))) {
-                    handleError?.Invoke ($"Error while parsing argument '{argQueue.Dequeue()}'");
+                try {
+                    if (!parsers.Any (parser => parser.Handle (argQueue))) {
+                        handleError?.Invoke ($"Error while parsing argument '{argQueue.Dequeue()}'");
+                    }
+                } catch (Exception ex) {
+                    handleError?.Invoke (ex.Message);
                 }
             }
 

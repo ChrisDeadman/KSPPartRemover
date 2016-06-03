@@ -1,11 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using KSPPartRemover.KspFormat;
-using KSPPartRemover.KspFormat.Objects;
 using KSPPartRemover.Feature;
 using KSPPartRemover.Command;
 
@@ -25,28 +19,8 @@ namespace KSPPartRemover
             var printInfoHeader = new Info (ui);
             var printUsage = new Help (ui);
 
-            Action<String> parseCommand = cmd => {
-                switch (cmd) {
-                case "list-crafts":
-                    parameters.Command = () => new ListCrafts (ui).Execute (parameters);
-                    break;
-                case "list-parts":
-                    parameters.Command = () => new ListParts (ui).Execute (parameters);
-                    break;
-                case "list-partdeps":
-                    parameters.Command = () => new ListPartDeps (ui).Execute (parameters);
-                    break;
-                case "remove-parts":
-                    parameters.Command = () => new RemoveParts (ui).Execute (parameters);
-                    break;
-                default:
-                    errors.Add ($"Invalid command '{cmd}'...");
-                    break;
-                }
-            };
-
             var commandLineParser = new CommandLineParser ()
-                .RequiredArgument (0, parseCommand)
+                .RequiredArgument (0, cmd => parameters.Command = ParseCommand (cmd, ui, parameters))
                 .RequiredSwitchArg<String> ("i", filePath => parameters.InputFilePath = filePath)
                 .OptionalSwitchArg<String> ("o", filePath => parameters.OutputFilePath = filePath)
                 .OptionalSwitchArg<String> ("c", pattern => parameters.CraftFilter = new RegexFilter (pattern))
@@ -59,6 +33,7 @@ namespace KSPPartRemover
             
             try {
                 commandLineParser.Parse (args);
+
                 if (parameters.OutputFilePath == null) {
                     parameters.OutputFilePath = parameters.InputFilePath;
                 }
@@ -78,6 +53,22 @@ namespace KSPPartRemover
                 printInfoHeader.Execute ();
                 ui.DisplayErrorMessage (ex.ToString ());
                 return -1;
+            }
+        }
+
+        private static Func<int> ParseCommand (String cmd, ProgramUI ui, Parameters parameters)
+        {
+            switch (cmd) {
+            case "list-crafts":
+                return () => new ListCrafts (ui).Execute (parameters);
+            case "list-parts":
+                return () => new ListParts (ui).Execute (parameters);
+            case "list-partdeps":
+                return () => new ListPartDeps (ui).Execute (parameters);
+            case "remove-parts":
+                return () => new RemoveParts (ui).Execute (parameters);
+            default:
+                throw new ArgumentException ($"Invalid command '{cmd}'...");
             }
         }
     }

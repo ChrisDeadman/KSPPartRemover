@@ -206,5 +206,31 @@ namespace KSPPartRemover.Tests.Feature
             Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
             Assert.That (obtainedSwitchArguments, Is.EqualTo (expectedSwitchArguments));
         }
+
+        [Test]
+        public void HandlesErrorsThrownByArgumentHandlers ()
+        {
+            // given
+            var args = new [] { "arg0" };
+
+            var obtainedErrors = new List<String> ();
+            var expectedErrors = new[] {
+                "Exception handling works",
+                "Required argument 0 missing"
+            };
+
+            Action throwException = () => {
+                throw new FormatException ("Exception handling works");
+            };
+
+            // when
+            new CommandLineParser ()
+                .RequiredArgument (0, arg => throwException ())
+                .OnError (obtainedErrors.Add)
+                .Parse (args);
+
+            // then
+            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
+        }
     }
 }

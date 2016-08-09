@@ -13,8 +13,8 @@ Removes parts from Kerbal Space Program crafts
 
 ## Usage
 ```
-KSPPartRemover v0.3.0.0
-Compatible with KSP version: 1.1
+KSPPartRemover v1.0
+Compatible with KSP version: 1.1.3
 
 usage: KSPPartRemover.exe <command> [<switches>] -i <input-file>
 
@@ -73,6 +73,10 @@ Switches:
 
 Release notes
 =======================
+
+### KSPPartRemover v1.0
+* Minor changes to output messages
+* Compatible with KSP version: 1.1.3
 
 ### KSPPartRemover v0.3
 * **NOTE:** command line interface is not backwards compatible!

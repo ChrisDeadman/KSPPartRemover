@@ -50,7 +50,7 @@ namespace KSPPartRemover.Command
             sb.AppendLine ("\t -c, --craft <name-pattern>");
             sb.AppendLine ("\t\t apply craft filter (applies to all crafts if not specified)");
             sb.AppendLine ("\t\t '!' in front of the regex performs inverse matching");
-            sb.AppendLine ("\t\t example for name pattern: --craft \'!^Asteroid\'");
+            sb.AppendLine ("\t\t example for name pattern: --craft \'^Asteroid\'");
             sb.AppendLine ("\t\t example for inverse matching: --craft \'!Mün\'");
             sb.AppendLine ();
             sb.AppendLine ("\t[Optional]");

@@ -338,7 +338,7 @@ namespace KSPPartRemover.Tests.Integration
             var returnCode = Program.Main ("remove-parts", "-p", "somePart", "--craft", "nonExistingCraft", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.EqualTo ("No craft matching 'nonExistingCraft' found, aborting" + Environment.NewLine));
+            Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No craft matching 'nonExistingCraft' found, aborting" + Environment.NewLine));
             Assert.That (returnCode, Is.LessThan (0));
         }
 

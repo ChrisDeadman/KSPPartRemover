@@ -27,30 +27,13 @@ namespace KSPPartRemover.Command
             var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name).ToList ();
 
             if (filteredCrafts.Count <= 0) {
-                Console.WriteLine ($"No craft matching '{parameters.CraftFilter}' found, aborting");
+                ui.DisplayErrorMessage ($"No craft matching '{parameters.CraftFilter}' found, aborting");
                 return -1;
             }
 
             ui.DisplayUserMessage ($"Searching for parts matching '{parameters.PartFilter}'...");
 
-            var partsRemoved = false;
-
-            foreach (var craft in filteredCrafts) {
-                var toBeRemoved = FindRemovedAndDependentParts (craft, parameters.PartFilter);
-                if (toBeRemoved.Count <= 0) {
-                    continue;
-                }
-
-                ui.DisplayUserList ("Removed Parts", toBeRemoved.Select (part => ProgramUI.PartObjectToString (craft, part)));
-
-                var removeParts = ui.AskYesNoQuestion ("Remove the listed parts?");
-                if (removeParts) {
-                    craft.Edit ().RemoveParts (toBeRemoved);
-                    ui.DisplayUserMessage ($"{toBeRemoved.Count} parts removed");
-                }
-
-                partsRemoved |= removeParts;
-            }
+            var partsRemoved = filteredCrafts.Aggregate (false, (removed, craft) => removed | RemoveMatchingParts (craft.Edit (), parameters.PartFilter));
 
             if (!partsRemoved) {
                 ui.DisplayErrorMessage ($"No parts removed");
@@ -60,6 +43,25 @@ namespace KSPPartRemover.Command
             CraftLoader.SaveToFile (parameters.OutputFilePath, kspObjTree);
 
             return 0;
+        }
+
+        private bool RemoveMatchingParts (CraftEditor craftEditor, RegexFilter partFilter)
+        {
+            var toBeRemoved = FindRemovedAndDependentParts (craftEditor.Craft, partFilter);
+            if (toBeRemoved.Count <= 0) {
+                return false;
+            }
+
+            ui.DisplayUserList ("Removed Parts", toBeRemoved.Select (part => ProgramUI.PartObjectToString (craftEditor.Craft, part)));
+
+            var removeConfirmed = ui.AskYesNoQuestion ("Remove the listed parts?");
+
+            if (removeConfirmed) {
+                craftEditor.RemoveParts (toBeRemoved);
+                ui.DisplayUserMessage ($"{toBeRemoved.Count} parts removed");
+            }
+
+            return removeConfirmed;
         }
 
         private List<KspPartObject> FindRemovedAndDependentParts (KspCraftObject craft, RegexFilter filter)
@@ -77,6 +79,7 @@ namespace KSPPartRemover.Command
                     }
                 }
             });
+
             ui.DisplayUserMessage ($"Found {dependentParts.Count} dependent parts");
 
             return removedParts.Concat (dependentParts).ToList ();

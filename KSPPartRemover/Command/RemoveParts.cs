@@ -73,7 +73,7 @@ namespace KSPPartRemover.Command
 
             var dependentParts = new HashSet<KspPartObject> ();
             Parallel.ForEach (removedParts, removedPart => {
-                foreach (var part in partLookup.LookupHardDependencies (removedPart)) {
+                foreach (var part in partLookup.LookupHardDependencies (removedPart).Except (removedParts)) {
                     lock (dependentParts) {
                         dependentParts.Add (part);
                     }

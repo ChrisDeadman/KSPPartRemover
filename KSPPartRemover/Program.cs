@@ -47,7 +47,6 @@ namespace KSPPartRemover
 
                 return parameters.Command ();
             } catch (Exception ex) {
-                printInfoHeader.Execute ();
                 ui.DisplayErrorMessage (ex.ToString ());
                 return -1;
             }
@@ -57,13 +56,13 @@ namespace KSPPartRemover
         {
             switch (cmd) {
             case "list-crafts":
-                return () => new ListCrafts (ui).Execute (parameters);
+                return () => new ListCrafts (ui).Execute (parameters.InputFilePath, parameters.CraftFilter);
             case "list-parts":
-                return () => new ListParts (ui).Execute (parameters);
+                return () => new ListParts (ui).Execute (parameters.InputFilePath, parameters.CraftFilter, parameters.PartFilter);
             case "list-partdeps":
-                return () => new ListPartDeps (ui).Execute (parameters);
+                return () => new ListPartDeps (ui).Execute (parameters.InputFilePath, parameters.CraftFilter, parameters.PartFilter);
             case "remove-parts":
-                return () => new RemoveParts (ui).Execute (parameters);
+                return () => new RemoveParts (ui).Execute (parameters.InputFilePath, parameters.OutputFilePath, parameters.CraftFilter, parameters.PartFilter);
             default:
                 throw new ArgumentException ($"Invalid command '{cmd}'...");
             }

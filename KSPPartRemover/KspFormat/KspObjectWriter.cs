@@ -10,7 +10,7 @@ namespace KSPPartRemover.KspFormat
     {
         public static KspToken WriteObject (KspObject obj)
         {
-            var attributes = obj.Properties.Select (p => ResolveProperty (obj, p)).ToList ();
+            var attributes = obj.Properties.Select (p => PropertyToAttribute (obj, p)).ToList ();
             var tokens = obj.Children.Select (WriteObject).ToList ();
 
             return obj.IsGlobalObject
@@ -18,7 +18,7 @@ namespace KSPPartRemover.KspFormat
                 : new KspToken (obj.Type, attributes, tokens);
         }
 
-        private static KeyValuePair<String, String> ResolveProperty (KspObject obj, KspProperty property)
+        private static KeyValuePair<String, String> PropertyToAttribute (KspObject obj, KspProperty property)
         {
             var value = "<KSPPR_NOT_SUPPORTED>";
 

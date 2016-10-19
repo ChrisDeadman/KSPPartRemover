@@ -56,6 +56,7 @@ namespace KSPPartRemover.Command
             sb.AppendLine ("\t[Optional]");
             sb.AppendLine ("\t -p, --part <id or name-pattern>");
             sb.AppendLine ("\t\t apply part filter (applies to all parts if not specified)");
+            sb.AppendLine ("\t\t if part is a number it is interpreted as the part id");
             sb.AppendLine ("\t\t '!' in front of the regex performs inverse matching");
             sb.AppendLine ("\t\t example for id: --part 1");
             sb.AppendLine ("\t\t example for name pattern: --part \'fuelTank.*\'");

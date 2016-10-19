@@ -17,11 +17,11 @@ namespace KSPPartRemover.Feature
         public void RemoveParts (IReadOnlyList<KspPartObject> parts)
         {
             foreach (var part in Craft.Children<KspPartObject>().Except(parts)) {
-                part.UpdatePartLinks (KspPartLinkProperty.Types.Link, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.Link), parts));
-                part.UpdatePartLinks (KspPartLinkProperty.Types.Parent, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.Parent), parts));
-                part.UpdatePartLinks (KspPartLinkProperty.Types.Sym, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.Sym), parts));
-                part.UpdatePartLinks (KspPartLinkProperty.Types.SrfN, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.SrfN), parts));
-                part.UpdatePartLinks (KspPartLinkProperty.Types.AttN, RemovePartLinks (part.PartLinks (KspPartLinkProperty.Types.AttN), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.Link, FilterOutPartLinks (part.PartLinks (KspPartLinkProperty.Types.Link), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.Parent, FilterOutPartLinks (part.PartLinks (KspPartLinkProperty.Types.Parent), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.Sym, FilterOutPartLinks (part.PartLinks (KspPartLinkProperty.Types.Sym), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.SrfN, FilterOutPartLinks (part.PartLinks (KspPartLinkProperty.Types.SrfN), parts));
+                part.UpdatePartLinks (KspPartLinkProperty.Types.AttN, FilterOutPartLinks (part.PartLinks (KspPartLinkProperty.Types.AttN), parts));
             }
 
             foreach (var part in parts) {
@@ -29,8 +29,8 @@ namespace KSPPartRemover.Feature
             }
         }
 
-        private static IReadOnlyList<KspPartLinkProperty> RemovePartLinks (IReadOnlyList<KspPartLinkProperty> links, IReadOnlyList<KspPartObject> parts) =>
-            links.Where (link => !parts.Contains (link.Part)).ToList ();
+        private static IEnumerable<KspPartLinkProperty> FilterOutPartLinks (IReadOnlyList<KspPartLinkProperty> links, IReadOnlyList<KspPartObject> parts) =>
+            links.Where (link => !parts.Contains (link.Part));
     }
 
     public static class CraftEditorExtensions

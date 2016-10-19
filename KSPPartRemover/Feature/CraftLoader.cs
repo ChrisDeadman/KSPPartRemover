@@ -9,32 +9,16 @@ namespace KSPPartRemover.Feature
 {
     public class CraftLoader
     {
-        public static IReadOnlyList<KspCraftObject> LoadFromFile (String filePath)
-        {
-            KspObject kspObjTree;
-            return LoadFromFile (filePath, out kspObjTree);
-        }
-
-        public static IReadOnlyList<KspCraftObject> LoadFromFile (String filePath, out KspObject kspObjTree)
+        public static KspObject LoadFromFile (String filePath)
         {
             using (var textReader = new StreamReader (new FileStream (filePath, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8)) {
-                return LoadFromText (textReader.ReadToEnd (), out kspObjTree);
+                return LoadFromText (textReader.ReadToEnd ());
             }
         }
 
-        public static IReadOnlyList<KspCraftObject> LoadFromText (String craftFileText, out KspObject kspObjTree)
+        public static KspObject LoadFromText (String craftFileText)
         {
-            kspObjTree = KspObjectReader.ReadObject (KspTokenReader.ReadToken (craftFileText));
-
-            var allCrafts = new List<KspCraftObject> ();
-
-            if (kspObjTree is KspCraftObject) {
-                allCrafts.Add (kspObjTree as KspCraftObject);
-            } else {
-                allCrafts.AddRange (kspObjTree.Children <KspCraftObject> (recursive: true));
-            }
-
-            return allCrafts;
+            return KspObjectReader.ReadObject (KspTokenReader.ReadToken (craftFileText));
         }
 
         public static void SaveToFile (String filePath, KspObject kspObjTree)

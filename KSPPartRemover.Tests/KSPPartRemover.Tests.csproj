@@ -50,6 +50,7 @@
     <Compile Include="Feature\PartLookupTest.cs" />
     <Compile Include="Feature\CraftLoaderTest.cs" />
     <Compile Include="Feature\RegexFilterTest.cs" />
+    <Compile Include="Feature\CraftLookupTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">

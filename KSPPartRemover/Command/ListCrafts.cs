@@ -18,14 +18,15 @@ namespace KSPPartRemover.Command
             this.ui = ui;
         }
 
-        public int Execute (Parameters parameters)
+        public int Execute (String inputFilePath, RegexFilter craftFilter)
         {
-            var allCrafts = CraftLoader.LoadFromFile (parameters.InputFilePath);
-            ui.DisplayUserMessage ($"Searching for crafts matching '{parameters.CraftFilter}'...");
-            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name).ToList ();
+            ui.DisplayUserMessage ($"Searching for crafts matching '{craftFilter}'...");
 
-            if (filteredCrafts.Count > 0) {
-                ui.DisplayCraftList (filteredCrafts);
+            var kspObjTree = CraftLoader.LoadFromFile (inputFilePath);
+            var crafts = new CraftLookup (kspObjTree).LookupCrafts (craftFilter).ToList ();
+
+            if (crafts.Count > 0) {
+                ui.DisplayCraftList (crafts);
             }
 
             return 0;

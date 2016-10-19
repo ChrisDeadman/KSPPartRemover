@@ -52,6 +52,7 @@ Switches:
 	[Optional]
 	 -p, --part <id or name-pattern>
 		 apply part filter (applies to all parts if not specified)
+		 if part is a number it is interpreted as the part id
 		 '!' in front of the regex performs inverse matching
 		 example for id: --part 1
 		 example for name pattern: --part 'fuelTank.*'

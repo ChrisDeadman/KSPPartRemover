@@ -19,13 +19,16 @@ namespace KSPPartRemover.Command
             this.ui = ui;
         }
 
-        public int Execute (Parameters parameters)
+        public int Execute (String inputFilePath, RegexFilter craftFilter, RegexFilter partFilter)
         {
-            var allCrafts = CraftLoader.LoadFromFile (parameters.InputFilePath);
-            ui.DisplayUserMessage ($"Searching for crafts matching '{parameters.CraftFilter}'...");
-            var filteredCrafts = parameters.CraftFilter.Apply (allCrafts, craft => craft.Name);
-            ui.DisplayUserMessage ($"Searching for parts with dependencies to '{parameters.PartFilter}'...");
-            var partDependencies = filteredCrafts.ToDictionary (craft => craft, craft => FindPartDependencies (craft, parameters.PartFilter));
+            ui.DisplayUserMessage ($"Searching for crafts matching '{craftFilter}'...");
+
+            var kspObjTree = CraftLoader.LoadFromFile (inputFilePath);
+            var crafts = new CraftLookup (kspObjTree).LookupCrafts (craftFilter);
+
+            ui.DisplayUserMessage ($"Searching for parts with dependencies to '{partFilter}'...");
+
+            var partDependencies = crafts.ToDictionary (craft => craft, craft => FindPartDependencies (craft, partFilter));
 
             if (partDependencies.Any (entry => entry.Value.Count > 0)) {
                 ui.DisplayPartDependencyList (partDependencies);
@@ -37,6 +40,7 @@ namespace KSPPartRemover.Command
         private Dictionary<KspPartObject, List<KspPartLinkProperty>> FindPartDependencies (KspCraftObject craft, RegexFilter filter)
         {
             ui.DisplayUserMessage ($"Entering craft '{craft.Name}'...");
+
             var partLookup = new PartLookup (craft);
             var dependencies = partLookup.LookupParts (filter).ToList ();
 
@@ -48,6 +52,7 @@ namespace KSPPartRemover.Command
                     }
                 }
             });
+
             ui.DisplayUserMessage ($"Found {dependentParts.Count} dependent parts");
 
             return dependentParts.ToDictionary (part => part, part => FindPartLinks (part, dependencies));

@@ -12,7 +12,7 @@ namespace KSPPartRemover.KspFormat.Objects
         {
         }
 
-        public String Name { get { return (this.Properties<KspStringProperty> ("part").FirstOrDefault () ?? this.Properties<KspStringProperty> ("name").FirstOrDefault ()).Text; } }
+        public String Name { get { return this.FirstProperty<KspStringProperty>("part", "name").Text.Split("//")[0].Trim(); } }
 
         public IReadOnlyList<KspPartLinkProperty> PartLinks (string propertyName)
         {

@@ -43,13 +43,20 @@ namespace KSPPartRemover.KspFormat
 
             if (property.Prefix != null) {
                 sb.Append (property.Prefix);
-                sb.Append (", ");
+                sb.Append (",");
             }
 
             if (property.IsIdReference) {
                 sb.Append (craft.IdOfChild (property.Part));
             } else {
+                if (property.Part == null) {
+                    throw new NotSupportedException($"Cannot resolve part reference for {obj.Type}.{property.Name}");
+                }
                 sb.Append (property.Part.Name);
+            }
+
+            if (property.Postfix != null) {
+                sb.Append (property.Postfix);
             }
 
             return sb.ToString ();

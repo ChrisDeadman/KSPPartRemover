@@ -74,10 +74,13 @@ namespace KSPPartRemover.KspFormat
         private static int ReadAttributes (String[] lines, int index, Action<KeyValuePair<String, String>> addAttribute)
         {
             while (index < lines.Length) {
-                var keyValue = lines [index].Split ('=');
+                var line = lines [index];
+                var splitPoint = line.IndexOf('=');
 
-                if (keyValue.Length == 2) {
-                    addAttribute (new KeyValuePair<String, String> (keyValue [0].Trim (), keyValue [1].Trim ()));
+                if (splitPoint > 0) {
+                    var key = line.Substring(0, splitPoint).Trim();
+                    var value = line.Substring(splitPoint+1).Trim();
+                    addAttribute(new KeyValuePair<String, String>(key, value));
                 } else {
                     break;
                 }

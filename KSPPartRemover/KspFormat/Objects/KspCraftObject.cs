@@ -11,6 +11,6 @@ namespace KSPPartRemover.KspFormat.Objects
         {
         }
 
-        public String Name => (this.Properties<KspStringProperty> ("ship").FirstOrDefault () ?? this.Properties<KspStringProperty> ("name").FirstOrDefault ()).Text;
+        public String Name => this.FirstProperty<KspStringProperty>("ship", "name").Text.Split("//")[0].Trim();
     }
 }

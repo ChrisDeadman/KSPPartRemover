@@ -17,12 +17,19 @@ namespace KSPPartRemover.KspFormat.Objects
 
         public KspPartObject Part { get; }
 
+        public string Postfix { get; }
+
         public bool IsIdReference { get; }
 
-        public KspPartLinkProperty (String name, String prefix, KspPartObject part, bool isIdReference = false) : base (name)
+        public KspPartLinkProperty (String name,
+                                    String prefix,
+                                    KspPartObject part,
+                                    string postfix = null,
+                                    bool isIdReference = false) : base (name)
         {
             this.Prefix = prefix;
             this.Part = part;
+            this.Postfix = postfix;
             this.IsIdReference = isIdReference;
         }
     }

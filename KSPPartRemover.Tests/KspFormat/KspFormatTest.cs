@@ -13,7 +13,7 @@ namespace KSPPartRemover.Tests.KspFormat
         public void CanReadAndWriteKspObjectsFromCraftFileString ()
         {
             // given
-            var textIn = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft")).ReadToEnd ();
+            var textIn = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Super-Heavy Lander.in.craft")).ReadToEnd ();
 
             // when
             var tokenIn = KspTokenReader.ReadToken (textIn);
@@ -29,7 +29,7 @@ namespace KSPPartRemover.Tests.KspFormat
         public void CanReadAndWriteKspObjectsFromSaveFileString ()
         {
             // given
-            var textIn = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Refuel at Minmus.in.sfs")).ReadToEnd ();
+            var textIn = new StreamReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("KSPPartRemover.Tests.Resources.Dynawing.sfs")).ReadToEnd ();
 
             // when
             var tokenIn = KspTokenReader.ReadToken (textIn);

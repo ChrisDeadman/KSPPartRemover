@@ -13,14 +13,14 @@ namespace KSPPartRemover.Tests.Integration
         private static readonly StringBuilder StdOutput = new StringBuilder ();
         private static readonly StringWriter StdOutputWriter = new StringWriter (StdOutput);
 
-        [TestFixtureSetUp]
-        public static void TestFixtureSetUp ()
+        [OneTimeSetUp]
+        public static void OneTimeSetUp ()
         {
             Console.SetOut (StdOutputWriter);
         }
 
-        [TestFixtureTearDown]
-        public static void TestFixtureTearDown ()
+        [OneTimeTearDown]
+        public static void OneTimeTearDown ()
         {
             StdOutputWriter.Dispose ();
         }
@@ -43,7 +43,7 @@ namespace KSPPartRemover.Tests.Integration
             var returnCode = Program.Main ("list-crafts", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringStarting ("KSPPartRemover v"));
+            Assert.That (StdOutput.ToString (), Does.StartWith ("KSPPartRemover v"));
             Assert.That (returnCode, Is.EqualTo (0));
         }
 
@@ -54,7 +54,7 @@ namespace KSPPartRemover.Tests.Integration
             Program.Main ();
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringStarting ("KSPPartRemover v"));
+            Assert.That (StdOutput.ToString (), Does.StartWith ("KSPPartRemover v"));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace KSPPartRemover.Tests.Integration
             Program.Main ();
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringContaining ("usage: "));
+            Assert.That (StdOutput.ToString (), Does.Contain ("usage: "));
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace KSPPartRemover.Tests.Integration
             var returnCode = Program.Main ();
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringEnding (
+            Assert.That (StdOutput.ToString (), Does.EndWith (
                 "ERROR: Required argument 0 missing" + Environment.NewLine +
                 "ERROR: Required switch argument 'i' missing" + Environment.NewLine));
             Assert.That (returnCode, Is.LessThan (0));
@@ -203,7 +203,7 @@ namespace KSPPartRemover.Tests.Integration
             var returnCode = Program.Main ("list-crafts", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
+            Assert.That (StdOutput.ToString (), Does.EndWith (expectedResult));
             Assert.That (returnCode, Is.EqualTo (0));
         }
 
@@ -237,7 +237,7 @@ namespace KSPPartRemover.Tests.Integration
             var returnCode = Program.Main ("list-parts", "-p", "[s,f].*", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
+            Assert.That (StdOutput.ToString (), Does.EndWith (expectedResult));
             Assert.That (returnCode, Is.EqualTo (0));
         }
 
@@ -258,10 +258,10 @@ namespace KSPPartRemover.Tests.Integration
             var craft1 = inputCrafts.Children [0];
             var craft2 = inputCrafts.Children [1];
 
-            craft1.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, null, (KspPartObject)craft1.Children [1], true));
-            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, null, (KspPartObject)craft1.Children [0], false));
-            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "top", (KspPartObject)craft1.Children [0], false));
-            craft2.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", (KspPartObject)craft2.Children [1], false));
+            craft1.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, null, (KspPartObject)craft1.Children [1], isIdReference: true));
+            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, null, (KspPartObject)craft1.Children [0], isIdReference: false));
+            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "top", (KspPartObject)craft1.Children [0], isIdReference: false));
+            craft2.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", (KspPartObject)craft2.Children [1], isIdReference: false));
 
             var inputText = KspObjToString (inputCrafts);
 
@@ -279,7 +279,7 @@ namespace KSPPartRemover.Tests.Integration
             var returnCode = Program.Main ("list-partdeps", "-p", ".*uelTank.*", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Is.StringEnding (expectedResult));
+            Assert.That (StdOutput.ToString (), Does.EndWith (expectedResult));
             Assert.That (returnCode, Is.EqualTo (0));
         }
 

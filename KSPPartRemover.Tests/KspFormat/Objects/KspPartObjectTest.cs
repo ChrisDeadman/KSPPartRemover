@@ -43,9 +43,9 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
 
             var part = obj.Children [0]
                 .AddProperty (new KspStringProperty ("not-a-link", "not-a-link"))
-                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "top", parts [0], false))
-                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [0], false))
-                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [1], false)) as KspPartObject;
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "top", parts [0], isIdReference: false))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [0], isIdReference: false))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [1], isIdReference: false)) as KspPartObject;
             
             // when / then
             Assert.That (part.PartLinks (KspPartLinkProperty.Types.Parent), Is.EqualTo (new[] { part.Properties [3], part.Properties [4] }));
@@ -64,11 +64,11 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
 
             var part = obj.Children [0]
                 .AddProperty (new KspStringProperty ("not-a-link", "not-a-link"))
-                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "top", parts [0], false))
-                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [0], false))
-                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [1], false)) as KspPartObject;
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, "top", parts [0], isIdReference: false))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [0], isIdReference: false))
+                .AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "top", parts [1], isIdReference: false)) as KspPartObject;
 
-            var newParentLink = new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "bottom", parts [1], false);
+            var newParentLink = new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, "bottom", parts [1], isIdReference: false);
 
             var expectedProperties = new [] {
                 part.Properties [0],

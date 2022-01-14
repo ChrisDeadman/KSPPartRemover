@@ -75,6 +75,10 @@ Switches:
 Release notes
 =======================
 
+### KSPPartRemover v1.1
+* Switch to .NET Core 3.1
+* Compatible with KSP version: 1.12.3
+
 ### KSPPartRemover v1.0
 * Minor changes to output messages
 * Compatible with KSP version: 1.1.3

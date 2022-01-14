@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4CB6362D-E384-411E-88C9-C9CD55D3EC68}</ProjectGuid>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>KSPPartRemover.Tests</RootNamespace>
     <AssemblyName>KSPPartRemover.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ReleaseVersion>1.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -29,28 +29,9 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <Package>nunit</Package>
-    </Reference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Compile Include="Integration\MunMkICraftTest.cs" />
-    <Compile Include="Integration\SpaceStationTest.cs" />
-    <Compile Include="Integration\ProgramTest.cs" />
-    <Compile Include="Integration\SaveFileTest.cs" />
-    <Compile Include="Feature\CraftEditorTest.cs" />
-    <Compile Include="KspFormat\Objects\KspCraftObjectTest.cs" />
-    <Compile Include="KspFormat\Objects\KspObjectSearchExtensionsTest.cs" />
-    <Compile Include="KspFormat\Objects\KspObjectTest.cs" />
-    <Compile Include="KspFormat\Objects\KspPartObjectTest.cs" />
-    <Compile Include="KspFormat\KspFormatTest.cs" />
-    <Compile Include="Feature\CommandLineParserTest.cs" />
-    <Compile Include="Feature\PartLookupTest.cs" />
-    <Compile Include="Feature\CraftLoaderTest.cs" />
-    <Compile Include="Feature\RegexFilterTest.cs" />
-    <Compile Include="Feature\CraftLookupTest.cs" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">
@@ -63,15 +44,17 @@
     <EmbeddedResource Include="Resources\5bc46e52-b7ff-47b2-b04d-c6227e47264f.in.craft" />
     <EmbeddedResource Include="Resources\Mün Mk I.expected.craft" />
     <EmbeddedResource Include="Resources\Mün Mk I.in.craft" />
+    <EmbeddedResource Include="Resources\Super Heavy.in.craft" />
+    <EmbeddedResource Include="Resources\Super Heavy.expected.craft" />
+    <EmbeddedResource Include="Resources\Super-Heavy Lander.in.craft" />
+    <EmbeddedResource Include="Resources\Super-Heavy Lander.expected.craft" />
     <EmbeddedResource Include="Resources\Refuel at Minmus.expected.sfs" />
     <EmbeddedResource Include="Resources\Refuel at Minmus.in.sfs" />
+    <EmbeddedResource Include="Resources\Dynawing.sfs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Feature\" />
     <Folder Include="KspFormat\" />
     <Folder Include="KspFormat\Objects\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

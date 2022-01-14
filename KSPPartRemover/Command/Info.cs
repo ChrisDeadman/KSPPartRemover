@@ -19,7 +19,7 @@ namespace KSPPartRemover.Command
 
             var sb = new StringBuilder ();
             sb.AppendLine ($"{assemblyName.Name} v{assemblyName.Version.Major}.{assemblyName.Version.Minor}");
-            sb.AppendLine ("Compatible with KSP version: 1.1.3");
+            sb.AppendLine ("Compatible with KSP version: 1.12.3");
 
             ui.DisplayUserMessage (sb.ToString ());
 

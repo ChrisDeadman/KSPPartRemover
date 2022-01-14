@@ -77,7 +77,15 @@ namespace KSPPartRemover.KspFormat
         {
             foreach (var attribute in attributes) {
                 if (IsPartLinkAttribute (obj, attribute)) {
-                    obj.InsertProperty (attributes.IndexOf (attribute), ReadPartLinkProperty (obj, attribute));
+                    var index = attributes.IndexOf (attribute);
+                    var link = ReadPartLinkProperty (obj, attribute);
+                    if (link.Part != null) {
+                        obj.InsertProperty (index, link);
+                    }
+                    // fall back to string property if part cannot be resolved
+                    else {
+                        obj.InsertProperty (index, new KspStringProperty (attribute.Key, attribute.Value));
+                    }
                 }
             }
         }
@@ -95,19 +103,14 @@ namespace KSPPartRemover.KspFormat
                                  attribute.Key.Equals (KspPartLinkProperty.Types.Sym) ||
                                  attribute.Key.Equals (KspPartLinkProperty.Types.SrfN) ||
                                  attribute.Key.Equals (KspPartLinkProperty.Types.AttN);
-            if (!isPartLinkType) {
-                return false;
-            }
-
-            var isSupportedPartLinkType = !attribute.Value.Contains(",Null_0");
-            return isSupportedPartLinkType;
+            return isPartLinkType;
         }
 
         private static KspPartLinkProperty ReadPartLinkProperty (KspObject obj, KeyValuePair<String, String> attribute)
         {
             String prefix = null;
             String reference = attribute.Value;
-            String postfix = null;
+            String postfix = "";
 
             var tokens = attribute.Value.Split(',').ToList();
 
@@ -117,20 +120,17 @@ namespace KSPPartRemover.KspFormat
                 reference = tokens[1].Trim();
 
                 // new attN format needs special parsing
-                if (attribute.Key.Equals(KspPartLinkProperty.Types.AttN) && tokens[1].Contains('|')) {
-                    var firstPostfixSep = tokens[1].IndexOf('|');
-                    var postfixStart = tokens[1].LastIndexOf("_", firstPostfixSep);
-                    reference = tokens[1].Substring(0, postfixStart).Trim();
-                    postfix = tokens[1].Substring(postfixStart);
-                    if (tokens.Count >= 3) {
-                        postfix += $",{String.Join(",", tokens.Skip(2))}";
-                    }
-                    // attN = top,command-375-biconic-1_4293284166_0|0.189999998|0_0|1|0_0|0.189999998|0_0|1|0
+                if (attribute.Key.Equals(KspPartLinkProperty.Types.AttN) && reference.Contains('|')) {
+                    var firstPostfixSep = reference.IndexOf('|');
+                    var postfixStart = reference.LastIndexOf("_", firstPostfixSep);
+                    postfix = reference.Substring(postfixStart);
+                    reference = reference.Substring(0, postfixStart).Trim();
                 }
-                // simply add postfixes for other types
-                else if (tokens.Count >= 3) {
-                    postfix = $",{String.Join(",", tokens.Skip(2))}";
-                }
+            }
+
+            // add remaining postfixes
+            if (tokens.Count >= 3) {
+                postfix += $",{String.Join(",", tokens.Skip(2))}";
             }
 
             int id;

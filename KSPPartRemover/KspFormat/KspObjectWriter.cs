@@ -49,9 +49,6 @@ namespace KSPPartRemover.KspFormat
             if (property.IsIdReference) {
                 sb.Append (craft.IdOfChild (property.Part));
             } else {
-                if (property.Part == null) {
-                    throw new NotSupportedException($"Cannot resolve part reference for {obj.Type}.{property.Name}");
-                }
                 sb.Append (property.Part.Name);
             }
 

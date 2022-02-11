@@ -1,4 +1,4 @@
-KSPPartRemover v1.1
+KSPPartRemover v1.2
 ===================
 
 Author: ChrisDeadman
@@ -13,10 +13,10 @@ Removes parts from Kerbal Space Program crafts
 
 ## Usage
 ```
-KSPPartRemover v1.1
+KSPPartRemover v1.2
 Compatible with KSP version: 1.12.3
 
-usage: KSPPartRemover.exe <command> [<switches>] -i <input-file>
+usage: KSPPartRemover <command> [<switches>] -i <input-file>
 
 Commands:
 
@@ -74,6 +74,9 @@ Switches:
 
 Release notes
 =======================
+
+### KSPPartRemover v1.2
+* TODO
 
 ### KSPPartRemover v1.1
 * Switch to .NET Core 3.1

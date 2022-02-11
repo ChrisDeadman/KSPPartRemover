@@ -9,28 +9,28 @@ namespace KSPPartRemover.Feature
     {
         public String Pattern { get; }
 
-        public RegexFilter (String pattern)
+        public RegexFilter(String pattern)
         {
             this.Pattern = pattern;
         }
 
-        public bool Matches (String str)
+        public bool Matches(String str)
         {
-            if (String.IsNullOrEmpty (Pattern)) {
+            if (String.IsNullOrEmpty(Pattern)) {
                 return true;
             }
 
-            return (Pattern.StartsWith ("!"))
-                ? !Regex.Match (str, Pattern.Substring (1)).Success
-                    : Regex.Match (str, Pattern).Success;
+            return (Pattern.StartsWith("!"))
+                ? !Regex.Match(str, Pattern.Substring(1)).Success
+                    : Regex.Match(str, Pattern).Success;
         }
 
-        public IEnumerable<TElement> Apply<TElement> (IEnumerable<TElement> source, Func<TElement, String> selector)
+        public IEnumerable<TElement> Apply<TElement>(IEnumerable<TElement> source, Func<TElement, String> selector)
         {
-            return source.Where (element => Matches (selector (element)));
+            return source.Where(element => Matches(selector(element)));
         }
 
-        public override String ToString ()
+        public override String ToString()
         {
             return Pattern;
         }

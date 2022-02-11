@@ -10,219 +10,219 @@ namespace KSPPartRemover.Tests.Integration
     public class ProgramTest
     {
         private static readonly String TestFilePath = "test.sfs";
-        private static readonly StringBuilder StdOutput = new StringBuilder ();
-        private static readonly StringWriter StdOutputWriter = new StringWriter (StdOutput);
+        private static readonly StringBuilder StdOutput = new StringBuilder();
+        private static readonly StringWriter StdOutputWriter = new StringWriter(StdOutput);
 
         [OneTimeSetUp]
-        public static void OneTimeSetUp ()
+        public static void OneTimeSetUp()
         {
-            Console.SetOut (StdOutputWriter);
+            Console.SetOut(StdOutputWriter);
         }
 
         [OneTimeTearDown]
-        public static void OneTimeTearDown ()
+        public static void OneTimeTearDown()
         {
-            StdOutputWriter.Dispose ();
+            StdOutputWriter.Dispose();
         }
 
         [TearDown]
-        public void TearDown ()
+        public void TearDown()
         {
-            StdOutput.Clear ();
+            StdOutput.Clear();
         }
 
         [Test]
-        public void PrintsInfoHeaderIfSilentSwitchIsNotOn ()
+        public void PrintsInfoHeaderIfSilentSwitchIsNotOn()
         {
             // given
-            var inputCrafts = new KspObject ("GAME");
-            var inputText = KspObjToString (inputCrafts);
+            var inputCrafts = new KspObject("GAME");
+            var inputText = KspObjToString(inputCrafts);
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("list-crafts", "-i", TestFilePath);
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("list-crafts", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Does.StartWith ("KSPPartRemover v"));
-            Assert.That (returnCode, Is.EqualTo (0));
+            Assert.That(StdOutput.ToString(), Does.StartWith("KSPPartRemover v"));
+            Assert.That(returnCode, Is.EqualTo(0));
         }
 
         [Test]
-        public void PrintsInfoHeaderOnError ()
+        public void PrintsInfoHeaderOnError()
         {
             // when
-            Program.Main ();
+            Program.Main();
 
             // then
-            Assert.That (StdOutput.ToString (), Does.StartWith ("KSPPartRemover v"));
+            Assert.That(StdOutput.ToString(), Does.StartWith("KSPPartRemover v"));
         }
 
         [Test]
-        public void PrintsUsageOnError ()
+        public void PrintsUsageOnError()
         {
             // when
-            Program.Main ();
+            Program.Main();
 
             // then
-            Assert.That (StdOutput.ToString (), Does.Contain ("usage: "));
+            Assert.That(StdOutput.ToString(), Does.Contain("usage: "));
         }
 
         [Test]
-        public void PrintsErrorMessageOnError ()
+        public void PrintsErrorMessageOnError()
         {
             // when
-            var returnCode = Program.Main ();
+            var returnCode = Program.Main();
 
             // then
-            Assert.That (StdOutput.ToString (), Does.EndWith (
+            Assert.That(StdOutput.ToString(), Does.EndWith(
                 "ERROR: Required argument 0 missing" + Environment.NewLine +
                 "ERROR: Required switch argument 'i' missing" + Environment.NewLine));
-            Assert.That (returnCode, Is.LessThan (0));
+            Assert.That(returnCode, Is.LessThan(0));
         }
 
         [Test]
-        public void HasReturnValueLessThanZeroIfArgumentsAreInvalid ()
+        public void HasReturnValueLessThanZeroIfArgumentsAreInvalid()
         {
             // when
-            var returnCode = Program.Main ();
+            var returnCode = Program.Main();
 
             // then
-            Assert.That (returnCode, Is.LessThan (0));
+            Assert.That(returnCode, Is.LessThan(0));
         }
 
         [Test]
-        public void CanRemovePartByIdAndOutputResult ()
+        public void CanRemovePartByIdAndOutputResult()
         {
             // given
-            var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
+            var inputCraft = new KspCraftObject(isGlobalObject: true).AddProperty(new KspStringProperty("name", "test"))
+                .AddChild(new KspObject("NOT_A_PART").AddProperty(new KspStringProperty("name", "fuelTank")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")));
 
-            var expectedCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
+            var expectedCraft = new KspCraftObject(isGlobalObject: true).AddProperty(new KspStringProperty("name", "test"))
+                .AddChild(new KspObject("NOT_A_PART").AddProperty(new KspStringProperty("name", "fuelTank")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")));
 
-            var inputText = KspObjToString (inputCraft);
-            var expectedResult = KspObjToString (expectedCraft);
+            var inputText = KspObjToString(inputCraft);
+            var expectedResult = KspObjToString(expectedCraft);
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "0", "-i", TestFilePath, "-s");
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("remove-parts", "-p", "0", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (File.ReadAllText (TestFilePath), Is.EqualTo (expectedResult));
-            Assert.That (returnCode, Is.EqualTo (0));
+            Assert.That(File.ReadAllText(TestFilePath), Is.EqualTo(expectedResult));
+            Assert.That(returnCode, Is.EqualTo(0));
         }
 
         [Test]
-        public void CanRemovePartByNameAndOutputResult ()
+        public void CanRemovePartByNameAndOutputResult()
         {
             // given
-            var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")));
+            var inputCraft = new KspCraftObject(isGlobalObject: true).AddProperty(new KspStringProperty("name", "test"))
+                .AddChild(new KspObject("NOT_A_PART").AddProperty(new KspStringProperty("name", "fuelTank")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")));
 
-            var expectedCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "fuelTank")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")));
+            var expectedCraft = new KspCraftObject(isGlobalObject: true).AddProperty(new KspStringProperty("name", "test"))
+                .AddChild(new KspObject("NOT_A_PART").AddProperty(new KspStringProperty("name", "fuelTank")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")));
 
-            var inputText = KspObjToString (inputCraft);
-            var expectedResult = KspObjToString (expectedCraft);
+            var inputText = KspObjToString(inputCraft);
+            var expectedResult = KspObjToString(expectedCraft);
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-i", TestFilePath, "-s");
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("remove-parts", "-p", "fuelTank", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (File.ReadAllText (TestFilePath), Is.EqualTo (expectedResult));
-            Assert.That (returnCode, Is.EqualTo (0));
+            Assert.That(File.ReadAllText(TestFilePath), Is.EqualTo(expectedResult));
+            Assert.That(returnCode, Is.EqualTo(0));
         }
 
         [Test]
-        public void CanRemovePartsOfMultipleCraftsAndOutputResult ()
+        public void CanRemovePartsOfMultipleCraftsAndOutputResult()
         {
             // given
-            var inputCrafts = new KspObject ("GAME")
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft1"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft2"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft4")));
+            var inputCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft1"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft2"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft3"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft4")));
 
-            var expectedCrafts = new KspObject ("GAME")
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft1"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft2"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft3"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "craft4")));
-            
-            var inputText = KspObjToString (inputCrafts);
-            var expectedResult = KspObjToString (expectedCrafts);
+            var expectedCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft1"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft2"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft3"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft4")));
+
+            var inputText = KspObjToString(inputCrafts);
+            var expectedResult = KspObjToString(expectedCrafts);
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "fuelTank", "-c", "!craft2", "-i", TestFilePath, "-o", TestFilePath, "-s");
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("remove-parts", "-p", "fuelTank", "-c", "!craft2", "-i", TestFilePath, "-o", TestFilePath, "-s");
 
             // then
-            Assert.That (File.ReadAllText (TestFilePath), Is.EqualTo (expectedResult));
-            Assert.That (returnCode, Is.EqualTo (0));
+            Assert.That(File.ReadAllText(TestFilePath), Is.EqualTo(expectedResult));
+            Assert.That(returnCode, Is.EqualTo(0));
         }
 
         [Test]
-        public void CanPrintCraftList ()
+        public void CanPrintCraftList()
         {
             // given
-            var inputCrafts = new KspObject ("GAME")
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft")))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored")));
-            
-            var inputText = KspObjToString (inputCrafts);
+            var inputCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "someCraft")))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "anotherCraft")))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "ignored")));
+
+            var inputText = KspObjToString(inputCrafts);
 
             var expectedResult = "someCraft" + Environment.NewLine + "anotherCraft" + Environment.NewLine;
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("list-crafts", "-c", ".*Craft", "-i", TestFilePath);
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("list-crafts", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Does.EndWith (expectedResult));
-            Assert.That (returnCode, Is.EqualTo (0));
+            Assert.That(StdOutput.ToString(), Does.EndWith(expectedResult));
+            Assert.That(returnCode, Is.EqualTo(0));
         }
 
         [Test]
-        public void CanPrintPartList ()
+        public void CanPrintPartList()
         {
             // given
-            var inputCrafts = new KspObject ("GAME")
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "ignored"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart"))));
-            
-            var inputText = KspObjToString (inputCrafts);
+            var inputCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "someCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "anotherCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "ignored"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "ignored"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "somePart"))));
+
+            var inputText = KspObjToString(inputCrafts);
 
             var expectedResult =
                 "someCraft:" + Environment.NewLine +
@@ -233,37 +233,37 @@ namespace KSPPartRemover.Tests.Integration
                 "\t[1]fuelTank" + Environment.NewLine;
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("list-parts", "-p", "[s,f].*", "-c", ".*Craft", "-i", TestFilePath);
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("list-parts", "-p", "[s,f].*", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Does.EndWith (expectedResult));
-            Assert.That (returnCode, Is.EqualTo (0));
+            Assert.That(StdOutput.ToString(), Does.EndWith(expectedResult));
+            Assert.That(returnCode, Is.EqualTo(0));
         }
 
         [Test]
-        public void CanPrintPartDependencies ()
+        public void CanPrintPartDependencies()
         {
             // given
-            var inputCrafts = new KspObject ("GAME")
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank1")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "strut")))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "fuelTank2"))))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "ignored"))
-                    .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart"))));
+            var inputCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "someCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank1")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "anotherCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank2"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "ignored"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "somePart"))));
 
-            var craft1 = inputCrafts.Children [0];
-            var craft2 = inputCrafts.Children [1];
+            var craft1 = inputCrafts.Children[0];
+            var craft2 = inputCrafts.Children[1];
 
-            craft1.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Link, null, (KspPartObject)craft1.Children [1], isIdReference: true));
-            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Parent, null, (KspPartObject)craft1.Children [0], isIdReference: false));
-            craft1.Children [1].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.Sym, "top", (KspPartObject)craft1.Children [0], isIdReference: false));
-            craft2.Children [0].AddProperty (new KspPartLinkProperty (KspPartLinkProperty.Types.AttN, "bottom", (KspPartObject)craft2.Children [1], isIdReference: false));
+            craft1.Children[0].AddProperty(new KspPartLinkProperty(KspPartLinkProperty.Types.Link, null, (KspPartObject)craft1.Children[1], isIdReference: true));
+            craft1.Children[1].AddProperty(new KspPartLinkProperty(KspPartLinkProperty.Types.Parent, null, (KspPartObject)craft1.Children[0], isIdReference: false));
+            craft1.Children[1].AddProperty(new KspPartLinkProperty(KspPartLinkProperty.Types.Sym, "top", (KspPartObject)craft1.Children[0], isIdReference: false));
+            craft2.Children[0].AddProperty(new KspPartLinkProperty(KspPartLinkProperty.Types.AttN, "bottom", (KspPartObject)craft2.Children[1], isIdReference: false));
 
-            var inputText = KspObjToString (inputCrafts);
+            var inputText = KspObjToString(inputCrafts);
 
             var expectedResult =
                 "someCraft:" + Environment.NewLine +
@@ -273,79 +273,79 @@ namespace KSPPartRemover.Tests.Integration
                 "anotherCraft:" + Environment.NewLine +
                 "\t[0]strut:" + Environment.NewLine +
                 "\t\t[1]fuelTank2[attN(bottom)]" + Environment.NewLine;
-            
+
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("list-partdeps", "-p", ".*uelTank.*", "-c", ".*Craft", "-i", TestFilePath);
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("list-partdeps", "-p", ".*uelTank.*", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
-            Assert.That (StdOutput.ToString (), Does.EndWith (expectedResult));
-            Assert.That (returnCode, Is.EqualTo (0));
+            Assert.That(StdOutput.ToString(), Does.EndWith(expectedResult));
+            Assert.That(returnCode, Is.EqualTo(0));
         }
 
         [Test]
-        public void PrintsAndReturnsErrorIfPartIdToRemoveIsNotFound ()
+        public void PrintsAndReturnsErrorIfPartIdToRemoveIsNotFound()
         {
             // given
-            var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "notAPart")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
-            
-            var inputText = KspObjToString (inputCraft);
+            var inputCraft = new KspCraftObject(isGlobalObject: true).AddProperty(new KspStringProperty("name", "test"))
+                .AddChild(new KspObject("NOT_A_PART").AddProperty(new KspStringProperty("name", "notAPart")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "somePart")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "anotherPart")));
+
+            var inputText = KspObjToString(inputCraft);
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "2", "-i", TestFilePath, "-s");
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("remove-parts", "-p", "2", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No parts removed\n"));
-            Assert.That (returnCode, Is.LessThan (0));
+            Assert.That(StdOutput.ToString(), Is.EqualTo("ERROR: No parts removed\n"));
+            Assert.That(returnCode, Is.LessThan(0));
         }
 
         [Test]
-        public void PrintsAndReturnsErrorIfPartNameToRemoveIsNotFound ()
+        public void PrintsAndReturnsErrorIfPartNameToRemoveIsNotFound()
         {
             // given
-            var inputCraft = new KspCraftObject (isGlobalObject : true).AddProperty (new KspStringProperty ("name", "test"))
-                .AddChild (new KspObject ("NOT_A_PART").AddProperty (new KspStringProperty ("name", "notAPart")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "somePart")))
-                .AddChild (new KspPartObject ().AddProperty (new KspStringProperty ("name", "anotherPart")));
+            var inputCraft = new KspCraftObject(isGlobalObject: true).AddProperty(new KspStringProperty("name", "test"))
+                .AddChild(new KspObject("NOT_A_PART").AddProperty(new KspStringProperty("name", "notAPart")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "somePart")))
+                .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "anotherPart")));
 
-            var inputText = KspObjToString (inputCraft);
+            var inputText = KspObjToString(inputCraft);
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "nonExistingPart", "-i", TestFilePath, "-s");
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("remove-parts", "-p", "nonExistingPart", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No parts removed\n"));
-            Assert.That (returnCode, Is.LessThan (0));
+            Assert.That(StdOutput.ToString(), Is.EqualTo("ERROR: No parts removed\n"));
+            Assert.That(returnCode, Is.LessThan(0));
         }
 
         [Test]
-        public void PrintsAndReturnsErrorIfNoCraftWithMatchingCraftNameIsFound ()
+        public void PrintsAndReturnsErrorIfNoCraftWithMatchingCraftNameIsFound()
         {
             // given
-            var inputCrafts = new KspObject ("GAME")
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "someCraft")))
-                .AddChild (new KspCraftObject ().AddProperty (new KspStringProperty ("name", "anotherCraft")));
-            
-            var inputText = KspObjToString (inputCrafts);
+            var inputCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "someCraft")))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "anotherCraft")));
+
+            var inputText = KspObjToString(inputCrafts);
 
             // when
-            File.WriteAllText (TestFilePath, inputText);
-            var returnCode = Program.Main ("remove-parts", "-p", "somePart", "--craft", "nonExistingCraft", "-i", TestFilePath, "-s");
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("remove-parts", "-p", "somePart", "--craft", "nonExistingCraft", "-i", TestFilePath, "-s");
 
             // then
-            Assert.That (StdOutput.ToString (), Is.EqualTo ("ERROR: No craft matching 'nonExistingCraft' found, aborting" + Environment.NewLine));
-            Assert.That (returnCode, Is.LessThan (0));
+            Assert.That(StdOutput.ToString(), Is.EqualTo("ERROR: No craft matching 'nonExistingCraft' found, aborting" + Environment.NewLine));
+            Assert.That(returnCode, Is.LessThan(0));
         }
 
-        private String KspObjToString (KspObject obj)
+        private String KspObjToString(KspObject obj)
         {
-            var token = KspObjectWriter.WriteObject (obj);
-            return KspTokenWriter.WriteToken (token, new StringBuilder ()).ToString ();
+            var token = KspObjectWriter.WriteObject(obj);
+            return KspTokenWriter.WriteToken(token, new StringBuilder()).ToString();
         }
     }
 }

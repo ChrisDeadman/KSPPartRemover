@@ -11,7 +11,7 @@ namespace KSPPartRemover.KspFormat
 
         public IReadOnlyList<KspToken> Tokens { get; }
 
-        public KspToken (String Name, IReadOnlyList<KeyValuePair<String, String>> attributes, IReadOnlyList<KspToken> tokens)
+        public KspToken(String Name, IReadOnlyList<KeyValuePair<String, String>> attributes, IReadOnlyList<KspToken> tokens)
         {
             this.Name = Name;
             this.Attributes = attributes;

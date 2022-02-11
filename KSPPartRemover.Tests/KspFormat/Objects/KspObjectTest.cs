@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using KSPPartRemover.KspFormat.Objects;
 
 namespace KSPPartRemover.Tests.KspFormat.Objects
@@ -7,7 +6,7 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
     public class KspObjectTest
     {
         [Test]
-        public void CanAddProperties ()
+        public void CanAddProperties()
         {
             // given
             var properties = new[] {
@@ -17,17 +16,17 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
             };
 
             // when
-            var obj = new KspObject ("OBJ")
-                .AddProperty (properties [0])
-                .AddProperty (properties [1])
-                .AddProperty (properties [2]);
-            
+            var obj = new KspObject("OBJ")
+                .AddProperty(properties[0])
+                .AddProperty(properties[1])
+                .AddProperty(properties[2]);
+
             // when / then
-            Assert.That (obj.Properties, Is.EqualTo (properties));
+            Assert.That(obj.Properties, Is.EqualTo(properties));
         }
 
         [Test]
-        public void CanInsertProperties ()
+        public void CanInsertProperties()
         {
             // given
             var properties = new[] {
@@ -37,17 +36,17 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
             };
 
             // when
-            var obj = new KspObject ("OBJ")
-                .InsertProperty (1, properties [1])
-                .InsertProperty (1, properties [2])
-                .InsertProperty (0, properties [0]);
+            var obj = new KspObject("OBJ")
+                .InsertProperty(1, properties[1])
+                .InsertProperty(1, properties[2])
+                .InsertProperty(0, properties[0]);
 
             // when / then
-            Assert.That (obj.Properties, Is.EqualTo (properties));
+            Assert.That(obj.Properties, Is.EqualTo(properties));
         }
 
         [Test]
-        public void CanRemoveProperties ()
+        public void CanRemoveProperties()
         {
             // given
             var properties = new[] {
@@ -57,18 +56,18 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
             };
 
             // when
-            var obj = new KspObject ("OBJ")
-                .AddProperty (properties [0])
-                .AddProperty (properties [1])
-                .AddProperty (properties [2])
-                .RemoveProperty (properties [1]);
+            var obj = new KspObject("OBJ")
+                .AddProperty(properties[0])
+                .AddProperty(properties[1])
+                .AddProperty(properties[2])
+                .RemoveProperty(properties[1]);
 
             // when / then
-            Assert.That (obj.Properties, Is.EqualTo (new[] { properties [0], properties [2] }));
+            Assert.That(obj.Properties, Is.EqualTo(new[] { properties[0], properties[2] }));
         }
 
         [Test]
-        public void CanAddChildren ()
+        public void CanAddChildren()
         {
             // given
             var children = new[] {
@@ -78,17 +77,17 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
             };
 
             // when
-            var obj = new KspObject ("OBJ")
-                .AddChild (children [0])
-                .AddChild (children [1])
-                .AddChild (children [2]);
+            var obj = new KspObject("OBJ")
+                .AddChild(children[0])
+                .AddChild(children[1])
+                .AddChild(children[2]);
 
             // when / then
-            Assert.That (obj.Children, Is.EqualTo (children));
+            Assert.That(obj.Children, Is.EqualTo(children));
         }
 
         [Test]
-        public void CanRemoveChildren ()
+        public void CanRemoveChildren()
         {
             // given
             var children = new[] {
@@ -98,14 +97,14 @@ namespace KSPPartRemover.Tests.KspFormat.Objects
             };
 
             // when
-            var obj = new KspObject ("OBJ")
-                .AddChild (children [0])
-                .AddChild (children [1])
-                .AddChild (children [2])
-                .RemoveChild (children [1]);
+            var obj = new KspObject("OBJ")
+                .AddChild(children[0])
+                .AddChild(children[1])
+                .AddChild(children[2])
+                .RemoveChild(children[1]);
 
             // when / then
-            Assert.That (obj.Children, Is.EqualTo (new[] { children [0], children [2] }));
+            Assert.That(obj.Children, Is.EqualTo(new[] { children[0], children[2] }));
         }
     }
 }

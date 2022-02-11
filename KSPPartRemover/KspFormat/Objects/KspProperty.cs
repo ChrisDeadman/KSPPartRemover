@@ -6,7 +6,7 @@ namespace KSPPartRemover.KspFormat.Objects
     {
         public String Name { get; }
 
-        public KspProperty (String name)
+        public KspProperty(String name)
         {
             this.Name = name;
         }

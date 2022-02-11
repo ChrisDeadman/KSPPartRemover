@@ -6,63 +6,63 @@ namespace KSPPartRemover.KspFormat
 {
     public class KspTokenReader
     {
-        private static readonly KspToken emptyToken = new KspToken ("", new KeyValuePair<String, String>[0], new KspToken[0]);
+        private static readonly KspToken emptyToken = new KspToken("", new KeyValuePair<String, String>[0], new KspToken[0]);
 
-        public static KspToken ReadToken (String text)
+        public static KspToken ReadToken(String text)
         {
-            var lines = text.Split (new [] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select (str => str.TrimStart ()).ToArray ();
+            var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(str => str.TrimStart()).ToArray();
 
             KspToken token;
-            ReadToken (lines, 0, out token);
+            ReadToken(lines, 0, out token);
             return token ?? emptyToken;
         }
 
-        private static int ReadToken (String[] lines, int index, out KspToken token)
+        private static int ReadToken(String[] lines, int index, out KspToken token)
         {
             if ((index + 1) >= lines.Length) {
                 token = null;
                 return index;
             }
 
-            var name = lines [index].Trim ();
-            var isGlobalToken = name.Contains ("=");
-            var attributes = new List<KeyValuePair<String, String>> ();
-            var tokens = new List<KspToken> ();
+            var name = lines[index].Trim();
+            var isGlobalToken = name.Contains("=");
+            var attributes = new List<KeyValuePair<String, String>>();
+            var tokens = new List<KspToken>();
 
             if (!isGlobalToken) {
                 index++;
-                if (lines [index++] != "{") {
-                    throw new FormatException ();
+                if (lines[index++] != "{") {
+                    throw new FormatException();
                 }
             }
 
-            index = ReadAttributes (lines, index, attributes.Add);
-            index = ReadTokens (lines, index, tokens.Add);
+            index = ReadAttributes(lines, index, attributes.Add);
+            index = ReadTokens(lines, index, tokens.Add);
 
             if (!isGlobalToken) {
-                if (index >= lines.Length || lines [index++] != "}") {
-                    throw new FormatException ();
+                if (index >= lines.Length || lines[index++] != "}") {
+                    throw new FormatException();
                 }
-                token = new KspToken (name, attributes, tokens);
+                token = new KspToken(name, attributes, tokens);
             } else {
-                token = KspTokenGlobalExtension.CreateGlobalToken (attributes, tokens);
+                token = KspTokenGlobalExtension.CreateGlobalToken(attributes, tokens);
             }
 
             return index;
         }
 
-        private static int ReadTokens (String[] lines, int index, Action<KspToken> addToken)
+        private static int ReadTokens(String[] lines, int index, Action<KspToken> addToken)
         {
             while (index < lines.Length) {
-                if (lines [index] == "}") {
+                if (lines[index] == "}") {
                     break;
                 }
 
                 KspToken token;
-                index = ReadToken (lines, index, out token);
+                index = ReadToken(lines, index, out token);
 
                 if (token != null) {
-                    addToken (token);
+                    addToken(token);
                 } else {
                     break;
                 }
@@ -71,15 +71,15 @@ namespace KSPPartRemover.KspFormat
             return index;
         }
 
-        private static int ReadAttributes (String[] lines, int index, Action<KeyValuePair<String, String>> addAttribute)
+        private static int ReadAttributes(String[] lines, int index, Action<KeyValuePair<String, String>> addAttribute)
         {
             while (index < lines.Length) {
-                var line = lines [index];
+                var line = lines[index];
                 var splitPoint = line.IndexOf('=');
 
                 if (splitPoint > 0) {
                     var key = line.Substring(0, splitPoint).Trim();
-                    var value = line.Substring(splitPoint+1).Trim();
+                    var value = line.Substring(splitPoint + 1).Trim();
                     addAttribute(new KeyValuePair<String, String>(key, value));
                 } else {
                     break;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace KSPPartRemover.KspFormat.Objects
 {
@@ -7,7 +6,7 @@ namespace KSPPartRemover.KspFormat.Objects
     {
         public const String TypeId = "VESSEL";
 
-        public KspCraftObject (bool isGlobalObject = false) : base (TypeId, isGlobalObject)
+        public KspCraftObject(bool isGlobalObject = false) : base(TypeId, isGlobalObject)
         {
         }
 

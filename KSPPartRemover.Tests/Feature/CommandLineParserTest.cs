@@ -7,76 +7,76 @@ namespace KSPPartRemover.Tests.Feature
     public class CommandLineParserTest
     {
         [Test]
-        public void CanParseRequiredArgumentAtSpecifiedPosition ()
+        public void CanParseRequiredArgumentAtSpecifiedPosition()
         {
             // given
-            var args = new [] {
+            var args = new[] {
                 "arg0",
                 "-s", "switchArg",
                 "--unknown",
                 "arg1"
             };
 
-            var obtainedArgs = new List<String> ();
+            var obtainedArgs = new List<String>();
             var expectedArgs = new[] { "arg0", "arg1" };
 
-            var obtainedErrors = new List<String> ();
+            var obtainedErrors = new List<String>();
             var expectedErrors = new[] {
                 "Error while parsing argument '--unknown'",
                 "Required argument 2 missing"
             };
 
             // when
-            new CommandLineParser ()
-                .OptionalSwitchArg<String> ("s", s => s = null)
-                .RequiredArgument (0, obtainedArgs.Add)
-                .RequiredArgument (1, obtainedArgs.Add)
-                .RequiredArgument (2, obtainedArgs.Add)
-                .OnError (obtainedErrors.Add)
-                .Parse (args);
+            new CommandLineParser()
+                .OptionalSwitchArg<String>("s", s => s = null)
+                .RequiredArgument(0, obtainedArgs.Add)
+                .RequiredArgument(1, obtainedArgs.Add)
+                .RequiredArgument(2, obtainedArgs.Add)
+                .OnError(obtainedErrors.Add)
+                .Parse(args);
 
             // then
-            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
-            Assert.That (obtainedArgs, Is.EqualTo (expectedArgs));
+            Assert.That(obtainedErrors, Is.EqualTo(expectedErrors));
+            Assert.That(obtainedArgs, Is.EqualTo(expectedArgs));
         }
 
         [Test]
-        public void CanParseRequiredSwitch ()
+        public void CanParseRequiredSwitch()
         {
             // given
-            var args = new [] {
+            var args = new[] {
                 "s",
                 "-s",
                 "--switch"
             };
 
-            var obtainedSwitches = new List<String> ();
+            var obtainedSwitches = new List<String>();
             var expectedSwitches = new[] { "-s", "--switch" };
 
-            var obtainedErrors = new List<String> ();
+            var obtainedErrors = new List<String>();
             var expectedErrors = new[] {
                 "Error while parsing argument 's'",
                 "Required switch 'missing' missing"
             };
 
             // when
-            new CommandLineParser ()
-                .RequiredSwitch ("s", () => obtainedSwitches.Add ("-s"))
-                .RequiredSwitch ("switch", () => obtainedSwitches.Add ("--switch"))
-                .RequiredSwitch ("missing", () => obtainedSwitches.Add ("--missing"))
-                .OnError (obtainedErrors.Add)
-                .Parse (args);
+            new CommandLineParser()
+                .RequiredSwitch("s", () => obtainedSwitches.Add("-s"))
+                .RequiredSwitch("switch", () => obtainedSwitches.Add("--switch"))
+                .RequiredSwitch("missing", () => obtainedSwitches.Add("--missing"))
+                .OnError(obtainedErrors.Add)
+                .Parse(args);
 
             // then
-            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
-            Assert.That (obtainedSwitches, Is.EqualTo (expectedSwitches));
+            Assert.That(obtainedErrors, Is.EqualTo(expectedErrors));
+            Assert.That(obtainedSwitches, Is.EqualTo(expectedSwitches));
         }
 
         [Test]
-        public void CanParseRequiredSwitchArg ()
+        public void CanParseRequiredSwitchArg()
         {
             // given
-            var args = new [] {
+            var args = new[] {
                 "x",
                 "-x", "not an integer",
                 "--int", "13",
@@ -84,10 +84,10 @@ namespace KSPPartRemover.Tests.Feature
                 "--arg-missing"
             };
 
-            var obtainedSwitchArguments = new List<Object> ();
+            var obtainedSwitchArguments = new List<Object>();
             var expectedSwitchArguments = new Object[] { 13, "hello" };
 
-            var obtainedErrors = new List<String> ();
+            var obtainedErrors = new List<String>();
             var expectedErrors = new[] {
                 "Error while parsing argument 'x'",
                 "Error while parsing argument '--arg-missing'",
@@ -96,85 +96,85 @@ namespace KSPPartRemover.Tests.Feature
             };
 
             // when
-            new CommandLineParser ()
-                .RequiredSwitchArg<int> ("x", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<int> ("int", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<String> ("string", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<String> ("arg-missing", arg => obtainedSwitchArguments.Add (arg))
-                .RequiredSwitchArg<String> ("missing", arg => obtainedSwitchArguments.Add (arg))
-                .OnError (obtainedErrors.Add)
-                .Parse (args);
+            new CommandLineParser()
+                .RequiredSwitchArg<int>("x", arg => obtainedSwitchArguments.Add(arg))
+                .RequiredSwitchArg<int>("int", arg => obtainedSwitchArguments.Add(arg))
+                .RequiredSwitchArg<String>("string", arg => obtainedSwitchArguments.Add(arg))
+                .RequiredSwitchArg<String>("arg-missing", arg => obtainedSwitchArguments.Add(arg))
+                .RequiredSwitchArg<String>("missing", arg => obtainedSwitchArguments.Add(arg))
+                .OnError(obtainedErrors.Add)
+                .Parse(args);
 
             // then
-            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
-            Assert.That (obtainedSwitchArguments, Is.EqualTo (expectedSwitchArguments));
+            Assert.That(obtainedErrors, Is.EqualTo(expectedErrors));
+            Assert.That(obtainedSwitchArguments, Is.EqualTo(expectedSwitchArguments));
         }
 
         [Test]
-        public void CanParseOptionalArgumentAtSpecifiedPosition ()
+        public void CanParseOptionalArgumentAtSpecifiedPosition()
         {
             // given
-            var args = new [] {
+            var args = new[] {
                 "arg0",
                 "-s", "switchArg",
                 "--unknown",
                 "arg1"
             };
 
-            var obtainedArgs = new List<String> ();
+            var obtainedArgs = new List<String>();
             var expectedArgs = new[] { "arg0", "arg1" };
 
-            var obtainedErrors = new List<String> ();
+            var obtainedErrors = new List<String>();
             var expectedErrors = new[] { "Error while parsing argument '--unknown'" };
 
             // when
-            new CommandLineParser ()
-                .OptionalSwitchArg<String> ("s", s => s = null)
-                .OptionalArgument (0, obtainedArgs.Add)
-                .OptionalArgument (1, obtainedArgs.Add)
-                .OptionalArgument (2, obtainedArgs.Add)
-                .OnError (obtainedErrors.Add)
-                .Parse (args);
+            new CommandLineParser()
+                .OptionalSwitchArg<String>("s", s => s = null)
+                .OptionalArgument(0, obtainedArgs.Add)
+                .OptionalArgument(1, obtainedArgs.Add)
+                .OptionalArgument(2, obtainedArgs.Add)
+                .OnError(obtainedErrors.Add)
+                .Parse(args);
 
             // then
-            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
-            Assert.That (obtainedArgs, Is.EqualTo (expectedArgs));
+            Assert.That(obtainedErrors, Is.EqualTo(expectedErrors));
+            Assert.That(obtainedArgs, Is.EqualTo(expectedArgs));
         }
 
         [Test]
-        public void CanParseOptionalSwitch ()
+        public void CanParseOptionalSwitch()
         {
             // given
-            var args = new [] {
+            var args = new[] {
                 "s",
                 "-s",
                 "--switch"
             };
 
-            var obtainedSwitches = new List<String> ();
+            var obtainedSwitches = new List<String>();
             var expectedSwitches = new[] { "-s", "--switch" };
 
-            var obtainedErrors = new List<String> ();
+            var obtainedErrors = new List<String>();
             var expectedErrors = new[] { "Error while parsing argument 's'" };
 
             // when
-            new CommandLineParser ()
-                .OptionalSwitch ("s", () => obtainedSwitches.Add ("-s"))
-                .OptionalSwitch ("switch", () => obtainedSwitches.Add ("--switch"))
-                .OptionalSwitch ("missing", () => obtainedSwitches.Add ("--missing"))
-                .OnError (obtainedErrors.Add)
-                .Parse (args);
+            new CommandLineParser()
+                .OptionalSwitch("s", () => obtainedSwitches.Add("-s"))
+                .OptionalSwitch("switch", () => obtainedSwitches.Add("--switch"))
+                .OptionalSwitch("missing", () => obtainedSwitches.Add("--missing"))
+                .OnError(obtainedErrors.Add)
+                .Parse(args);
 
             // then
-            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
-            Assert.That (obtainedSwitches, Is.EqualTo (expectedSwitches));
+            Assert.That(obtainedErrors, Is.EqualTo(expectedErrors));
+            Assert.That(obtainedSwitches, Is.EqualTo(expectedSwitches));
         }
 
         [Test]
-        public void CanParseOptionalSwitchArg ()
+        public void CanParseOptionalSwitchArg()
         {
             // given
-            var args = new [] {
+            var args = new[] {
                 "x",
                 "-x", "not an integer",
                 "--int", "13",
@@ -182,10 +182,10 @@ namespace KSPPartRemover.Tests.Feature
                 "--arg-missing"
             };
 
-            var obtainedSwitchArguments = new List<Object> ();
+            var obtainedSwitchArguments = new List<Object>();
             var expectedSwitchArguments = new Object[] { 13, "hello" };
 
-            var obtainedErrors = new List<String> ();
+            var obtainedErrors = new List<String>();
             var expectedErrors = new[] {
                 "Error while parsing argument 'x'",
                 "Error while parsing argument '--arg-missing'",
@@ -193,69 +193,69 @@ namespace KSPPartRemover.Tests.Feature
             };
 
             // when
-            new CommandLineParser ()
-                .OptionalSwitchArg<int> ("x", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<int> ("int", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<String> ("string", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<String> ("arg-missing", arg => obtainedSwitchArguments.Add (arg))
-                .OptionalSwitchArg<String> ("missing", arg => obtainedSwitchArguments.Add (arg))
-                .OnError (obtainedErrors.Add)
-                .Parse (args);
+            new CommandLineParser()
+                .OptionalSwitchArg<int>("x", arg => obtainedSwitchArguments.Add(arg))
+                .OptionalSwitchArg<int>("int", arg => obtainedSwitchArguments.Add(arg))
+                .OptionalSwitchArg<String>("string", arg => obtainedSwitchArguments.Add(arg))
+                .OptionalSwitchArg<String>("arg-missing", arg => obtainedSwitchArguments.Add(arg))
+                .OptionalSwitchArg<String>("missing", arg => obtainedSwitchArguments.Add(arg))
+                .OnError(obtainedErrors.Add)
+                .Parse(args);
 
             // then
-            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
-            Assert.That (obtainedSwitchArguments, Is.EqualTo (expectedSwitchArguments));
+            Assert.That(obtainedErrors, Is.EqualTo(expectedErrors));
+            Assert.That(obtainedSwitchArguments, Is.EqualTo(expectedSwitchArguments));
         }
 
         [Test]
-        public void SupportsBothShortAndLongSwitchNames ()
+        public void SupportsBothShortAndLongSwitchNames()
         {
             // given
-            var obtainedSwitches = new List<String> ();
-            var obtainedErrors = new List<String> ();
+            var obtainedSwitches = new List<String>();
+            var obtainedErrors = new List<String>();
 
             // when
-            var target = new CommandLineParser ()
-                .RequiredSwitch ("t", "test", () => obtainedSwitches.Add ("test"))
-                .OnError (obtainedErrors.Add);
+            var target = new CommandLineParser()
+                .RequiredSwitch("t", "test", () => obtainedSwitches.Add("test"))
+                .OnError(obtainedErrors.Add);
 
             // parse short name
-            target.Parse (new[] { "-t" });
-            Assert.That (obtainedErrors, Is.Empty);
-            Assert.That (obtainedSwitches, Is.EqualTo (new[] { "test" }));
+            target.Parse(new[] { "-t" });
+            Assert.That(obtainedErrors, Is.Empty);
+            Assert.That(obtainedSwitches, Is.EqualTo(new[] { "test" }));
 
-            obtainedSwitches.Clear ();
+            obtainedSwitches.Clear();
 
             // parse long name
-            target.Parse (new[] { "--test" });
-            Assert.That (obtainedErrors, Is.Empty);
-            Assert.That (obtainedSwitches, Is.EqualTo (new[] { "test" }));
+            target.Parse(new[] { "--test" });
+            Assert.That(obtainedErrors, Is.Empty);
+            Assert.That(obtainedSwitches, Is.EqualTo(new[] { "test" }));
         }
 
         [Test]
-        public void HandlesErrorsThrownByArgumentHandlers ()
+        public void HandlesErrorsThrownByArgumentHandlers()
         {
             // given
-            var args = new [] { "arg0" };
+            var args = new[] { "arg0" };
 
-            var obtainedErrors = new List<String> ();
+            var obtainedErrors = new List<String>();
             var expectedErrors = new[] {
                 "Exception handling works",
                 "Required argument 0 missing"
             };
 
             Action throwException = () => {
-                throw new FormatException ("Exception handling works");
+                throw new FormatException("Exception handling works");
             };
 
             // when
-            new CommandLineParser ()
-                .RequiredArgument (0, arg => throwException ())
-                .OnError (obtainedErrors.Add)
-                .Parse (args);
+            new CommandLineParser()
+                .RequiredArgument(0, arg => throwException())
+                .OnError(obtainedErrors.Add)
+                .Parse(args);
 
             // then
-            Assert.That (obtainedErrors, Is.EqualTo (expectedErrors));
+            Assert.That(obtainedErrors, Is.EqualTo(expectedErrors));
         }
     }
 }

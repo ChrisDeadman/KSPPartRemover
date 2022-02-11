@@ -47,10 +47,6 @@ build/
 *.log
 *.scc
 
-# VSCode
-
-.vscode/
-
 # Visual C++ cache files
 ipch/
 *.aps

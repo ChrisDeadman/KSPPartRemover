@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using KSPPartRemover.KspFormat.Objects;
 
 namespace KSPPartRemover.Feature
@@ -9,16 +7,16 @@ namespace KSPPartRemover.Feature
     {
         private readonly KspObject kspObjTree;
 
-        public CraftLookup (KspObject kspObjTree)
+        public CraftLookup(KspObject kspObjTree)
         {
             this.kspObjTree = kspObjTree;
         }
 
-        public IEnumerable<KspCraftObject> LookupCrafts (RegexFilter craftFilter)
+        public IEnumerable<KspCraftObject> LookupCrafts(RegexFilter craftFilter)
         {
-            var allCrafts = (kspObjTree is KspCraftObject) ? new[] { kspObjTree as KspCraftObject } : kspObjTree.Children <KspCraftObject> (recursive: true);
+            var allCrafts = (kspObjTree is KspCraftObject) ? new[] { kspObjTree as KspCraftObject } : kspObjTree.Children<KspCraftObject>(recursive: true);
 
-            return craftFilter.Apply (allCrafts, craft => craft.Name);
+            return craftFilter.Apply(allCrafts, craft => craft.Name);
         }
     }
 }

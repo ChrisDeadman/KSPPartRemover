@@ -21,11 +21,11 @@ namespace KSPPartRemover.KspFormat.Objects
 
         public bool IsIdReference { get; }
 
-        public KspPartLinkProperty (String name,
+        public KspPartLinkProperty(String name,
                                     String prefix,
                                     KspPartObject part,
                                     string postfix = null,
-                                    bool isIdReference = false) : base (name)
+                                    bool isIdReference = false) : base(name)
         {
             this.Prefix = prefix;
             this.Part = part;

@@ -6,13 +6,10 @@
     <ProjectGuid>{50E890F7-94B7-41BD-BD76-6FE68E108161}</ProjectGuid>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Exe</OutputType>
-    <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>true</PublishTrimmed>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <RootNamespace>KSPPartRemover</RootNamespace>
     <AssemblyName>KSPPartRemover</AssemblyName>
-    <ReleaseVersion>1.0</ReleaseVersion>
-    <Description>Removes parts from Kerbal Space Program crafts</Description>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

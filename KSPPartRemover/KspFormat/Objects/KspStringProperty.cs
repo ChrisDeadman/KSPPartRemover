@@ -6,7 +6,7 @@ namespace KSPPartRemover.KspFormat.Objects
     {
         public String Text { get; }
 
-        public KspStringProperty (String name, String value) : base (name)
+        public KspStringProperty(String name, String value) : base(name)
         {
             this.Text = value;
         }

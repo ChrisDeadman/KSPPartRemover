@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using KSPPartRemover.Feature;
 using KSPPartRemover.KspFormat.Objects;
@@ -8,6 +9,8 @@ namespace KSPPartRemover.Command
 {
     public class ListMods
     {
+        private static readonly string ModFolder = "GameData";
+
         private readonly ProgramUI ui;
 
         public ListMods(ProgramUI ui)
@@ -17,8 +20,13 @@ namespace KSPPartRemover.Command
 
         public int Execute(String inputFilePath, RegexFilter craftFilter)
         {
+            if (!Directory.Exists(ModFolder)) {
+                ui.DisplayErrorMessage($"{ModFolder} directory not found! (is KSP directory your current directory?)");
+                return -1;
+            }
+
             ui.DisplayUserMessage("building part database...");
-            var partDb = PartDatabase.CreateFromDirectory("GameData", dir => ui.DisplayUserMessage($"\t{dir}..."));
+            var partDb = PartDatabase.CreateFromDirectory(ModFolder, dir => ui.DisplayUserMessage($"\t{dir}..."));
             ui.DisplayUserMessage("done building part database.");
 
             ui.DisplayUserMessage($"Searching for crafts matching '{craftFilter}'...");

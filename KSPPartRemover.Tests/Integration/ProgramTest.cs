@@ -336,6 +336,26 @@ namespace KSPPartRemover.Tests.Integration
         }
 
         [Test]
+        public void PrintsAndReturnsErrorForListModsIfGameDataDirectoryIsNotInCurrentPath()
+        {
+            // given
+            var inputCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "anotherCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "mod1.part1")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank"))));
+
+            var inputText = KspObjToString(inputCrafts);
+
+            // when
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("list-mods", "-c", ".*Craft", "-i", TestFilePath, "-s");
+
+            // then
+            Assert.That(StdOutput.ToString(), Is.EqualTo("ERROR: GameData directory not found! (is KSP directory your current directory?)\n"));
+            Assert.That(returnCode, Is.LessThan(0));
+        }
+
+        [Test]
         public void PrintsAndReturnsErrorIfPartIdToRemoveIsNotFound()
         {
             // given

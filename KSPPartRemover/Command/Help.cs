@@ -35,7 +35,7 @@ namespace KSPPartRemover.Command
             sb.AppendLine("\t list-mods");
             sb.AppendLine("\t\t list mods used by the parts in the input file");
             sb.AppendLine($"\t\t if you don't have a required mod installed it will be listed as UNKNOWN");
-            sb.AppendLine($"\t\t [{assemblyName.Name} needs to be in KSP directory for this to work!]");
+            sb.AppendLine("\t\t [KSP directory needs to be your current directory for this to work!]");
             sb.AppendLine();
             sb.AppendLine("\t remove-parts");
             sb.AppendLine("\t\t remove one or more parts from one or more crafts");

@@ -31,6 +31,8 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0"/>
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KSPPartRemover\KSPPartRemover.csproj">
@@ -50,6 +52,8 @@
     <EmbeddedResource Include="Resources\Refuel at Minmus.expected.sfs" />
     <EmbeddedResource Include="Resources\Refuel at Minmus.in.sfs" />
     <EmbeddedResource Include="Resources\Dynawing.sfs" />
+    <EmbeddedResource Include="Resources\Size3LargeTankPart.cfg" />
+    <EmbeddedResource Include="Resources\DummyMods.zip" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Feature\" />

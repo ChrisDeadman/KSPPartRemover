@@ -20,7 +20,7 @@ namespace KSPPartRemover.Command
         {
             ui.DisplayUserMessage($"Searching for crafts matching '{craftFilter}'...");
 
-            var kspObjTree = CraftLoader.LoadFromFile(inputFilePath);
+            var kspObjTree = ObjectLoader.LoadFromFile(inputFilePath);
             var crafts = new CraftLookup(kspObjTree).LookupCrafts(craftFilter).ToList();
 
             if (crafts.Count <= 0) {
@@ -37,7 +37,7 @@ namespace KSPPartRemover.Command
                 return -1;
             }
 
-            CraftLoader.SaveToFile(outputFilePath, kspObjTree);
+            ObjectLoader.SaveToFile(outputFilePath, kspObjTree);
 
             return 0;
         }

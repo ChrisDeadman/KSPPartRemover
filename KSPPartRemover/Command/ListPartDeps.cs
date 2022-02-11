@@ -20,7 +20,7 @@ namespace KSPPartRemover.Command
         {
             ui.DisplayUserMessage($"Searching for crafts matching '{craftFilter}'...");
 
-            var kspObjTree = CraftLoader.LoadFromFile(inputFilePath);
+            var kspObjTree = ObjectLoader.LoadFromFile(inputFilePath);
             var crafts = new CraftLookup(kspObjTree).LookupCrafts(craftFilter);
 
             ui.DisplayUserMessage($"Searching for parts with dependencies to '{partFilter}'...");

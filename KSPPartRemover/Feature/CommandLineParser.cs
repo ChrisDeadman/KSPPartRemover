@@ -155,8 +155,8 @@ namespace KSPPartRemover
         private static bool IsExpectedSwitch(String name, String cmdLine)
         {
             var expected = (name.Length <= 1)
-                ? ArgPrefix + name
-                : ArgPrefix + ArgPrefix + name;
+                ? $"{ArgPrefix}{name}"
+                : $"{ArgPrefix}{ArgPrefix}{name}";
 
             return expected.Equals(cmdLine);
         }

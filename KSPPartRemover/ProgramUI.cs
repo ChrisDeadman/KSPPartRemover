@@ -3,6 +3,7 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using KSPPartRemover.KspFormat.Objects;
+using KSPPartRemover.Feature;
 
 namespace KSPPartRemover
 {
@@ -48,6 +49,18 @@ namespace KSPPartRemover
             }
 
             PrintList("Part Dependencies", listEntries);
+        }
+
+        public void DisplayPartInfoList(Dictionary<KspCraftObject, List<PartInfo>> craftParts)
+        {
+            var listEntries = new List<String>();
+
+            foreach (var craftEntry in craftParts) {
+                listEntries.Add(CraftObjectToString(craftEntry.Key) + ":");
+                listEntries.AddRange(craftEntry.Value.Select(partInfo => "\t" + PartInfoToString(craftEntry.Key, partInfo)));
+            }
+
+            PrintList("Parts", listEntries);
         }
 
         public void DisplayUserMessage(String str)
@@ -96,6 +109,12 @@ namespace KSPPartRemover
             }
             sb.Append("]");
             return sb.ToString();
+        }
+
+        public static String PartInfoToString(KspCraftObject craft, PartInfo partInfo)
+        {
+            var modName = (partInfo.ModName != null) ? partInfo.ModName : "UNKNOWN";
+            return $"{partInfo.Name}: mod={modName}";
         }
 
         private void PrintList(String title, IEnumerable<String> entries)

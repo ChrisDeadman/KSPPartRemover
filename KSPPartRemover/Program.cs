@@ -61,6 +61,8 @@ namespace KSPPartRemover
                     return () => new ListParts(ui).Execute(parameters.InputFilePath, parameters.CraftFilter, parameters.PartFilter);
                 case "list-partdeps":
                     return () => new ListPartDeps(ui).Execute(parameters.InputFilePath, parameters.CraftFilter, parameters.PartFilter);
+                case "list-mods":
+                    return () => new ListMods(ui).Execute(parameters.InputFilePath, parameters.CraftFilter);
                 case "remove-parts":
                     return () => new RemoveParts(ui).Execute(parameters.InputFilePath, parameters.OutputFilePath, parameters.CraftFilter, parameters.PartFilter);
                 default:

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
+using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 using KSPPartRemover.KspFormat;
@@ -29,6 +31,12 @@ namespace KSPPartRemover.Tests.Integration
         public void TearDown()
         {
             StdOutput.Clear();
+            if (File.Exists(TestFilePath)) {
+                File.Delete(TestFilePath);
+            }
+            if (Directory.Exists("GameData")) {
+                Directory.Delete("GameData", true);
+            }
         }
 
         [Test]
@@ -277,6 +285,50 @@ namespace KSPPartRemover.Tests.Integration
             // when
             File.WriteAllText(TestFilePath, inputText);
             var returnCode = Program.Main("list-partdeps", "-p", ".*uelTank.*", "-c", ".*Craft", "-i", TestFilePath);
+
+            // then
+            Assert.That(StdOutput.ToString(), Does.EndWith(expectedResult));
+            Assert.That(returnCode, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CanPrintModList()
+        {
+            // given
+            var dummyModsZip = new ZipArchive(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.DummyMods.zip"));
+            dummyModsZip.ExtractToDirectory("./", true);
+
+            var inputCrafts = new KspObject("GAME")
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "someCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "strut"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "anotherCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "mod1.part1")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "fuelTank")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "mod1.part2"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "yetAnotherCraft"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "mod1.part1_235097823")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "mod1.part1_8456")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "mod2.firstpart")))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "mod2.second.part_376"))))
+                .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "ignored"))
+                    .AddChild(new KspPartObject().AddProperty(new KspStringProperty("name", "somePart"))));
+
+            var inputText = KspObjToString(inputCrafts);
+
+            var expectedResult =
+                "someCraft:" + Environment.NewLine +
+                "anotherCraft:" + Environment.NewLine +
+                "\tmod1_part1: mod=Mod1" + Environment.NewLine +
+                "\tmod1_part2: mod=UNKNOWN" + Environment.NewLine +
+                "yetAnotherCraft:" + Environment.NewLine +
+                "\tmod1_part1: mod=Mod1" + Environment.NewLine +
+                "\tmod2_firstpart: mod=Mod2" + Environment.NewLine +
+                "\tmod2.second.part: mod=Mod2" + Environment.NewLine;
+
+            // when
+            File.WriteAllText(TestFilePath, inputText);
+            var returnCode = Program.Main("list-mods", "-c", ".*Craft", "-i", TestFilePath);
 
             // then
             Assert.That(StdOutput.ToString(), Does.EndWith(expectedResult));

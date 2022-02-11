@@ -3,13 +3,17 @@ KSPPartRemover v1.2
 
 Author: ChrisDeadman
 
-Removes parts from Kerbal Space Program crafts
+Removes parts from Kerbal Space Program crafts - and more :)
 
 ## Brief feature list
-* Works with .craft and .sfs files
-* Checks all links to the removed part(s) and also removes parts with "hard" dependencies
-* Adapts "parent", "link", "sym", "SrfN" and "AttN" links on dependent parts - in other words performs a "safe" remove
-* Can also print a list of crafts, parts or dependencies
+* Works with craft (.craft) and savegame (.sfs) files
+* Can print the list of crafts in a savegame-file
+* Can print the list of parts in any craft- or savegame-file
+* Can print the list of part-dependencies in any craft- or savegame-file
+* Can print mods used by any craft- or savegame-file
+* Can remove parts from any craft- or savegame-file
+  * Checks all links to the removed part(s) and only removes parts with "hard" dependencies
+  * Adapts "parent", "link", "sym", "SrfN" and "AttN" links on dependent parts
 
 ## Usage
 ```
@@ -20,47 +24,52 @@ usage: KSPPartRemover <command> [<switches>] -i <input-file>
 
 Commands:
 
-	 remove-parts
-		 remove one or more parts from one or more crafts
+         list-crafts
+                 list crafts in the input file
 
-	 list-crafts
-		 list crafts in the input file
+         list-parts
+                 list parts in the input file
 
-	 list-parts
-		 list parts in the input file
+         list-partdeps
+                 same as 'list-parts' but also prints dependencies
+                 the part filter is applied on the dependencies for this command
 
-	 list-partdeps
-		 same as 'list-parts' but also prints dependencies
-		 the part filter is applied on the dependencies for this command
+         list-mods
+                 list mods used by the parts in the input file
+                 if you don't have a required mod installed it will be listed as UNKNOWN
+                 [KSPPartRemover needs to be in KSP directory for this to work!]
+
+         remove-parts
+                 remove one or more parts from one or more crafts
 
 Switches:
 
-	 -i <path>
-		 specifies the input file
+         -i <path>
+                 specifies the input file
 
-	[Optional]
-	 -o <path>
-		 specifies the output file (modifies input file if not specified)
+        [Optional]
+         -o <path>
+                 specifies the output file (modifies input file if not specified)
 
-	[Optional]
-	 -c, --craft <name-pattern>
-		 apply craft filter (applies to all crafts if not specified)
-		 '!' in front of the regex performs inverse matching
-		 example for name pattern: --craft '^Asteroid'
-		 example for inverse matching: --craft '!Mün'
+        [Optional]
+         -c, --craft <name-pattern>
+                 apply craft filter (applies to all crafts if not specified)
+                 '!' in front of the regex performs inverse matching
+                 example for name pattern: --craft '^Asteroid'
+                 example for inverse matching: --craft '!Mün'
 
-	[Optional]
-	 -p, --part <id or name-pattern>
-		 apply part filter (applies to all parts if not specified)
-		 if part is a number it is interpreted as the part id
-		 '!' in front of the regex performs inverse matching
-		 example for id: --part 1
-		 example for name pattern: --part 'fuelTank.*'
-		 example for inverse matching: --part '!^PotatoRoid$'
+        [Optional]
+         -p, --part <id or name-pattern>
+                 apply part filter (applies to all parts if not specified)
+                 if part is a number it is interpreted as the part id
+                 '!' in front of the regex performs inverse matching
+                 example for id: --part 1
+                 example for name pattern: --part 'fuelTank.*'
+                 example for inverse matching: --part '!^PotatoRoid$'
 
-	[Optional]
-	 -s, --silent
-		 do not print additional info, do not ask for confirmation
+        [Optional]
+         -s, --silent
+                 do not print additional info, do not ask for confirmation
 ```
 
 ## General notes
@@ -76,7 +85,10 @@ Release notes
 =======================
 
 ### KSPPartRemover v1.2
-* TODO
+* New command **list-mods**: list mods used by the parts in the input file
+  * KSPPartRemover **needs** to be in KSP directory for this to work!
+  * If you don't have a required mod installed it will be listed as **UNKNOWN**
+* Make loading files much more tolerant (since part information from mods can now be loaded from KSP directory)
 
 ### KSPPartRemover v1.1
 * Switch to .NET Core 3.1

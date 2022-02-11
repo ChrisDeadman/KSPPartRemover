@@ -7,7 +7,7 @@ using KSPPartRemover.KspFormat.Objects;
 
 namespace KSPPartRemover.Tests.Feature
 {
-    public class CraftLoaderTest
+    public class ObjectLoaderTest
     {
         [Test]
         public void CanLoadCraftFromCraftFileString()
@@ -16,7 +16,7 @@ namespace KSPPartRemover.Tests.Feature
             var textIn = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Mün Mk I.in.craft")).ReadToEnd();
 
             // when
-            var craft = CraftLoader.LoadFromText(textIn);
+            var craft = ObjectLoader.LoadFromText(textIn);
 
             // then
             Assert.That((craft as KspCraftObject).Name, Is.EqualTo("Mün Mk I"));
@@ -29,7 +29,7 @@ namespace KSPPartRemover.Tests.Feature
             var textIn = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Refuel at Minmus.in.sfs")).ReadToEnd();
 
             // when
-            var kspObjTree = CraftLoader.LoadFromText(textIn);
+            var kspObjTree = ObjectLoader.LoadFromText(textIn);
 
             // then
             Assert.That(kspObjTree.Children<KspCraftObject>(recursive: true).Select(craft => craft.Name), Is.EqualTo(new[] {
@@ -54,7 +54,7 @@ namespace KSPPartRemover.Tests.Feature
             var textIn = "";
 
             // when
-            var kspObjTree = CraftLoader.LoadFromText(textIn);
+            var kspObjTree = ObjectLoader.LoadFromText(textIn);
 
             // then
             Assert.That(kspObjTree.Type, Is.Empty);
@@ -65,16 +65,29 @@ namespace KSPPartRemover.Tests.Feature
         public void CanLoadAndSaveFromFiles()
         {
             // given / when
-            CraftLoader.SaveToFile("test.sfs", new KspObject("GAME")
+            ObjectLoader.SaveToFile("test.sfs", new KspObject("GAME")
                 .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft1")))
                 .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft2")))
                 .AddChild(new KspCraftObject().AddProperty(new KspStringProperty("name", "craft3"))));
 
             // and when
-            var kspObjTree = CraftLoader.LoadFromFile("test.sfs");
+            var kspObjTree = ObjectLoader.LoadFromFile("test.sfs");
 
             // then
             Assert.That(kspObjTree.Children<KspCraftObject>(recursive: true).Select(craft => craft.Name), Is.EqualTo(new[] { "craft1", "craft2", "craft3" }));
+        }
+
+        [Test]
+        public void CanLoadPartFromPartFileString()
+        {
+            // given
+            var textIn = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("KSPPartRemover.Tests.Resources.Size3LargeTankPart.cfg")).ReadToEnd();
+
+            // when
+            var part = ObjectLoader.LoadFromText(textIn);
+
+            // then
+            Assert.That((part as KspPartObject).Name, Is.EqualTo("Size3LargeTank"));
         }
     }
 }

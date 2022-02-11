@@ -6,7 +6,7 @@ using KSPPartRemover.KspFormat;
 
 namespace KSPPartRemover.Feature
 {
-    public class CraftLoader
+    public class ObjectLoader
     {
         public static KspObject LoadFromFile(String filePath)
         {
@@ -15,18 +15,18 @@ namespace KSPPartRemover.Feature
             }
         }
 
-        public static KspObject LoadFromText(String craftFileText)
+        public static KspObject LoadFromText(String text)
         {
-            return KspObjectReader.ReadObject(KspTokenReader.ReadToken(craftFileText));
+            return KspObjectReader.ReadObject(KspTokenReader.ReadToken(text));
         }
 
         public static void SaveToFile(String filePath, KspObject kspObjTree)
         {
-            var craftToken = KspObjectWriter.WriteObject(kspObjTree);
-            var craftString = KspTokenWriter.WriteToken(craftToken, new StringBuilder()).ToString();
+            var kspToken = KspObjectWriter.WriteObject(kspObjTree);
+            var kspTokenText = KspTokenWriter.WriteToken(kspToken, new StringBuilder()).ToString();
 
             using (var textWriter = new StreamWriter(File.Create(filePath), Encoding.UTF8)) {
-                textWriter.Write(craftString);
+                textWriter.Write(kspTokenText);
             }
         }
     }

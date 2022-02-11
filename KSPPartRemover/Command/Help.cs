@@ -22,9 +22,6 @@ namespace KSPPartRemover.Command
             sb.AppendLine();
             sb.AppendLine("Commands:");
             sb.AppendLine();
-            sb.AppendLine("\t remove-parts");
-            sb.AppendLine("\t\t remove one or more parts from one or more crafts");
-            sb.AppendLine();
             sb.AppendLine("\t list-crafts");
             sb.AppendLine("\t\t list crafts in the input file");
             sb.AppendLine();
@@ -34,6 +31,14 @@ namespace KSPPartRemover.Command
             sb.AppendLine("\t list-partdeps");
             sb.AppendLine("\t\t same as 'list-parts' but also prints dependencies");
             sb.AppendLine("\t\t the part filter is applied on the dependencies for this command");
+            sb.AppendLine();
+            sb.AppendLine("\t list-mods");
+            sb.AppendLine("\t\t list mods used by the parts in the input file");
+            sb.AppendLine($"\t\t if you don't have a required mod installed it will be listed as UNKNOWN");
+            sb.AppendLine($"\t\t [{assemblyName.Name} needs to be in KSP directory for this to work!]");
+            sb.AppendLine();
+            sb.AppendLine("\t remove-parts");
+            sb.AppendLine("\t\t remove one or more parts from one or more crafts");
             sb.AppendLine();
             sb.AppendLine("Switches:");
             sb.AppendLine();

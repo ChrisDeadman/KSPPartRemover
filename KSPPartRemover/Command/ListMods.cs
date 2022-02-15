@@ -26,8 +26,8 @@ namespace KSPPartRemover.Command
             }
 
             ui.DisplayUserMessage("building part database...");
-            var partDb = PartDatabase.CreateFromDirectory(ModFolder, dir => ui.DisplayUserMessage($"\t{dir}..."));
-            ui.DisplayUserMessage("done building part database.");
+            var partDb = PartDatabase.CreateFromDirectory(ModFolder, dir => ui.DisplayUserMessage($"  {dir}..."));
+            ui.DisplayUserMessage("done.\n");
 
             ui.DisplayUserMessage($"Searching for crafts matching '{craftFilter}'...");
 

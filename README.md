@@ -1,5 +1,5 @@
-KSPPartRemover v1.2
-===================
+KSPPartRemover v1.2.1
+=====================
 
 Author: ChrisDeadman
 
@@ -12,7 +12,7 @@ Removes parts from Kerbal Space Program crafts - and more :)
 * Can print the list of part-dependencies in any craft- or savegame-file
 * Can print mods used by any craft- or savegame-file
 * Can remove parts from any craft- or savegame-file
-  * Checks all links to the removed part(s) and only removes parts with "hard" dependencies
+  * Checks all links to the removed part(s) and only removes dependent parts with "hard" dependencies
   * Adapts "parent", "link", "sym", "SrfN" and "AttN" links on dependent parts
 
 ## General notes
@@ -26,7 +26,7 @@ Removes parts from Kerbal Space Program crafts - and more :)
 
 ## Usage
 ```
-KSPPartRemover v1.2
+KSPPartRemover v1.2.1
 Compatible with KSP version: 1.12.3
 
 usage: KSPPartRemover <command> [<switches>] -i <input-file>
@@ -106,11 +106,16 @@ Switches:
 Release notes
 =======================
 
+### KSPPartRemover v1.2.1
+* Command **list-mods** no longer lists squad expansion parts as UNKNOWN if expansion is installed
+* Compatible with KSP version: 1.12.3
+
 ### KSPPartRemover v1.2
 * New command **list-mods**: list mods used by the parts in the input file
   * If you don't have a required mod installed it will be listed as **UNKNOWN**
   * **KSP directory needs to be your current directory** for this to work!
 * Make loading files much more tolerant (since part information from mods can now be loaded from KSP directory)
+* Compatible with KSP version: 1.12.3
 
 ### KSPPartRemover v1.1
 * Switch to .NET Core 3.1

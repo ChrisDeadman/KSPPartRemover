@@ -33,10 +33,8 @@ namespace KSPPartRemover.Feature
                 callback?.Invoke(dir);
 
                 var modName = Path.GetFileName(dir);
-                var modPartList = new List<string>();
 
-                var partsDir = Path.Combine(dir, "Parts");
-                if (Directory.Exists(partsDir)) {
+                foreach (var partsDir in Directory.GetDirectories(dir, "Parts", SearchOption.AllDirectories)) {
                     foreach (var partFile in Directory.GetFiles(partsDir, "*.cfg", SearchOption.AllDirectories)) {
                         var part = ObjectLoader.LoadFromFile(partFile) as KspPartObject;
                         if (part != null) {

@@ -15,109 +15,96 @@ namespace KSPPartRemover.KspFormat
                 .Select(str => str.TrimStart())
                 .ToArray();
 
+            // check if this is a global token
+            KeyValuePair<String, String>? attribute;
+            ReadAttribute(lines, 0, out attribute);
+            var isGlobalToken = (attribute != null);
+
+            // read the token and all of its children
             KspToken token;
-            ReadToken(lines, 0, out token);
+            ReadToken(lines, 0, isGlobalToken, out token);
             return token ?? emptyToken;
         }
 
-        private static int ReadToken(String[] lines, int index, out KspToken token)
+        private static int ReadAttribute(String[] lines, int index, out KeyValuePair<String, String>? attribute)
         {
             // EOF
             index = SkipEmptyLinesAndComments(lines, index);
             if (index >= lines.Length) {
-                token = null;
+                attribute = null;
                 return index;
             }
 
-            // read token start
-            string name;
-            index = TryReadTokenStart(lines, index, true, out name);
+            var line = lines[index];
+            var equalsSignIdx = line.IndexOf('=');
+            if (equalsSignIdx > 0) {
+                var key = line.Substring(0, equalsSignIdx).Trim();
+                var value = line.Substring(equalsSignIdx + 1).Trim();
+                attribute = new KeyValuePair<String, String>(key, value);
+                return index + 1;
+            }
 
-            // check if global token
-            var isGlobalToken = false;
-            if (name == null) {
-                name = lines[index];
-                if (name.Contains("=")) {
-                    isGlobalToken = true;
-                } else {
-                    throw new FormatException();
+            attribute = null;
+            return index;
+        }
+
+        private static int ReadToken(String[] lines, int index, bool isGlobalToken, out KspToken token)
+        {
+            // read token start if not a global token
+            string name = null;
+            if (!isGlobalToken) {
+                index = TryReadTokenStart(lines, index, out name);
+                if (name == null) {
+                    token = null;
+                    return index;
                 }
             }
 
             var attributes = new List<KeyValuePair<String, String>>();
-            var tokens = new List<KspToken>();
+            var children = new List<KspToken>();
 
-            index = ReadAttributes(lines, index, attributes.Add);
-            index = ReadTokens(lines, index, tokens.Add);
-
-            if (!isGlobalToken) {
-                bool endFound;
-                index = TryReadTokenEnd(lines, index, true, out endFound);
-                if (!endFound) {
-                    throw new FormatException();
-                }
-                token = new KspToken(name, attributes, tokens);
-            } else {
-                token = KspTokenGlobalExtension.CreateGlobalToken(attributes, tokens);
-            }
-
-            return index;
-        }
-
-        private static int ReadTokens(String[] lines, int index, Action<KspToken> addToken)
-        {
             while (index < lines.Length) {
-                // stop on token end (but do not consume line)
+                // read token end
                 bool endFound;
-                TryReadTokenEnd(lines, index, false, out endFound);
+                index = TryReadTokenEnd(lines, index, out endFound);
+                // token end found -> return token
                 if (endFound) {
-                    break;
-                }
-
-                KspToken token;
-                index = ReadToken(lines, index, out token);
-
-                if (token != null) {
-                    addToken(token);
-                }
-            }
-
-            return index;
-        }
-
-        private static int ReadAttributes(String[] lines, int index, Action<KeyValuePair<String, String>> addAttribute)
-        {
-            while (index < lines.Length) {
-                var line = lines[index];
-                var splitPoint = line.IndexOf('=');
-
-                if (splitPoint > 0) {
-                    var key = line.Substring(0, splitPoint).Trim();
-                    var value = line.Substring(splitPoint + 1).Trim();
-                    addAttribute(new KeyValuePair<String, String>(key, value));
-                } else {
-                    // stop on token end
-                    bool endFound;
-                    TryReadTokenEnd(lines, index, false, out endFound);
-                    if (endFound) {
-                        break;
+                    if (isGlobalToken) {
+                        throw new FormatException("Unexpected token end found!");
                     }
-                    // stop on next token (child token)
-                    string tokenName;
-                    TryReadTokenStart(lines, index, false, out tokenName);
-                    if (tokenName != null) {
-                        break;
-                    }
-                    // simply ignore other stuff
+                    token = new KspToken(name, attributes, children);
+                    return index;
                 }
 
+                // read next attribute
+                KeyValuePair<String, String>? attribute;
+                index = ReadAttribute(lines, index, out attribute);
+                if (attribute != null) {
+                    attributes.Add(attribute.Value);
+                    continue;
+                }
+
+                // read next child
+                KspToken childToken;
+                index = ReadToken(lines, index, false, out childToken);
+                if (childToken != null) {
+                    children.Add(childToken);
+                    continue;
+                }
+
+                // unknown stuff -> just ignore
                 index++;
             }
 
+            if (!isGlobalToken) {
+                throw new FormatException("No token end found!");
+            }
+
+            token = KspTokenGlobalExtension.CreateGlobalToken(attributes, children);
             return index;
         }
 
-        private static int TryReadTokenStart(String[] lines, int index, bool reinsert, out string name)
+        private static int TryReadTokenStart(String[] lines, int index, out string name)
         {
             // EOF
             index = SkipEmptyLinesAndComments(lines, index);
@@ -151,12 +138,10 @@ namespace KSPPartRemover.KspFormat
             var tokenStart = lines[bracketLineIdx].Substring(bracketStart).TrimStart();
             if (tokenStart.StartsWith('{')) {
                 // more than just token start -> reinsert rest of line
-                if (reinsert) {
-                    var remaining = tokenStart.Substring(1);
-                    if (remaining.Trim().Length > 0) {
-                        lines[bracketLineIdx] = remaining;
-                        return bracketLineIdx;
-                    }
+                var remaining = tokenStart.Substring(1);
+                if (remaining.Trim().Length > 0) {
+                    lines[bracketLineIdx] = remaining;
+                    return bracketLineIdx;
                 }
                 return bracketLineIdx + 1;
             }
@@ -166,7 +151,7 @@ namespace KSPPartRemover.KspFormat
             return index;
         }
 
-        private static int TryReadTokenEnd(String[] lines, int index, bool reinsert, out bool found)
+        private static int TryReadTokenEnd(String[] lines, int index, out bool found)
         {
             // EOF
             index = SkipEmptyLinesAndComments(lines, index);
@@ -180,12 +165,10 @@ namespace KSPPartRemover.KspFormat
             if (tokenEnd.StartsWith('}')) {
                 found = true;
                 // more than just token end -> reinsert rest of line
-                if (reinsert) {
-                    var remaining = tokenEnd.Substring(1);
-                    if (remaining.Trim().Length > 0) {
-                        lines[index] = remaining;
-                        return index;
-                    }
+                var remaining = tokenEnd.Substring(1);
+                if (remaining.Trim().Length > 0) {
+                    lines[index] = remaining;
+                    return index;
                 }
                 return index + 1;
             }

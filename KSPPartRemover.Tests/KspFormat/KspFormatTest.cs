@@ -124,7 +124,7 @@ namespace KSPPartRemover.Tests.KspFormat
             var textOut = KspTokenWriter.WriteToken(tokenOut, new StringBuilder()).ToString();
 
             // then
-            // A lot of comments are not written out so it cannot be comared here.
+            // A lot of comments are not written out so it cannot be compared here.
             // So just check if reading it returns same properties
             tokenIn = KspTokenReader.ReadToken(textOut);
             kspObject = KspObjectReader.ReadObject(tokenIn) as KspPartObject;

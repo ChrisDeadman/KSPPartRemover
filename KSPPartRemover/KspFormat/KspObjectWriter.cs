@@ -43,7 +43,7 @@ namespace KSPPartRemover.KspFormat
 
             if (property.Prefix != null) {
                 sb.Append(property.Prefix);
-                sb.Append(",");
+                sb.Append(", ");
             }
 
             if (property.IsIdReference) {

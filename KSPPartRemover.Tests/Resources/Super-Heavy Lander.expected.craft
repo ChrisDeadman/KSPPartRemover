@@ -35,8 +35,8 @@ PART
 	modSize = 0,0,0
 	link = largeAdapter_4293030504
 	link = dockingPort2_4293028448
-	attN = bottom,largeAdapter_4293030504_0|-0.47924|0
-	attN = top,dockingPort2_4293028448_0|1.19319|0
+	attN = bottom, largeAdapter_4293030504_0|-0.47924|0
+	attN = top, dockingPort2_4293028448_0|1.19319|0
 	EVENTS
 	{
 	}
@@ -373,8 +373,8 @@ PART
 	link = batteryPack_4293028376
 	link = batteryPack_4293028342
 	link = batteryPack_4293028308
-	attN = top,mk1-3pod_4293291310_0|0.75|0
-	attN = bottom,RCSTank1-2_4293030008_0|-0.755|0
+	attN = top, mk1-3pod_4293291310_0|0.75|0
+	attN = bottom, RCSTank1-2_4293030008_0|-0.755|0
 	EVENTS
 	{
 	}
@@ -434,8 +434,8 @@ PART
 	sym = fuelTank_4293030384
 	sym = fuelTank_4293030448
 	sym = fuelTank_4293030416
-	srfN = srfAttach,largeAdapter_4293030504
-	attN = bottom,liquidEngine3.v2_4293252926_0|-0.9125|0
+	srfN = srfAttach, largeAdapter_4293030504
+	attN = bottom, liquidEngine3.v2_4293252926_0|-0.9125|0
 	EVENTS
 	{
 	}
@@ -512,7 +512,7 @@ PART
 	sym = linearRcs_4293028942
 	sym = linearRcs_4293029018
 	sym = linearRcs_4293028980
-	srfN = srfAttach,fuelTank_4293030480
+	srfN = srfAttach, fuelTank_4293030480
 	EVENTS
 	{
 	}
@@ -582,7 +582,7 @@ PART
 	sym = linearRcs_4293028904
 	sym = linearRcs_4293028866
 	sym = linearRcs_4293028828
-	srfN = srfAttach,fuelTank_4293030480
+	srfN = srfAttach, fuelTank_4293030480
 	EVENTS
 	{
 	}
@@ -652,7 +652,7 @@ PART
 	sym = linearRcs_4293028600
 	sym = linearRcs_4293028562
 	sym = linearRcs_4293028524
-	srfN = srfAttach,fuelTank_4293030480
+	srfN = srfAttach, fuelTank_4293030480
 	EVENTS
 	{
 	}
@@ -722,7 +722,7 @@ PART
 	sym = solarPanels5_4293028274
 	sym = solarPanels5_4293028248
 	sym = solarPanels5_4293028196
-	srfN = srfAttach,fuelTank_4293030480
+	srfN = srfAttach, fuelTank_4293030480
 	EVENTS
 	{
 	}
@@ -805,8 +805,8 @@ PART
 	sym = fuelTank_4293030384
 	sym = fuelTank_4293030480
 	sym = fuelTank_4293030416
-	srfN = srfAttach,largeAdapter_4293030504
-	attN = bottom,liquidEngine3.v2_4293252728_0|-0.9125|0
+	srfN = srfAttach, largeAdapter_4293030504
+	attN = bottom, liquidEngine3.v2_4293252728_0|-0.9125|0
 	EVENTS
 	{
 	}
@@ -883,7 +883,7 @@ PART
 	sym = linearRcs_4293028942
 	sym = linearRcs_4293029056
 	sym = linearRcs_4293028980
-	srfN = srfAttach,fuelTank_4293030448
+	srfN = srfAttach, fuelTank_4293030448
 	EVENTS
 	{
 	}
@@ -953,7 +953,7 @@ PART
 	sym = linearRcs_4293028790
 	sym = linearRcs_4293028904
 	sym = linearRcs_4293028828
-	srfN = srfAttach,fuelTank_4293030448
+	srfN = srfAttach, fuelTank_4293030448
 	EVENTS
 	{
 	}
@@ -1023,7 +1023,7 @@ PART
 	sym = linearRcs_4293028486
 	sym = linearRcs_4293028600
 	sym = linearRcs_4293028524
-	srfN = srfAttach,fuelTank_4293030448
+	srfN = srfAttach, fuelTank_4293030448
 	EVENTS
 	{
 	}
@@ -1093,7 +1093,7 @@ PART
 	sym = solarPanels5_4293028248
 	sym = solarPanels5_4293028222
 	sym = solarPanels5_4293028196
-	srfN = srfAttach,fuelTank_4293030448
+	srfN = srfAttach, fuelTank_4293030448
 	EVENTS
 	{
 	}
@@ -1177,8 +1177,8 @@ PART
 	sym = fuelTank_4293030384
 	sym = fuelTank_4293030480
 	sym = fuelTank_4293030448
-	srfN = srfAttach,largeAdapter_4293030504
-	attN = bottom,liquidEngine3.v2_4293256386_0|-0.9125|0
+	srfN = srfAttach, largeAdapter_4293030504
+	attN = bottom, liquidEngine3.v2_4293256386_0|-0.9125|0
 	EVENTS
 	{
 	}
@@ -1255,7 +1255,7 @@ PART
 	sym = linearRcs_4293028942
 	sym = linearRcs_4293029056
 	sym = linearRcs_4293029018
-	srfN = srfAttach,fuelTank_4293030416
+	srfN = srfAttach, fuelTank_4293030416
 	EVENTS
 	{
 	}
@@ -1325,7 +1325,7 @@ PART
 	sym = linearRcs_4293028790
 	sym = linearRcs_4293028904
 	sym = linearRcs_4293028866
-	srfN = srfAttach,fuelTank_4293030416
+	srfN = srfAttach, fuelTank_4293030416
 	EVENTS
 	{
 	}
@@ -1395,7 +1395,7 @@ PART
 	sym = linearRcs_4293028486
 	sym = linearRcs_4293028600
 	sym = linearRcs_4293028562
-	srfN = srfAttach,fuelTank_4293030416
+	srfN = srfAttach, fuelTank_4293030416
 	EVENTS
 	{
 	}
@@ -1465,7 +1465,7 @@ PART
 	sym = solarPanels5_4293028274
 	sym = solarPanels5_4293028248
 	sym = solarPanels5_4293028222
-	srfN = srfAttach,fuelTank_4293030416
+	srfN = srfAttach, fuelTank_4293030416
 	EVENTS
 	{
 	}
@@ -1548,8 +1548,8 @@ PART
 	sym = fuelTank_4293030480
 	sym = fuelTank_4293030448
 	sym = fuelTank_4293030416
-	srfN = srfAttach,largeAdapter_4293030504
-	attN = bottom,liquidEngine3.v2_4293253124_0|-0.9125|0
+	srfN = srfAttach, largeAdapter_4293030504
+	attN = bottom, liquidEngine3.v2_4293253124_0|-0.9125|0
 	EVENTS
 	{
 	}
@@ -1626,7 +1626,7 @@ PART
 	sym = linearRcs_4293029056
 	sym = linearRcs_4293029018
 	sym = linearRcs_4293028980
-	srfN = srfAttach,fuelTank_4293030384
+	srfN = srfAttach, fuelTank_4293030384
 	EVENTS
 	{
 	}
@@ -1696,7 +1696,7 @@ PART
 	sym = linearRcs_4293028790
 	sym = linearRcs_4293028866
 	sym = linearRcs_4293028828
-	srfN = srfAttach,fuelTank_4293030384
+	srfN = srfAttach, fuelTank_4293030384
 	EVENTS
 	{
 	}
@@ -1766,7 +1766,7 @@ PART
 	sym = linearRcs_4293028486
 	sym = linearRcs_4293028562
 	sym = linearRcs_4293028524
-	srfN = srfAttach,fuelTank_4293030384
+	srfN = srfAttach, fuelTank_4293030384
 	EVENTS
 	{
 	}
@@ -1836,7 +1836,7 @@ PART
 	sym = solarPanels5_4293028274
 	sym = solarPanels5_4293028222
 	sym = solarPanels5_4293028196
-	srfN = srfAttach,fuelTank_4293030384
+	srfN = srfAttach, fuelTank_4293030384
 	EVENTS
 	{
 	}
@@ -1919,7 +1919,7 @@ PART
 	link = landingLeg1-2_4293750630
 	link = landingLeg1-2_4293750526
 	link = landingLeg1-2_4293750422
-	attN = top,largeAdapter_4293030504_0|0.5|0
+	attN = top, largeAdapter_4293030504_0|0.5|0
 	EVENTS
 	{
 	}
@@ -1985,7 +1985,7 @@ PART
 	sym = linearRcs_4293028638
 	sym = linearRcs_4293028714
 	sym = linearRcs_4293028676
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2055,7 +2055,7 @@ PART
 	sym = linearRcs_4293028638
 	sym = linearRcs_4293028752
 	sym = linearRcs_4293028676
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2125,7 +2125,7 @@ PART
 	sym = linearRcs_4293028638
 	sym = linearRcs_4293028752
 	sym = linearRcs_4293028714
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2195,7 +2195,7 @@ PART
 	sym = linearRcs_4293028752
 	sym = linearRcs_4293028714
 	sym = linearRcs_4293028676
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2265,7 +2265,7 @@ PART
 	sym = landingLeg1-2_4293750630
 	sym = landingLeg1-2_4293750526
 	sym = landingLeg1-2_4293750422
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2418,7 +2418,7 @@ PART
 	sym = landingLeg1-2_4293029760
 	sym = landingLeg1-2_4293750526
 	sym = landingLeg1-2_4293750422
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2571,7 +2571,7 @@ PART
 	sym = landingLeg1-2_4293029760
 	sym = landingLeg1-2_4293750630
 	sym = landingLeg1-2_4293750422
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2724,7 +2724,7 @@ PART
 	sym = landingLeg1-2_4293029760
 	sym = landingLeg1-2_4293750630
 	sym = landingLeg1-2_4293750526
-	srfN = srfAttach,RCSTank1-2_4293030008
+	srfN = srfAttach, RCSTank1-2_4293030008
 	EVENTS
 	{
 	}
@@ -2877,7 +2877,7 @@ PART
 	sym = batteryPack_4293028376
 	sym = batteryPack_4293028342
 	sym = batteryPack_4293028308
-	srfN = srfAttach,largeAdapter_4293030504
+	srfN = srfAttach, largeAdapter_4293030504
 	EVENTS
 	{
 	}
@@ -2927,7 +2927,7 @@ PART
 	sym = batteryPack_4293028410
 	sym = batteryPack_4293028342
 	sym = batteryPack_4293028308
-	srfN = srfAttach,largeAdapter_4293030504
+	srfN = srfAttach, largeAdapter_4293030504
 	EVENTS
 	{
 	}
@@ -2977,7 +2977,7 @@ PART
 	sym = batteryPack_4293028410
 	sym = batteryPack_4293028376
 	sym = batteryPack_4293028308
-	srfN = srfAttach,largeAdapter_4293030504
+	srfN = srfAttach, largeAdapter_4293030504
 	EVENTS
 	{
 	}
@@ -3027,7 +3027,7 @@ PART
 	sym = batteryPack_4293028410
 	sym = batteryPack_4293028376
 	sym = batteryPack_4293028342
-	srfN = srfAttach,largeAdapter_4293030504
+	srfN = srfAttach, largeAdapter_4293030504
 	EVENTS
 	{
 	}
@@ -3074,7 +3074,7 @@ PART
 	modCost = 0
 	modMass = 0
 	modSize = 0,0,0
-	attN = bottom,mk1-3pod_4293291310_0|0|0
+	attN = bottom, mk1-3pod_4293291310_0|0|0
 	EVENTS
 	{
 	}
@@ -3162,7 +3162,7 @@ PART
 	sym = liquidEngine3.v2_4293253124
 	sym = liquidEngine3.v2_4293252926
 	sym = liquidEngine3.v2_4293252728
-	attN = top,fuelTank_4293030416_0|0|0
+	attN = top, fuelTank_4293030416_0|0|0
 	EVENTS
 	{
 	}
@@ -3376,7 +3376,7 @@ PART
 	sym = liquidEngine3.v2_4293252926
 	sym = liquidEngine3.v2_4293252728
 	sym = liquidEngine3.v2_4293256386
-	attN = top,fuelTank_4293030384_0|0|0
+	attN = top, fuelTank_4293030384_0|0|0
 	EVENTS
 	{
 	}
@@ -3590,7 +3590,7 @@ PART
 	sym = liquidEngine3.v2_4293252728
 	sym = liquidEngine3.v2_4293256386
 	sym = liquidEngine3.v2_4293253124
-	attN = top,fuelTank_4293030480_0|0|0
+	attN = top, fuelTank_4293030480_0|0|0
 	EVENTS
 	{
 	}
@@ -3804,7 +3804,7 @@ PART
 	sym = liquidEngine3.v2_4293256386
 	sym = liquidEngine3.v2_4293253124
 	sym = liquidEngine3.v2_4293252926
-	attN = top,fuelTank_4293030448_0|0|0
+	attN = top, fuelTank_4293030448_0|0|0
 	EVENTS
 	{
 	}
@@ -4015,7 +4015,7 @@ PART
 	modCost = 0
 	modMass = 0
 	modSize = 0,0,0
-	srfN = srfAttach,fuelTank_4293030416
+	srfN = srfAttach, fuelTank_4293030416
 	EVENTS
 	{
 	}

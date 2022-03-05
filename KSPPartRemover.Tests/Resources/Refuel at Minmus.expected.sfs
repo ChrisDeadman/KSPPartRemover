@@ -717,7 +717,7 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = bottom,4
+				attN = bottom, 4
 				mass = 1.25
 				temp = 99.2135811092077
 				tempExt = 99.5056858835104
@@ -1228,7 +1228,7 @@
 				sidx = -1
 				attm = 1
 				sym = 2
-				srfN = srfAttach,0
+				srfN = srfAttach, 0
 				mass = 0.03
 				temp = 99.2025743049884
 				tempExt = 99.3627403111689
@@ -1338,7 +1338,7 @@
 				sidx = -1
 				attm = 1
 				sym = 1
-				srfN = srfAttach,0
+				srfN = srfAttach, 0
 				mass = 0.03
 				temp = 99.2025743049884
 				tempExt = 99.3627403111689
@@ -1447,7 +1447,7 @@
 				sepI = 0
 				sidx = -1
 				attm = 1
-				srfN = srfAttach,0
+				srfN = srfAttach, 0
 				mass = 0.18
 				temp = 99.1881960844579
 				tempExt = 99.2599687475526
@@ -1846,8 +1846,8 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = top,0
-				attN = bottom,5
+				attN = top, 0
+				attN = bottom, 5
 				mass = 0.1
 				temp = 99.1622850431569
 				tempExt = 99.2416796479953
@@ -1945,8 +1945,8 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = top,4
-				attN = bottom,6
+				attN = top, 4
+				attN = bottom, 6
 				mass = 0.3
 				temp = 99.1497061319278
 				tempExt = 99.1501757785568
@@ -2187,8 +2187,8 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = top,5
-				attN = bottom,7
+				attN = top, 5
+				attN = bottom, 7
 				mass = 0.15
 				temp = 99.1510129681804
 				tempExt = 99.1812335745517
@@ -2239,8 +2239,8 @@
 				sidx = -1
 				attm = 0
 				srfN = srfAttach, -1
-				attN = top,6
-				attN = bottom,32
+				attN = top, 6
+				attN = bottom, 32
 				mass = 0.5
 				temp = 99.1524009209363
 				tempExt = 99.2171451617677
@@ -2303,9 +2303,9 @@
 				sidx = -1
 				attm = 1
 				sym = 18
-				srfN = srfAttach,7
-				attN = top,17
-				attN = bottom,9
+				srfN = srfAttach, 7
+				attN = top, 17
+				attN = bottom, 9
 				mass = 0.25
 				temp = 99.1533325199807
 				tempExt = 99.1652583363082
@@ -2369,7 +2369,7 @@
 				attm = 0
 				sym = 19
 				srfN = , -1
-				attN = top,8
+				attN = top, 8
 				mass = 1.8
 				temp = 99.1495960167299
 				tempExt = 99.2997521294527
@@ -2680,7 +2680,7 @@
 				sidx = -1
 				attm = 1
 				sym = 20
-				srfN = srfAttach,8
+				srfN = srfAttach, 8
 				mass = 0.18
 				temp = 99.1612398456053
 				tempExt = 99.1525330035339
@@ -3079,7 +3079,7 @@
 				sidx = -1
 				attm = 1
 				sym = 21
-				srfN = srfAttach,8
+				srfN = srfAttach, 8
 				mass = 0.2
 				temp = 99.1695093828323
 				tempExt = 99.3495028378763
@@ -3144,7 +3144,7 @@
 				sidx = -1
 				attm = 1
 				sym = 22
-				srfN = srfAttach,11
+				srfN = srfAttach, 11
 				mass = 0.03
 				temp = 99.1634870480387
 				tempExt = 99.2590038174512
@@ -3254,7 +3254,7 @@
 				sidx = -1
 				attm = 1
 				sym = 23
-				srfN = srfAttach,11
+				srfN = srfAttach, 11
 				mass = 0.05
 				temp = 99.1646876340922
 				tempExt = 99.269249786619
@@ -3364,7 +3364,7 @@
 				sidx = -1
 				attm = 1
 				sym = 24
-				srfN = srfAttach,11
+				srfN = srfAttach, 11
 				mass = 0.05
 				temp = 99.1578606566707
 				tempExt = 99.1849985880215
@@ -3481,7 +3481,7 @@
 				sidx = -1
 				attm = 1
 				sym = 25
-				srfN = srfAttach,11
+				srfN = srfAttach, 11
 				mass = 0.06
 				temp = 99.1591778027033
 				tempExt = 99.1892752774585
@@ -3598,7 +3598,7 @@
 				sidx = -1
 				attm = 1
 				sym = 26
-				srfN = srfAttach,8
+				srfN = srfAttach, 8
 				mass = 0.05
 				temp = 99.1525493483389
 				tempExt = 99.182465001413
@@ -3692,7 +3692,7 @@
 				attm = 0
 				sym = 27
 				srfN = , -1
-				attN = bottom,8
+				attN = bottom, 8
 				mass = 0.12
 				temp = 99.155498802666
 				tempExt = 99.1417776911255
@@ -3821,9 +3821,9 @@
 				sidx = -1
 				attm = 1
 				sym = 8
-				srfN = srfAttach,7
-				attN = top,27
-				attN = bottom,19
+				srfN = srfAttach, 7
+				attN = top, 27
+				attN = bottom, 19
 				mass = 0.25
 				temp = 99.1502589788467
 				tempExt = 99.1551890244788
@@ -3887,7 +3887,7 @@
 				attm = 0
 				sym = 9
 				srfN = , -1
-				attN = top,18
+				attN = top, 18
 				mass = 1.8
 				temp = 99.1410448247283
 				tempExt = 99.1389722753065
@@ -4198,7 +4198,7 @@
 				sidx = -1
 				attm = 1
 				sym = 10
-				srfN = srfAttach,18
+				srfN = srfAttach, 18
 				mass = 0.18
 				temp = 99.1595700816032
 				tempExt = 99.1452623855885
@@ -4597,7 +4597,7 @@
 				sidx = -1
 				attm = 1
 				sym = 11
-				srfN = srfAttach,18
+				srfN = srfAttach, 18
 				mass = 0.2
 				temp = 99.1657580865706
 				tempExt = 99.3247352443861
@@ -4662,7 +4662,7 @@
 				sidx = -1
 				attm = 1
 				sym = 12
-				srfN = srfAttach,21
+				srfN = srfAttach, 21
 				mass = 0.03
 				temp = 99.1603615720813
 				tempExt = 99.2442857348517
@@ -4772,7 +4772,7 @@
 				sidx = -1
 				attm = 1
 				sym = 13
-				srfN = srfAttach,21
+				srfN = srfAttach, 21
 				mass = 0.05
 				temp = 99.1612704828377
 				tempExt = 99.2601594924252
@@ -4882,7 +4882,7 @@
 				sidx = -1
 				attm = 1
 				sym = 14
-				srfN = srfAttach,21
+				srfN = srfAttach, 21
 				mass = 0.05
 				temp = 99.1552087156224
 				tempExt = 99.1894924364403
@@ -4999,7 +4999,7 @@
 				sidx = -1
 				attm = 1
 				sym = 15
-				srfN = srfAttach,21
+				srfN = srfAttach, 21
 				mass = 0.06
 				temp = 99.1562405330591
 				tempExt = 99.1789648892195
@@ -5116,7 +5116,7 @@
 				sidx = -1
 				attm = 1
 				sym = 16
-				srfN = srfAttach,18
+				srfN = srfAttach, 18
 				mass = 0.05
 				temp = 99.1512140423351
 				tempExt = 99.1817311743309
@@ -5210,7 +5210,7 @@
 				attm = 0
 				sym = 17
 				srfN = , -1
-				attN = bottom,18
+				attN = bottom, 18
 				mass = 0.12
 				temp = 99.1549401423787
 				tempExt = 99.1453072115025
@@ -5339,7 +5339,7 @@
 				sidx = -1
 				attm = 1
 				sym = 30
-				srfN = srfAttach,7
+				srfN = srfAttach, 7
 				mass = 0.1
 				temp = 99.1446530823363
 				tempExt = 99.343897483247
@@ -5404,7 +5404,7 @@
 				sidx = -1
 				attm = 1
 				sym = 31
-				srfN = srfAttach,28
+				srfN = srfAttach, 28
 				mass = 0.05
 				temp = 99.1350918460827
 				tempExt = 99.2417922428214
@@ -5514,7 +5514,7 @@
 				sidx = -1
 				attm = 1
 				sym = 28
-				srfN = srfAttach,7
+				srfN = srfAttach, 7
 				mass = 0.1
 				temp = 99.1452255745538
 				tempExt = 99.1712824260849
@@ -5579,7 +5579,7 @@
 				sidx = -1
 				attm = 1
 				sym = 29
-				srfN = srfAttach,30
+				srfN = srfAttach, 30
 				mass = 0.05
 				temp = 99.1417070210905
 				tempExt = 99.153849707242
@@ -5689,8 +5689,8 @@
 				sidx = -1
 				attm = 0
 				srfN = srfAttach, -1
-				attN = top,7
-				attN = bottom,37
+				attN = top, 7
+				attN = bottom, 37
 				mass = 0.25
 				temp = 99.1541740199101
 				tempExt = 99.2604402299835
@@ -5741,7 +5741,7 @@
 				sepI = 1
 				sidx = -1
 				attm = 1
-				srfN = srfAttach,32
+				srfN = srfAttach, 32
 				mass = 0.05
 				temp = 99.1901950087988
 				tempExt = 99.5952888749221
@@ -5805,7 +5805,7 @@
 				sepI = 1
 				sidx = -1
 				attm = 1
-				srfN = srfAttach,33
+				srfN = srfAttach, 33
 				mass = 0.08
 				temp = 99.1663889158443
 				tempExt = 99.5395525421476
@@ -5922,7 +5922,7 @@
 				sidx = -1
 				attm = 1
 				sym = 36
-				srfN = srfAttach,33
+				srfN = srfAttach, 33
 				mass = 0.005
 				temp = 99.1988059858101
 				tempExt = 99.4041949172763
@@ -6034,7 +6034,7 @@
 				sidx = -1
 				attm = 1
 				sym = 35
-				srfN = srfAttach,33
+				srfN = srfAttach, 33
 				mass = 0.005
 				temp = 99.1988059858101
 				tempExt = 99.4041949172763
@@ -6146,7 +6146,7 @@
 				sidx = 1
 				attm = 0
 				srfN = , -1
-				attN = top,32
+				attN = top, 32
 				attN = bottom, -1
 				mass = 1
 				temp = 99.1546840156805
@@ -6416,7 +6416,7 @@
 				sidx = -1
 				attm = 1
 				sym = 39
-				srfN = srfAttach,32
+				srfN = srfAttach, 32
 				mass = 0.005
 				temp = 99.1609193997917
 				tempExt = 99.2081555403009
@@ -6468,7 +6468,7 @@
 				sidx = -1
 				attm = 1
 				sym = 38
-				srfN = srfAttach,32
+				srfN = srfAttach, 32
 				mass = 0.005
 				temp = 99.1623738922977
 				tempExt = 99.2254352271019
@@ -6519,7 +6519,7 @@
 				sepI = 1
 				sidx = -1
 				attm = 1
-				srfN = srfAttach,7
+				srfN = srfAttach, 7
 				mass = 0.005
 				temp = 99.1526491207696
 				tempExt = 99.1825051512834
@@ -6631,7 +6631,7 @@
 				sidx = -1
 				attm = 1
 				sym = 42
-				srfN = srfAttach,0
+				srfN = srfAttach, 0
 				mass = 0.1
 				temp = 99.1974111592383
 				tempExt = 99.2924374864514
@@ -6748,7 +6748,7 @@
 				sidx = -1
 				attm = 1
 				sym = 41
-				srfN = srfAttach,0
+				srfN = srfAttach, 0
 				mass = 0.1
 				temp = 99.1886587478426
 				tempExt = 99.4409740547817
@@ -7212,8 +7212,8 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = bottom,2
-				attN = top,1
+				attN = bottom, 2
+				attN = top, 1
 				mass = 0.1
 				temp = 145.573267698779
 				tempExt = 145.623643255627
@@ -7435,7 +7435,7 @@
 				sidx = -1
 				attm = 0
 				srfN = srfAttach, -1
-				attN = bottom,0
+				attN = bottom, 0
 				mass = 0.005
 				temp = 145.550761788096
 				tempExt = 145.645739892051
@@ -7591,8 +7591,8 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = bottom,3
-				attN = top,0
+				attN = bottom, 3
+				attN = top, 0
 				mass = 0.05
 				temp = 145.589151197828
 				tempExt = 145.674932061848
@@ -7690,8 +7690,8 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = top,2
-				attN = bottom,4
+				attN = top, 2
+				attN = bottom, 4
 				mass = 0.05
 				temp = 145.620787452702
 				tempExt = 145.782503137275
@@ -7732,7 +7732,7 @@
 				sidx = -1
 				attm = 0
 				srfN = srfAttach, -1
-				attN = top,3
+				attN = top, 3
 				mass = 0.5
 				temp = 145.615377133999
 				tempExt = 145.850227739364
@@ -7797,7 +7797,7 @@
 				sym = 6
 				sym = 7
 				sym = 8
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.005
 				temp = 145.62150093269
 				tempExt = 145.727111652216
@@ -7911,7 +7911,7 @@
 				sym = 5
 				sym = 7
 				sym = 8
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.005
 				temp = 145.62150093269
 				tempExt = 145.727111652216
@@ -8025,7 +8025,7 @@
 				sym = 5
 				sym = 6
 				sym = 8
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.005
 				temp = 145.62150093269
 				tempExt = 145.727111652216
@@ -8139,7 +8139,7 @@
 				sym = 5
 				sym = 6
 				sym = 7
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.005
 				temp = 145.62150093269
 				tempExt = 145.727111652216
@@ -8250,7 +8250,7 @@
 				sepI = 1
 				sidx = -1
 				attm = 1
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				attN = top, -1
 				attN = bottom, -1
 				mass = 0.05
@@ -8440,7 +8440,7 @@
 				sidx = -1
 				attm = 1
 				sym = 11
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.015
 				temp = 145.618516778223
 				tempExt = 145.724057357155
@@ -8569,7 +8569,7 @@
 				sidx = -1
 				attm = 1
 				sym = 10
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.015
 				temp = 145.646125415151
 				tempExt = 145.938798430454
@@ -8697,7 +8697,7 @@
 				sepI = 0
 				sidx = -1
 				attm = 1
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.02
 				temp = 145.626955641613
 				tempExt = 145.757879210845
@@ -8748,7 +8748,7 @@
 				sepI = 0
 				sidx = -1
 				attm = 1
-				srfN = srfAttach,4
+				srfN = srfAttach, 4
 				mass = 0.02
 				temp = 145.629859882898
 				tempExt = 145.78061727249
@@ -8886,7 +8886,7 @@
 				sidx = 0
 				attm = 0
 				srfN = , -1
-				attN = bottom,1
+				attN = bottom, 1
 				attN = top, -1
 				mass = 0.05
 				temp = 303.300987519226
@@ -9064,8 +9064,8 @@
 				sidx = -1
 				attm = 0
 				srfN = , -1
-				attN = top,0
-				attN = bottom,2
+				attN = top, 0
+				attN = bottom, 2
 				mass = 0.1
 				temp = 303.33599910315
 				tempExt = 303.13107463996
@@ -9106,8 +9106,8 @@
 				sidx = -1
 				attm = 0
 				srfN = srfAttach, -1
-				attN = top,1
-				attN = bottom,3
+				attN = top, 1
+				attN = bottom, 3
 				mass = 2
 				temp = 303.39702834261
 				tempExt = 303.263032173241
@@ -9170,7 +9170,7 @@
 				sidx = -1
 				attm = 0
 				srfN = srfAttach, -1
-				attN = top,2
+				attN = top, 2
 				mass = 4
 				temp = 303.548925523262
 				tempExt = 303.371794581398
@@ -9235,7 +9235,7 @@
 				sym = 5
 				sym = 6
 				sym = 7
-				srfN = srfAttach,3
+				srfN = srfAttach, 3
 				mass = 0.1
 				temp = 303.752509493434
 				tempExt = 303.05140752604
@@ -9354,7 +9354,7 @@
 				sym = 4
 				sym = 6
 				sym = 7
-				srfN = srfAttach,3
+				srfN = srfAttach, 3
 				mass = 0.1
 				temp = 303.555523199494
 				tempExt = 302.885809149649
@@ -9473,7 +9473,7 @@
 				sym = 4
 				sym = 5
 				sym = 7
-				srfN = srfAttach,3
+				srfN = srfAttach, 3
 				mass = 0.1
 				temp = 303.79980474641
 				tempExt = 303.096765389087
@@ -9592,7 +9592,7 @@
 				sym = 4
 				sym = 5
 				sym = 6
-				srfN = srfAttach,3
+				srfN = srfAttach, 3
 				mass = 0.1
 				temp = 303.471099327352
 				tempExt = 302.778994779395
@@ -9711,7 +9711,7 @@
 				sym = 9
 				sym = 10
 				sym = 11
-				srfN = srfAttach,1
+				srfN = srfAttach, 1
 				mass = 0.05
 				temp = 303.327635160225
 				tempExt = 303.265166324702
@@ -9806,7 +9806,7 @@
 				sym = 8
 				sym = 10
 				sym = 11
-				srfN = srfAttach,1
+				srfN = srfAttach, 1
 				mass = 0.05
 				temp = 303.327635160225
 				tempExt = 303.265166324702
@@ -9901,7 +9901,7 @@
 				sym = 8
 				sym = 9
 				sym = 11
-				srfN = srfAttach,1
+				srfN = srfAttach, 1
 				mass = 0.05
 				temp = 303.327635160225
 				tempExt = 303.265166324702
@@ -9996,7 +9996,7 @@
 				sym = 8
 				sym = 9
 				sym = 10
-				srfN = srfAttach,1
+				srfN = srfAttach, 1
 				mass = 0.05
 				temp = 303.327635160225
 				tempExt = 303.265166324702
@@ -10262,7 +10262,7 @@
 				sidx = 0
 				attm = 0
 				srfN = , -1
-				attN = bottom,1
+				attN = bottom, 1
 				attN = top, -1
 				mass = 0.05
 				temp = 146.50304347331
@@ -10440,7 +10440,7 @@
 				sidx = -1
 				attm = 0
 				srfN = srfAttach, -1
-				attN = top,0
+				attN = top, 0
 				mass = 0.5
 				temp = 146.479290089181
 				tempExt = 146.645566388853

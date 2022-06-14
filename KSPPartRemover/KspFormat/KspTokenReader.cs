@@ -28,9 +28,8 @@ namespace KSPPartRemover.KspFormat
 
         private static int ReadAttribute(String[] lines, int index, out KeyValuePair<String, String>? attribute)
         {
-            // EOF
             index = SkipEmptyLinesAndComments(lines, index);
-            if (index >= lines.Length) {
+            if (index >= lines.Length) { // EOF
                 attribute = null;
                 return index;
             }
@@ -106,9 +105,8 @@ namespace KSPPartRemover.KspFormat
 
         private static int TryReadTokenStart(String[] lines, int index, out string name)
         {
-            // EOF
             index = SkipEmptyLinesAndComments(lines, index);
-            if (index >= lines.Length) {
+            if (index >= lines.Length) { // EOF
                 name = null;
                 return index;
             }
@@ -125,12 +123,10 @@ namespace KSPPartRemover.KspFormat
             else {
                 name = lines[index].Trim();
                 bracketStart = 0;
-                bracketLineIdx = index + 1;
-                // EOF
-                index = SkipEmptyLinesAndComments(lines, index);
-                if (index >= lines.Length) {
+                bracketLineIdx = SkipEmptyLinesAndComments(lines, index + 1);
+                if (bracketLineIdx >= lines.Length) { // EOF
                     name = null;
-                    return index;
+                    return bracketLineIdx;
                 }
             }
 
@@ -153,9 +149,8 @@ namespace KSPPartRemover.KspFormat
 
         private static int TryReadTokenEnd(String[] lines, int index, out bool found)
         {
-            // EOF
             index = SkipEmptyLinesAndComments(lines, index);
-            if (index >= lines.Length) {
+            if (index >= lines.Length) { // EOF
                 found = false;
                 return index;
             }
